@@ -1,8 +1,12 @@
+# LEX_Parser.py by Gabriel Ortega and Paulina Cámara (2021)
+# Lexer and Parser program using ply
+
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
-#List of Tokens
+# ***** LEXER *****
+# Tokens
 tokens = [
 
     'PROGRAM',      #program
@@ -19,6 +23,7 @@ tokens = [
     'WRITE',        #Write
     'RETURN',       #Return
     'IF',           #if
+    'THEN'          #then
     'ELSE',         #else
     'VOID',         #Void
     'WHILE',        #While
@@ -60,7 +65,8 @@ tokens = [
     'DIF',          #!=
     'SAME'          #==
 ]
-#Definition of tokens
+
+# Definition of tokens
 t_LESS = r'\<'          #<
 t_GREATER = r'\>'       #>
 t_SEMICOLON = r'\;'     #;
@@ -176,6 +182,11 @@ def t_IF(t):
     t.type = 'IF'
     return t
 
+def t_THEN(t):
+    r'then'
+    t.type = 'THEN'
+    return t
+
 def t_ELSE(t):
     r'else'
     t.type = 'ELSE'
@@ -229,7 +240,7 @@ lexer = lex.lex()
 
 pruebaLex()"""
 
-"""#__________PARSER____________
+#__________PARSER____________
 #Definicion de gramatica
 def p_program(p):
     '''
