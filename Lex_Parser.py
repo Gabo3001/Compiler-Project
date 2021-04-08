@@ -2,56 +2,173 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
-#Lista de todos los tokens que se utilizaran
+#List of Tokens
 tokens = [
 
     'PROGRAM',      #program
     'ID',           #id
-    'SEMICOLON',     #;
-    'COMMA',        #,
-    'COLON',        #:
-    'INT',          #cte int
-    'FLOAT',        #cte float
-    'STRING',       #cte string
-    'L_CURPAR',     #{
-    'R_CURPAR',     #}
-    'EQ',           #=
-    'LESS',         #<
-    'GREATER',      #>
-    'DIF',          #<>
-    'L_PAR',        #(
-    'R_PAR',        #)
+    'CLASS',        #Class
+    'INHERIT',      #Inherit
+    'ATTRIBUTES',   #Attributes
+    'METHODS',      #Methods
+    'VARS',         #Global variables(vars)
+    'VAR',          #variables (var)
+    'FUCTION',      #Function
+    'MAIN',         #Main
+    'READ',         #Read
+    'WRITE',        #Write
+    'RETURN',       #Return
     'IF',           #if
     'ELSE',         #else
-    'VAR',          #var
-    'PRINT',        #print
+    'VOID',         #Void
+    'WHILE',        #While
+    'DO',           #Do
+    'FROM',         #From
+    'TO',           #To
+    'LESS',         #<
+    'GREATER',      #>
+    'SEMICOLON',    #;
+    'COMMA',        #,
+    'COLON',        #:
+    'DOT',          #.
+    'L_CURPAR',     #{
+    'R_CURPAR',     #}
+    'L_BREAK',      #[
+    'R_BREAK',      #]
+    'L_PAR',        #(
+    'R_PAR',        #)
+    'INT',          #int
+    'FLOAT',        #float
+    'CHAR',         #char
+    'STRING',       #string
+    'CTE_INT',      #Cte.int
+    'CTE_FLOAT',    #Cte.float
+    'CTE_STRING',   #Cte.string
+    'EQUAL',        #=
     'PLUS',         #+
     'MINUS',        #-
     'MULT',         #*
-    'DIV'          #/
+    'DIV',          #/
+    'AND',          #&
+    'OR',           #|
+    'PLUS_EQ',      #+=
+    'MIN_EQ',       #-=
+    'MULT_EQ',      #*=
+    'DIV_EQ',       #/=
+    'LESS_TH',      #<=
+    'GREAT_TH',     #>=
+    'DIF',          #!=
+    'SAME'          #==
 ]
-#Definicion de variables para los tokens
-t_SEMICOLON = r'\;'
-t_COMMA = r'\,'
-t_COLON = r'\:'
-t_L_CURPAR = r'\{'
-t_R_CURPAR = r'\}'
-t_EQ = r'\='
-t_DIF = r'\<\>'
-t_LESS = r'\<'
-t_GREATER = r'\>'
-t_L_PAR = r'\('
-t_R_PAR = r'\)'
-t_PLUS = r'\+'
-t_MINUS = r'\-'
-t_MULT = r'\*'
-t_DIV = r'\/'
+#Definition of tokens
+t_LESS = r'\<'          #<
+t_GREATER = r'\>'       #>
+t_SEMICOLON = r'\;'     #;
+t_COMMA = r'\,'         #,
+t_COLON = r'\:'         #:
+t_DOT = r'\.'           #.
+t_L_CURPAR = r'\{'      #{
+t_R_CURPAR = r'\}'      #}
+t_L_BREAK = r'\['       #[
+t_R_BREAK = r'\]'       #]
+t_L_PAR = r'\('         #(
+t_R_PAR = r'\)'         #)
+t_EQUAL = r'\='         #=
+t_PLUS = r'\+'          #+
+t_MINUS = r'\-'         #-
+t_MULT = r'\*'          #*
+t_DIV = r'\/'           #/
+t_AND = r'\&'            #&
+t_OR = r'\|'            #|
+t_PLUS_EQ = r'\+\='     #+=
+t_MIN_EQ = r'\-\='      #-=
+t_MULT_EQ = r'\*\='     #*=
+t_DIV_EQ = r'\/\='      #/=
+t_LESS_TH = r'\<\='     #<=
+t_GREAT_TH = r'\>\='    #>=
+t_DIF = r'\=\='         #!=
+t_SAME = r'\=\='        #==
 
 t_ignore = ' \t'
-#Definicion de tokens
+#Definition of complex tokens
 def t_PROGRAM(t):
     r'program'
     t.type = 'PROGRAM'
+    return t
+
+def t_CLASS(t):
+    r'class'
+    t.type = 'CLASS'
+    return t 
+
+def t_INHERIT(t):
+    r'inherit'
+    t.type = 'INHERIT'
+    return t 
+
+def t_ATTRIBUTES(t):
+    r'attributes'
+    t.type = 'ATTRIBUTES'
+    return t 
+
+def t_METHODS(t):
+    r'methods'
+    t.type = 'METHODS'
+    return t 
+
+def t_VARS(t):
+    r'vars'
+    t.type = 'VARS'
+    return t 
+
+def t_FUNCTION(t):
+    r'function'
+    t.type = 'FUNCTION'
+    return t
+
+def t_MAIN(t):
+    r'main'
+    t.type = 'MAIN'
+    return t
+
+def t_READ(t):
+    r'read'
+    t.type = 'READ'
+    return t 
+
+def t_WRITE(t):
+    r'write'
+    t.type = 'WRITE'
+    return t 
+
+def t_RETURN(t):
+    r'return'
+    t.type = 'RETURN'
+    return t 
+
+def t_VOID(t):
+    r'void'
+    t.type = 'VOID'
+    return t 
+
+def t_WHILE(t):
+    r'while'
+    t.type = 'WHILE'
+    return t 
+
+def t_DO(t):
+    r'do'
+    t.type = 'DO'
+    return t 
+
+def t_FROM(t):
+    r'from'
+    t.type = 'FROM'
+    return t
+
+def t_TO(t):
+    r'to'
+    t.type = 'TO'
     return t
 
 def t_IF(t):
@@ -64,11 +181,6 @@ def t_ELSE(t):
     t.type = 'ELSE'
     return t 
 
-def t_PRINT(t):
-    r'print'
-    t.type = 'PRINT'
-    return t 
-
 def t_VAR(t):
     r'[a-z][a-zA-Z_0-9]*'
     t.type = 'VAR'
@@ -79,25 +191,26 @@ def t_ID(t):
     t.type = 'ID'
     return t
 
-def t_FLOAT(t):
+def t_CTE_FLOAT(t):
     r'\d+\.\d+'
     t.value = float(t.value)
     return t
 
-def t_INT(t):
+def t_CTE_INT(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
-def t_STRING(t):
+def t_CTE_STRING(t):
     r'"[a-zA-Z0-9!@#$%^&*()]*"'
-    t.type = 'STRING'
+    t.type = 'CTE_STRING'
     return t
-#Funcion para contar lineas
+
+#Function to count lines
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
-#Variable para manejar errores de 0 coincidencias 
+#Function to show lexical error 
 def t_error(t):
     print('Line: %d, Not valid character: %r' % (t.lexer.lineno, t.value[0]))
     t.lexer.skip(1)
@@ -106,14 +219,17 @@ lexer = lex.lex()
 
 #Funcion para probar el escaner lexico 
 """def pruebaLex():
-    lexer.input("if else print + - * / gabo_125 Gabo")
+    lexer.input('if else print + - "HOLA" program vars 123 123.1 -123.5 class * / gabo_125 Gabo')
 
     while True:
         tok = lexer.token()
         if not tok:
             break
-        print(tok)"""
-#__________PARSER____________
+        print(tok)
+
+pruebaLex()"""
+
+"""#__________PARSER____________
 #Definicion de gramatica
 def p_program(p):
     '''
@@ -250,4 +366,4 @@ try:
     #parser.parse(f.read())
 except EOFError:
     print('Error')
-    #parser.parse(s)
+    #parser.parse(s)"""
