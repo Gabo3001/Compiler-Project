@@ -352,13 +352,16 @@ def p_main(p):
 
 def p_statement(p):
     '''
-    statement : assigment empty
-                | void empty
-                | return empty
-                | read empty
-                | write empty
-                | if empty
-                | repeat empty
+    statement : assigment statementF
+                | void statementF
+                | return statementF
+                | read statementF
+                | write statementF
+                | if statementF
+                | repeat statementF
+
+    statementF : statement
+                | empty
     '''
     p[0] = None
 

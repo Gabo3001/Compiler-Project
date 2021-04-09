@@ -1,0 +1,12 @@
+program TestF2;
+class Clase1; {
+    a = 1
+    ¨
+    ¨
+    ¨
+    ¨
+    ¨
+};
+main(){
+    a = 1
+}
