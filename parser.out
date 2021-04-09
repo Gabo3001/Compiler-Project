@@ -1,0 +1,4922 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM ID SEMICOLON programT
+Rule 2     programT -> class programT
+Rule 3     programT -> vars programF
+Rule 4     programT -> programF
+Rule 5     programF -> func programF
+Rule 6     programF -> main empty
+Rule 7     class -> CLASS ID classT
+Rule 8     classT -> LESS INHERIT ID GREATER classF
+Rule 9     classT -> classF
+Rule 10    classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+Rule 11    vars -> VARS dec empty
+Rule 12    dec -> VAR arr decF
+Rule 13    dec -> VAR decF
+Rule 14    decF -> COMMA dec
+Rule 15    decF -> COLON type SEMICOLON dec
+Rule 16    decF -> COLON type SEMICOLON empty
+Rule 17    type -> INT empty
+Rule 18    type -> FLOAT empty
+Rule 19    type -> CHAR empty
+Rule 20    type -> STRING empty
+Rule 21    type -> ID empty
+Rule 22    arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty
+Rule 23    arr -> L_BREAK CTE_INT R_BREAK empty
+Rule 24    func -> type funcT
+Rule 25    func -> VOID funcT
+Rule 26    funcT -> FUNCTION ID L_PAR funcF
+Rule 27    funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+Rule 28    funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+Rule 29    parameter -> VAR COLON type SEMICOLON parameterF
+Rule 30    parameterF -> parameter
+Rule 31    parameterF -> empty
+Rule 32    main -> MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+Rule 33    statement -> assigment empty
+Rule 34    statement -> void empty
+Rule 35    statement -> return empty
+Rule 36    statement -> read empty
+Rule 37    statement -> write empty
+Rule 38    statement -> if empty
+Rule 39    statement -> repeat empty
+Rule 40    void -> ID DOT ID L_PAR param R_PAR SEMICOLON empty
+Rule 41    void -> ID L_PAR param R_PAR SEMICOLON empty
+Rule 42    arrfunc -> L_BREAK exp COMMA exp R_BREAK empty
+Rule 43    arrfunc -> L_BREAK exp R_BREAK empty
+Rule 44    param -> var paramF
+Rule 45    paramF -> COMMA param
+Rule 46    paramF -> empty
+Rule 47    return -> RETURN L_PAR exp R_PAR SEMICOLON empty
+Rule 48    var -> VAR varF
+Rule 49    var -> ID DOT VAR varF
+Rule 50    varF -> arrfunc empty
+Rule 51    varF -> empty
+Rule 52    read -> READ L_PAR readF
+Rule 53    readF -> var COMMA readF
+Rule 54    readF -> var R_PAR SEMICOLON empty
+Rule 55    write -> WRITE L_PAR writeT
+Rule 56    writeT -> CTE_STRING writeF
+Rule 57    writeT -> exp writeF
+Rule 58    writeF -> COMMA writeT
+Rule 59    writeF -> R_PAR SEMICOLON empty
+Rule 60    repeat -> conditional empty
+Rule 61    repeat -> nonconditional empty
+Rule 62    if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+Rule 63    ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
+Rule 64    ifF -> empty
+Rule 65    assigment -> var assigmentF
+Rule 66    assigmentF -> EQUAL exp empty
+Rule 67    assigmentF -> ope exp empty
+Rule 68    ope -> PLUS_EQ empty
+Rule 69    ope -> MIN_EQ empty
+Rule 70    ope -> MULT_EQ empty
+Rule 71    ope -> DIV_EQ empty
+Rule 72    conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+Rule 73    nonconditional -> FROM VAR arr nonconditionalF
+Rule 74    nonconditional -> FROM VAR nonconditionalF
+Rule 75    nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+Rule 76    bool -> OR exp empty
+Rule 77    bool -> AND exp empty
+Rule 78    exp -> ex expT
+Rule 79    expT -> LESS expf
+Rule 80    expT -> GREATER expf
+Rule 81    expT -> LESS_TH expf
+Rule 82    expT -> GREAT_TH expf
+Rule 83    expT -> SAME expf
+Rule 84    expT -> DIF expf
+Rule 85    expT -> empty
+Rule 86    expf -> ex empty
+Rule 87    expf -> ex bool empty
+Rule 88    ex -> term exF
+Rule 89    exF -> PLUS ex
+Rule 90    exF -> MINUS ex
+Rule 91    exF -> empty
+Rule 92    term -> factor termF
+Rule 93    termF -> MULT term
+Rule 94    termF -> DIV term
+Rule 95    termF -> empty
+Rule 96    factor -> L_PAR exp R_PAR empty
+Rule 97    factor -> factorT
+Rule 98    factorT -> PLUS factorF
+Rule 99    factorT -> MINUS factorF
+Rule 100   factorT -> factorF
+Rule 101   factorF -> varcte empty
+Rule 102   varcte -> var empty
+Rule 103   varcte -> CTE_INT empty
+Rule 104   varcte -> CTE_FLOAT empty
+Rule 105   varcte -> CTE_STRING empty
+Rule 106   empty -> <empty>
+
+Terminals, with rules where they appear
+
+AND                  : 77
+ATTRIBUTES           : 10
+CHAR                 : 19
+CLASS                : 7
+COLON                : 15 16 29
+COMMA                : 14 22 42 45 53 58
+CTE_FLOAT            : 104
+CTE_INT              : 22 22 23 103
+CTE_STRING           : 56 105
+DIF                  : 84
+DIV                  : 94
+DIV_EQ               : 71
+DO                   : 72 75
+DOT                  : 40 49
+ELSE                 : 63
+EQUAL                : 66
+FLOAT                : 18
+FROM                 : 73 74
+FUNCTION             : 26
+GREATER              : 8 80
+GREAT_TH             : 82
+ID                   : 1 7 8 21 26 40 40 41 49
+IF                   : 62
+INHERIT              : 8
+INT                  : 17
+LESS                 : 8 79
+LESS_TH              : 81
+L_BREAK              : 22 23 42 43
+L_CURPAR             : 10 27 28 32 62 63 72 75
+L_PAR                : 26 32 40 41 47 52 55 62 72 96
+MAIN                 : 32
+METHODS              : 10
+MINUS                : 90 99
+MIN_EQ               : 69
+MULT                 : 93
+MULT_EQ              : 70
+OR                   : 76
+PLUS                 : 89 98
+PLUS_EQ              : 68
+PROGRAM              : 1
+READ                 : 52
+RETURN               : 47
+R_BREAK              : 22 23 42 43
+R_CURPAR             : 10 27 28 32 62 63 72 75
+R_PAR                : 27 28 32 40 41 47 54 59 62 72 96
+SAME                 : 83
+SEMICOLON            : 1 10 10 15 16 27 28 29 40 41 47 54 59 62 63 72 75
+STRING               : 20
+THEN                 : 62
+TO                   : 75
+VAR                  : 12 13 29 48 49 73 74
+VARS                 : 11
+VOID                 : 25
+WHILE                : 72
+WRITE                : 55
+error                : 
+
+Nonterminals, with rules where they appear
+
+arr                  : 12 73
+arrfunc              : 50
+assigment            : 33
+assigmentF           : 65
+bool                 : 87
+class                : 2
+classF               : 8 9
+classT               : 7
+conditional          : 60
+dec                  : 10 11 14 15 27 28
+decF                 : 12 13
+empty                : 6 10 11 16 17 18 19 20 21 22 23 27 28 31 32 33 34 35 36 37 38 39 40 41 42 43 46 47 50 51 54 59 60 61 63 64 66 67 68 69 70 71 72 75 76 77 85 86 87 91 95 96 101 102 103 104 105
+ex                   : 78 86 87 89 90
+exF                  : 88
+exp                  : 42 42 43 47 57 62 66 67 72 75 75 76 77 96
+expT                 : 78
+expf                 : 79 80 81 82 83 84
+factor               : 92
+factorF              : 98 99 100
+factorT              : 97
+func                 : 5 10
+funcF                : 26
+funcT                : 24 25
+if                   : 38
+ifF                  : 62
+main                 : 6
+nonconditional       : 61
+nonconditionalF      : 73 74
+ope                  : 67
+param                : 40 41 45
+paramF               : 44
+parameter            : 27 30
+parameterF           : 29
+program              : 0
+programF             : 3 4 5
+programT             : 1 2
+read                 : 36
+readF                : 52 53
+repeat               : 39
+return               : 35
+statement            : 27 28 32 62 63 72 75
+term                 : 88 93 94
+termF                : 92
+type                 : 15 16 24 29
+var                  : 44 53 54 65 102
+varF                 : 48 49
+varcte               : 101
+vars                 : 3
+void                 : 34
+write                : 37
+writeF               : 56 57
+writeT               : 55 58
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM ID SEMICOLON programT
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . ID SEMICOLON programT
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM ID . SEMICOLON programT
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM ID SEMICOLON . programT
+    (2) programT -> . class programT
+    (3) programT -> . vars programF
+    (4) programT -> . programF
+    (7) class -> . CLASS ID classT
+    (11) vars -> . VARS dec empty
+    (5) programF -> . func programF
+    (6) programF -> . main empty
+    (24) func -> . type funcT
+    (25) func -> . VOID funcT
+    (32) main -> . MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    CLASS           shift and go to state 10
+    VARS            shift and go to state 11
+    VOID            shift and go to state 15
+    MAIN            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    programT                       shift and go to state 6
+    class                          shift and go to state 7
+    vars                           shift and go to state 8
+    programF                       shift and go to state 9
+    func                           shift and go to state 12
+    main                           shift and go to state 13
+    type                           shift and go to state 14
+
+state 5
+
+    (21) type -> ID . empty
+    (106) empty -> .
+
+    FUNCTION        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 21
+
+state 6
+
+    (1) program -> PROGRAM ID SEMICOLON programT .
+
+    $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON programT .)
+
+
+state 7
+
+    (2) programT -> class . programT
+    (2) programT -> . class programT
+    (3) programT -> . vars programF
+    (4) programT -> . programF
+    (7) class -> . CLASS ID classT
+    (11) vars -> . VARS dec empty
+    (5) programF -> . func programF
+    (6) programF -> . main empty
+    (24) func -> . type funcT
+    (25) func -> . VOID funcT
+    (32) main -> . MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    CLASS           shift and go to state 10
+    VARS            shift and go to state 11
+    VOID            shift and go to state 15
+    MAIN            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    class                          shift and go to state 7
+    programT                       shift and go to state 22
+    vars                           shift and go to state 8
+    programF                       shift and go to state 9
+    func                           shift and go to state 12
+    main                           shift and go to state 13
+    type                           shift and go to state 14
+
+state 8
+
+    (3) programT -> vars . programF
+    (5) programF -> . func programF
+    (6) programF -> . main empty
+    (24) func -> . type funcT
+    (25) func -> . VOID funcT
+    (32) main -> . MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    VOID            shift and go to state 15
+    MAIN            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    programF                       shift and go to state 23
+    func                           shift and go to state 12
+    main                           shift and go to state 13
+    type                           shift and go to state 14
+
+state 9
+
+    (4) programT -> programF .
+
+    $end            reduce using rule 4 (programT -> programF .)
+
+
+state 10
+
+    (7) class -> CLASS . ID classT
+
+    ID              shift and go to state 24
+
+
+state 11
+
+    (11) vars -> VARS . dec empty
+    (12) dec -> . VAR arr decF
+    (13) dec -> . VAR decF
+
+    VAR             shift and go to state 26
+
+    dec                            shift and go to state 25
+
+state 12
+
+    (5) programF -> func . programF
+    (5) programF -> . func programF
+    (6) programF -> . main empty
+    (24) func -> . type funcT
+    (25) func -> . VOID funcT
+    (32) main -> . MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    VOID            shift and go to state 15
+    MAIN            shift and go to state 16
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    func                           shift and go to state 12
+    programF                       shift and go to state 27
+    main                           shift and go to state 13
+    type                           shift and go to state 14
+
+state 13
+
+    (6) programF -> main . empty
+    (106) empty -> .
+
+    $end            reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 28
+
+state 14
+
+    (24) func -> type . funcT
+    (26) funcT -> . FUNCTION ID L_PAR funcF
+
+    FUNCTION        shift and go to state 30
+
+    funcT                          shift and go to state 29
+
+state 15
+
+    (25) func -> VOID . funcT
+    (26) funcT -> . FUNCTION ID L_PAR funcF
+
+    FUNCTION        shift and go to state 30
+
+    funcT                          shift and go to state 31
+
+state 16
+
+    (32) main -> MAIN . L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+
+    L_PAR           shift and go to state 32
+
+
+state 17
+
+    (17) type -> INT . empty
+    (106) empty -> .
+
+    FUNCTION        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 33
+
+state 18
+
+    (18) type -> FLOAT . empty
+    (106) empty -> .
+
+    FUNCTION        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 34
+
+state 19
+
+    (19) type -> CHAR . empty
+    (106) empty -> .
+
+    FUNCTION        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 35
+
+state 20
+
+    (20) type -> STRING . empty
+    (106) empty -> .
+
+    FUNCTION        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 36
+
+state 21
+
+    (21) type -> ID empty .
+
+    FUNCTION        reduce using rule 21 (type -> ID empty .)
+    SEMICOLON       reduce using rule 21 (type -> ID empty .)
+
+
+state 22
+
+    (2) programT -> class programT .
+
+    $end            reduce using rule 2 (programT -> class programT .)
+
+
+state 23
+
+    (3) programT -> vars programF .
+
+    $end            reduce using rule 3 (programT -> vars programF .)
+
+
+state 24
+
+    (7) class -> CLASS ID . classT
+    (8) classT -> . LESS INHERIT ID GREATER classF
+    (9) classT -> . classF
+    (10) classF -> . SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+
+    LESS            shift and go to state 38
+    SEMICOLON       shift and go to state 40
+
+    classT                         shift and go to state 37
+    classF                         shift and go to state 39
+
+state 25
+
+    (11) vars -> VARS dec . empty
+    (106) empty -> .
+
+    VOID            reduce using rule 106 (empty -> .)
+    MAIN            reduce using rule 106 (empty -> .)
+    INT             reduce using rule 106 (empty -> .)
+    FLOAT           reduce using rule 106 (empty -> .)
+    CHAR            reduce using rule 106 (empty -> .)
+    STRING          reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 41
+
+state 26
+
+    (12) dec -> VAR . arr decF
+    (13) dec -> VAR . decF
+    (22) arr -> . L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty
+    (23) arr -> . L_BREAK CTE_INT R_BREAK empty
+    (14) decF -> . COMMA dec
+    (15) decF -> . COLON type SEMICOLON dec
+    (16) decF -> . COLON type SEMICOLON empty
+
+    L_BREAK         shift and go to state 44
+    COMMA           shift and go to state 45
+    COLON           shift and go to state 46
+
+    arr                            shift and go to state 42
+    decF                           shift and go to state 43
+
+state 27
+
+    (5) programF -> func programF .
+
+    $end            reduce using rule 5 (programF -> func programF .)
+
+
+state 28
+
+    (6) programF -> main empty .
+
+    $end            reduce using rule 6 (programF -> main empty .)
+
+
+state 29
+
+    (24) func -> type funcT .
+
+    VOID            reduce using rule 24 (func -> type funcT .)
+    MAIN            reduce using rule 24 (func -> type funcT .)
+    INT             reduce using rule 24 (func -> type funcT .)
+    FLOAT           reduce using rule 24 (func -> type funcT .)
+    CHAR            reduce using rule 24 (func -> type funcT .)
+    STRING          reduce using rule 24 (func -> type funcT .)
+    ID              reduce using rule 24 (func -> type funcT .)
+    R_CURPAR        reduce using rule 24 (func -> type funcT .)
+
+
+state 30
+
+    (26) funcT -> FUNCTION . ID L_PAR funcF
+
+    ID              shift and go to state 47
+
+
+state 31
+
+    (25) func -> VOID funcT .
+
+    VOID            reduce using rule 25 (func -> VOID funcT .)
+    MAIN            reduce using rule 25 (func -> VOID funcT .)
+    INT             reduce using rule 25 (func -> VOID funcT .)
+    FLOAT           reduce using rule 25 (func -> VOID funcT .)
+    CHAR            reduce using rule 25 (func -> VOID funcT .)
+    STRING          reduce using rule 25 (func -> VOID funcT .)
+    ID              reduce using rule 25 (func -> VOID funcT .)
+    R_CURPAR        reduce using rule 25 (func -> VOID funcT .)
+
+
+state 32
+
+    (32) main -> MAIN L_PAR . R_PAR L_CURPAR statement R_CURPAR empty
+
+    R_PAR           shift and go to state 48
+
+
+state 33
+
+    (17) type -> INT empty .
+
+    FUNCTION        reduce using rule 17 (type -> INT empty .)
+    SEMICOLON       reduce using rule 17 (type -> INT empty .)
+
+
+state 34
+
+    (18) type -> FLOAT empty .
+
+    FUNCTION        reduce using rule 18 (type -> FLOAT empty .)
+    SEMICOLON       reduce using rule 18 (type -> FLOAT empty .)
+
+
+state 35
+
+    (19) type -> CHAR empty .
+
+    FUNCTION        reduce using rule 19 (type -> CHAR empty .)
+    SEMICOLON       reduce using rule 19 (type -> CHAR empty .)
+
+
+state 36
+
+    (20) type -> STRING empty .
+
+    FUNCTION        reduce using rule 20 (type -> STRING empty .)
+    SEMICOLON       reduce using rule 20 (type -> STRING empty .)
+
+
+state 37
+
+    (7) class -> CLASS ID classT .
+
+    CLASS           reduce using rule 7 (class -> CLASS ID classT .)
+    VARS            reduce using rule 7 (class -> CLASS ID classT .)
+    VOID            reduce using rule 7 (class -> CLASS ID classT .)
+    MAIN            reduce using rule 7 (class -> CLASS ID classT .)
+    INT             reduce using rule 7 (class -> CLASS ID classT .)
+    FLOAT           reduce using rule 7 (class -> CLASS ID classT .)
+    CHAR            reduce using rule 7 (class -> CLASS ID classT .)
+    STRING          reduce using rule 7 (class -> CLASS ID classT .)
+    ID              reduce using rule 7 (class -> CLASS ID classT .)
+
+
+state 38
+
+    (8) classT -> LESS . INHERIT ID GREATER classF
+
+    INHERIT         shift and go to state 49
+
+
+state 39
+
+    (9) classT -> classF .
+
+    CLASS           reduce using rule 9 (classT -> classF .)
+    VARS            reduce using rule 9 (classT -> classF .)
+    VOID            reduce using rule 9 (classT -> classF .)
+    MAIN            reduce using rule 9 (classT -> classF .)
+    INT             reduce using rule 9 (classT -> classF .)
+    FLOAT           reduce using rule 9 (classT -> classF .)
+    CHAR            reduce using rule 9 (classT -> classF .)
+    STRING          reduce using rule 9 (classT -> classF .)
+    ID              reduce using rule 9 (classT -> classF .)
+
+
+state 40
+
+    (10) classF -> SEMICOLON . L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+
+    L_CURPAR        shift and go to state 50
+
+
+state 41
+
+    (11) vars -> VARS dec empty .
+
+    VOID            reduce using rule 11 (vars -> VARS dec empty .)
+    MAIN            reduce using rule 11 (vars -> VARS dec empty .)
+    INT             reduce using rule 11 (vars -> VARS dec empty .)
+    FLOAT           reduce using rule 11 (vars -> VARS dec empty .)
+    CHAR            reduce using rule 11 (vars -> VARS dec empty .)
+    STRING          reduce using rule 11 (vars -> VARS dec empty .)
+    ID              reduce using rule 11 (vars -> VARS dec empty .)
+
+
+state 42
+
+    (12) dec -> VAR arr . decF
+    (14) decF -> . COMMA dec
+    (15) decF -> . COLON type SEMICOLON dec
+    (16) decF -> . COLON type SEMICOLON empty
+
+    COMMA           shift and go to state 45
+    COLON           shift and go to state 46
+
+    decF                           shift and go to state 51
+
+state 43
+
+    (13) dec -> VAR decF .
+
+    VOID            reduce using rule 13 (dec -> VAR decF .)
+    MAIN            reduce using rule 13 (dec -> VAR decF .)
+    INT             reduce using rule 13 (dec -> VAR decF .)
+    FLOAT           reduce using rule 13 (dec -> VAR decF .)
+    CHAR            reduce using rule 13 (dec -> VAR decF .)
+    STRING          reduce using rule 13 (dec -> VAR decF .)
+    ID              reduce using rule 13 (dec -> VAR decF .)
+    METHODS         reduce using rule 13 (dec -> VAR decF .)
+    L_CURPAR        reduce using rule 13 (dec -> VAR decF .)
+
+
+state 44
+
+    (22) arr -> L_BREAK . CTE_INT COMMA CTE_INT R_BREAK empty
+    (23) arr -> L_BREAK . CTE_INT R_BREAK empty
+
+    CTE_INT         shift and go to state 52
+
+
+state 45
+
+    (14) decF -> COMMA . dec
+    (12) dec -> . VAR arr decF
+    (13) dec -> . VAR decF
+
+    VAR             shift and go to state 26
+
+    dec                            shift and go to state 53
+
+state 46
+
+    (15) decF -> COLON . type SEMICOLON dec
+    (16) decF -> COLON . type SEMICOLON empty
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    type                           shift and go to state 54
+
+state 47
+
+    (26) funcT -> FUNCTION ID . L_PAR funcF
+
+    L_PAR           shift and go to state 55
+
+
+state 48
+
+    (32) main -> MAIN L_PAR R_PAR . L_CURPAR statement R_CURPAR empty
+
+    L_CURPAR        shift and go to state 56
+
+
+state 49
+
+    (8) classT -> LESS INHERIT . ID GREATER classF
+
+    ID              shift and go to state 57
+
+
+state 50
+
+    (10) classF -> SEMICOLON L_CURPAR . ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+
+    ATTRIBUTES      shift and go to state 58
+
+
+state 51
+
+    (12) dec -> VAR arr decF .
+
+    VOID            reduce using rule 12 (dec -> VAR arr decF .)
+    MAIN            reduce using rule 12 (dec -> VAR arr decF .)
+    INT             reduce using rule 12 (dec -> VAR arr decF .)
+    FLOAT           reduce using rule 12 (dec -> VAR arr decF .)
+    CHAR            reduce using rule 12 (dec -> VAR arr decF .)
+    STRING          reduce using rule 12 (dec -> VAR arr decF .)
+    ID              reduce using rule 12 (dec -> VAR arr decF .)
+    METHODS         reduce using rule 12 (dec -> VAR arr decF .)
+    L_CURPAR        reduce using rule 12 (dec -> VAR arr decF .)
+
+
+state 52
+
+    (22) arr -> L_BREAK CTE_INT . COMMA CTE_INT R_BREAK empty
+    (23) arr -> L_BREAK CTE_INT . R_BREAK empty
+
+    COMMA           shift and go to state 59
+    R_BREAK         shift and go to state 60
+
+
+state 53
+
+    (14) decF -> COMMA dec .
+
+    VOID            reduce using rule 14 (decF -> COMMA dec .)
+    MAIN            reduce using rule 14 (decF -> COMMA dec .)
+    INT             reduce using rule 14 (decF -> COMMA dec .)
+    FLOAT           reduce using rule 14 (decF -> COMMA dec .)
+    CHAR            reduce using rule 14 (decF -> COMMA dec .)
+    STRING          reduce using rule 14 (decF -> COMMA dec .)
+    ID              reduce using rule 14 (decF -> COMMA dec .)
+    METHODS         reduce using rule 14 (decF -> COMMA dec .)
+    L_CURPAR        reduce using rule 14 (decF -> COMMA dec .)
+
+
+state 54
+
+    (15) decF -> COLON type . SEMICOLON dec
+    (16) decF -> COLON type . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 61
+
+
+state 55
+
+    (26) funcT -> FUNCTION ID L_PAR . funcF
+    (27) funcF -> . parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+    (28) funcF -> . R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+    (29) parameter -> . VAR COLON type SEMICOLON parameterF
+
+    R_PAR           shift and go to state 64
+    VAR             shift and go to state 65
+
+    funcF                          shift and go to state 62
+    parameter                      shift and go to state 63
+
+state 56
+
+    (32) main -> MAIN L_PAR R_PAR L_CURPAR . statement R_CURPAR empty
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 66
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 57
+
+    (8) classT -> LESS INHERIT ID . GREATER classF
+
+    GREATER         shift and go to state 85
+
+
+state 58
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES . dec METHODS func R_CURPAR SEMICOLON empty
+    (12) dec -> . VAR arr decF
+    (13) dec -> . VAR decF
+
+    VAR             shift and go to state 26
+
+    dec                            shift and go to state 86
+
+state 59
+
+    (22) arr -> L_BREAK CTE_INT COMMA . CTE_INT R_BREAK empty
+
+    CTE_INT         shift and go to state 87
+
+
+state 60
+
+    (23) arr -> L_BREAK CTE_INT R_BREAK . empty
+    (106) empty -> .
+
+    COMMA           reduce using rule 106 (empty -> .)
+    COLON           reduce using rule 106 (empty -> .)
+    L_PAR           reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    CTE_INT         reduce using rule 106 (empty -> .)
+    CTE_FLOAT       reduce using rule 106 (empty -> .)
+    CTE_STRING      reduce using rule 106 (empty -> .)
+    VAR             reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 88
+
+state 61
+
+    (15) decF -> COLON type SEMICOLON . dec
+    (16) decF -> COLON type SEMICOLON . empty
+    (12) dec -> . VAR arr decF
+    (13) dec -> . VAR decF
+    (106) empty -> .
+
+    VAR             shift and go to state 26
+    VOID            reduce using rule 106 (empty -> .)
+    MAIN            reduce using rule 106 (empty -> .)
+    INT             reduce using rule 106 (empty -> .)
+    FLOAT           reduce using rule 106 (empty -> .)
+    CHAR            reduce using rule 106 (empty -> .)
+    STRING          reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+    METHODS         reduce using rule 106 (empty -> .)
+    L_CURPAR        reduce using rule 106 (empty -> .)
+
+    dec                            shift and go to state 89
+    empty                          shift and go to state 90
+
+state 62
+
+    (26) funcT -> FUNCTION ID L_PAR funcF .
+
+    VOID            reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    MAIN            reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    INT             reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    FLOAT           reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    CHAR            reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    STRING          reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    ID              reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+    R_CURPAR        reduce using rule 26 (funcT -> FUNCTION ID L_PAR funcF .)
+
+
+state 63
+
+    (27) funcF -> parameter . R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+
+    R_PAR           shift and go to state 91
+
+
+state 64
+
+    (28) funcF -> R_PAR . SEMICOLON dec L_CURPAR statement R_CURPAR empty
+
+    SEMICOLON       shift and go to state 92
+
+
+state 65
+
+    (29) parameter -> VAR . COLON type SEMICOLON parameterF
+
+    COLON           shift and go to state 93
+
+
+state 66
+
+    (32) main -> MAIN L_PAR R_PAR L_CURPAR statement . R_CURPAR empty
+
+    R_CURPAR        shift and go to state 94
+
+
+state 67
+
+    (33) statement -> assigment . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 95
+
+state 68
+
+    (34) statement -> void . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 96
+
+state 69
+
+    (35) statement -> return . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 97
+
+state 70
+
+    (36) statement -> read . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 98
+
+state 71
+
+    (37) statement -> write . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 99
+
+state 72
+
+    (38) statement -> if . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 100
+
+state 73
+
+    (39) statement -> repeat . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 101
+
+state 74
+
+    (65) assigment -> var . assigmentF
+    (66) assigmentF -> . EQUAL exp empty
+    (67) assigmentF -> . ope exp empty
+    (68) ope -> . PLUS_EQ empty
+    (69) ope -> . MIN_EQ empty
+    (70) ope -> . MULT_EQ empty
+    (71) ope -> . DIV_EQ empty
+
+    EQUAL           shift and go to state 103
+    PLUS_EQ         shift and go to state 105
+    MIN_EQ          shift and go to state 106
+    MULT_EQ         shift and go to state 107
+    DIV_EQ          shift and go to state 108
+
+    assigmentF                     shift and go to state 102
+    ope                            shift and go to state 104
+
+state 75
+
+    (40) void -> ID . DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> ID . L_PAR param R_PAR SEMICOLON empty
+    (49) var -> ID . DOT VAR varF
+
+    DOT             shift and go to state 109
+    L_PAR           shift and go to state 110
+
+
+state 76
+
+    (47) return -> RETURN . L_PAR exp R_PAR SEMICOLON empty
+
+    L_PAR           shift and go to state 111
+
+
+state 77
+
+    (52) read -> READ . L_PAR readF
+
+    L_PAR           shift and go to state 112
+
+
+state 78
+
+    (55) write -> WRITE . L_PAR writeT
+
+    L_PAR           shift and go to state 113
+
+
+state 79
+
+    (62) if -> IF . L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+
+    L_PAR           shift and go to state 114
+
+
+state 80
+
+    (60) repeat -> conditional . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 115
+
+state 81
+
+    (61) repeat -> nonconditional . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 116
+
+state 82
+
+    (48) var -> VAR . varF
+    (50) varF -> . arrfunc empty
+    (51) varF -> . empty
+    (42) arrfunc -> . L_BREAK exp COMMA exp R_BREAK empty
+    (43) arrfunc -> . L_BREAK exp R_BREAK empty
+    (106) empty -> .
+
+    L_BREAK         shift and go to state 120
+    EQUAL           reduce using rule 106 (empty -> .)
+    PLUS_EQ         reduce using rule 106 (empty -> .)
+    MIN_EQ          reduce using rule 106 (empty -> .)
+    MULT_EQ         reduce using rule 106 (empty -> .)
+    DIV_EQ          reduce using rule 106 (empty -> .)
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    varF                           shift and go to state 117
+    arrfunc                        shift and go to state 118
+    empty                          shift and go to state 119
+
+state 83
+
+    (72) conditional -> WHILE . L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    L_PAR           shift and go to state 121
+
+
+state 84
+
+    (73) nonconditional -> FROM . VAR arr nonconditionalF
+    (74) nonconditional -> FROM . VAR nonconditionalF
+
+    VAR             shift and go to state 122
+
+
+state 85
+
+    (8) classT -> LESS INHERIT ID GREATER . classF
+    (10) classF -> . SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+
+    SEMICOLON       shift and go to state 40
+
+    classF                         shift and go to state 123
+
+state 86
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec . METHODS func R_CURPAR SEMICOLON empty
+
+    METHODS         shift and go to state 124
+
+
+state 87
+
+    (22) arr -> L_BREAK CTE_INT COMMA CTE_INT . R_BREAK empty
+
+    R_BREAK         shift and go to state 125
+
+
+state 88
+
+    (23) arr -> L_BREAK CTE_INT R_BREAK empty .
+
+    COMMA           reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    COLON           reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    L_PAR           reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    PLUS            reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    MINUS           reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    CTE_INT         reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    CTE_FLOAT       reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    CTE_STRING      reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    VAR             reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+    ID              reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
+
+
+state 89
+
+    (15) decF -> COLON type SEMICOLON dec .
+
+    VOID            reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    MAIN            reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    INT             reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    FLOAT           reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    CHAR            reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    STRING          reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    ID              reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    METHODS         reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+    L_CURPAR        reduce using rule 15 (decF -> COLON type SEMICOLON dec .)
+
+
+state 90
+
+    (16) decF -> COLON type SEMICOLON empty .
+
+    VOID            reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    MAIN            reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    INT             reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    FLOAT           reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    CHAR            reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    STRING          reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    ID              reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    METHODS         reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+    L_CURPAR        reduce using rule 16 (decF -> COLON type SEMICOLON empty .)
+
+
+state 91
+
+    (27) funcF -> parameter R_PAR . SEMICOLON dec L_CURPAR statement R_CURPAR empty
+
+    SEMICOLON       shift and go to state 126
+
+
+state 92
+
+    (28) funcF -> R_PAR SEMICOLON . dec L_CURPAR statement R_CURPAR empty
+    (12) dec -> . VAR arr decF
+    (13) dec -> . VAR decF
+
+    VAR             shift and go to state 26
+
+    dec                            shift and go to state 127
+
+state 93
+
+    (29) parameter -> VAR COLON . type SEMICOLON parameterF
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    type                           shift and go to state 128
+
+state 94
+
+    (32) main -> MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR . empty
+    (106) empty -> .
+
+    $end            reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 129
+
+state 95
+
+    (33) statement -> assigment empty .
+
+    R_CURPAR        reduce using rule 33 (statement -> assigment empty .)
+    SEMICOLON       reduce using rule 33 (statement -> assigment empty .)
+
+
+state 96
+
+    (34) statement -> void empty .
+
+    R_CURPAR        reduce using rule 34 (statement -> void empty .)
+    SEMICOLON       reduce using rule 34 (statement -> void empty .)
+
+
+state 97
+
+    (35) statement -> return empty .
+
+    R_CURPAR        reduce using rule 35 (statement -> return empty .)
+    SEMICOLON       reduce using rule 35 (statement -> return empty .)
+
+
+state 98
+
+    (36) statement -> read empty .
+
+    R_CURPAR        reduce using rule 36 (statement -> read empty .)
+    SEMICOLON       reduce using rule 36 (statement -> read empty .)
+
+
+state 99
+
+    (37) statement -> write empty .
+
+    R_CURPAR        reduce using rule 37 (statement -> write empty .)
+    SEMICOLON       reduce using rule 37 (statement -> write empty .)
+
+
+state 100
+
+    (38) statement -> if empty .
+
+    R_CURPAR        reduce using rule 38 (statement -> if empty .)
+    SEMICOLON       reduce using rule 38 (statement -> if empty .)
+
+
+state 101
+
+    (39) statement -> repeat empty .
+
+    R_CURPAR        reduce using rule 39 (statement -> repeat empty .)
+    SEMICOLON       reduce using rule 39 (statement -> repeat empty .)
+
+
+state 102
+
+    (65) assigment -> var assigmentF .
+
+    R_CURPAR        reduce using rule 65 (assigment -> var assigmentF .)
+    SEMICOLON       reduce using rule 65 (assigment -> var assigmentF .)
+
+
+state 103
+
+    (66) assigmentF -> EQUAL . exp empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 130
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 104
+
+    (67) assigmentF -> ope . exp empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 145
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 105
+
+    (68) ope -> PLUS_EQ . empty
+    (106) empty -> .
+
+    L_PAR           reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    CTE_INT         reduce using rule 106 (empty -> .)
+    CTE_FLOAT       reduce using rule 106 (empty -> .)
+    CTE_STRING      reduce using rule 106 (empty -> .)
+    VAR             reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 146
+
+state 106
+
+    (69) ope -> MIN_EQ . empty
+    (106) empty -> .
+
+    L_PAR           reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    CTE_INT         reduce using rule 106 (empty -> .)
+    CTE_FLOAT       reduce using rule 106 (empty -> .)
+    CTE_STRING      reduce using rule 106 (empty -> .)
+    VAR             reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 147
+
+state 107
+
+    (70) ope -> MULT_EQ . empty
+    (106) empty -> .
+
+    L_PAR           reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    CTE_INT         reduce using rule 106 (empty -> .)
+    CTE_FLOAT       reduce using rule 106 (empty -> .)
+    CTE_STRING      reduce using rule 106 (empty -> .)
+    VAR             reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 148
+
+state 108
+
+    (71) ope -> DIV_EQ . empty
+    (106) empty -> .
+
+    L_PAR           reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    CTE_INT         reduce using rule 106 (empty -> .)
+    CTE_FLOAT       reduce using rule 106 (empty -> .)
+    CTE_STRING      reduce using rule 106 (empty -> .)
+    VAR             reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 149
+
+state 109
+
+    (40) void -> ID DOT . ID L_PAR param R_PAR SEMICOLON empty
+    (49) var -> ID DOT . VAR varF
+
+    ID              shift and go to state 150
+    VAR             shift and go to state 151
+
+
+state 110
+
+    (41) void -> ID L_PAR . param R_PAR SEMICOLON empty
+    (44) param -> . var paramF
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    param                          shift and go to state 152
+    var                            shift and go to state 153
+
+state 111
+
+    (47) return -> RETURN L_PAR . exp R_PAR SEMICOLON empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 154
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 112
+
+    (52) read -> READ L_PAR . readF
+    (53) readF -> . var COMMA readF
+    (54) readF -> . var R_PAR SEMICOLON empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    readF                          shift and go to state 155
+    var                            shift and go to state 156
+
+state 113
+
+    (55) write -> WRITE L_PAR . writeT
+    (56) writeT -> . CTE_STRING writeF
+    (57) writeT -> . exp writeF
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    CTE_STRING      shift and go to state 158
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    writeT                         shift and go to state 157
+    exp                            shift and go to state 159
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 114
+
+    (62) if -> IF L_PAR . exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 160
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 115
+
+    (60) repeat -> conditional empty .
+
+    R_CURPAR        reduce using rule 60 (repeat -> conditional empty .)
+    SEMICOLON       reduce using rule 60 (repeat -> conditional empty .)
+
+
+state 116
+
+    (61) repeat -> nonconditional empty .
+
+    R_CURPAR        reduce using rule 61 (repeat -> nonconditional empty .)
+    SEMICOLON       reduce using rule 61 (repeat -> nonconditional empty .)
+
+
+state 117
+
+    (48) var -> VAR varF .
+
+    EQUAL           reduce using rule 48 (var -> VAR varF .)
+    PLUS_EQ         reduce using rule 48 (var -> VAR varF .)
+    MIN_EQ          reduce using rule 48 (var -> VAR varF .)
+    MULT_EQ         reduce using rule 48 (var -> VAR varF .)
+    DIV_EQ          reduce using rule 48 (var -> VAR varF .)
+    MULT            reduce using rule 48 (var -> VAR varF .)
+    DIV             reduce using rule 48 (var -> VAR varF .)
+    PLUS            reduce using rule 48 (var -> VAR varF .)
+    MINUS           reduce using rule 48 (var -> VAR varF .)
+    LESS            reduce using rule 48 (var -> VAR varF .)
+    GREATER         reduce using rule 48 (var -> VAR varF .)
+    LESS_TH         reduce using rule 48 (var -> VAR varF .)
+    GREAT_TH        reduce using rule 48 (var -> VAR varF .)
+    SAME            reduce using rule 48 (var -> VAR varF .)
+    DIF             reduce using rule 48 (var -> VAR varF .)
+    R_CURPAR        reduce using rule 48 (var -> VAR varF .)
+    SEMICOLON       reduce using rule 48 (var -> VAR varF .)
+    COMMA           reduce using rule 48 (var -> VAR varF .)
+    R_PAR           reduce using rule 48 (var -> VAR varF .)
+    R_BREAK         reduce using rule 48 (var -> VAR varF .)
+    TO              reduce using rule 48 (var -> VAR varF .)
+    OR              reduce using rule 48 (var -> VAR varF .)
+    AND             reduce using rule 48 (var -> VAR varF .)
+    DO              reduce using rule 48 (var -> VAR varF .)
+
+
+state 118
+
+    (50) varF -> arrfunc . empty
+    (106) empty -> .
+
+    EQUAL           reduce using rule 106 (empty -> .)
+    PLUS_EQ         reduce using rule 106 (empty -> .)
+    MIN_EQ          reduce using rule 106 (empty -> .)
+    MULT_EQ         reduce using rule 106 (empty -> .)
+    DIV_EQ          reduce using rule 106 (empty -> .)
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 161
+
+state 119
+
+    (51) varF -> empty .
+
+    EQUAL           reduce using rule 51 (varF -> empty .)
+    PLUS_EQ         reduce using rule 51 (varF -> empty .)
+    MIN_EQ          reduce using rule 51 (varF -> empty .)
+    MULT_EQ         reduce using rule 51 (varF -> empty .)
+    DIV_EQ          reduce using rule 51 (varF -> empty .)
+    MULT            reduce using rule 51 (varF -> empty .)
+    DIV             reduce using rule 51 (varF -> empty .)
+    PLUS            reduce using rule 51 (varF -> empty .)
+    MINUS           reduce using rule 51 (varF -> empty .)
+    LESS            reduce using rule 51 (varF -> empty .)
+    GREATER         reduce using rule 51 (varF -> empty .)
+    LESS_TH         reduce using rule 51 (varF -> empty .)
+    GREAT_TH        reduce using rule 51 (varF -> empty .)
+    SAME            reduce using rule 51 (varF -> empty .)
+    DIF             reduce using rule 51 (varF -> empty .)
+    R_CURPAR        reduce using rule 51 (varF -> empty .)
+    SEMICOLON       reduce using rule 51 (varF -> empty .)
+    COMMA           reduce using rule 51 (varF -> empty .)
+    R_PAR           reduce using rule 51 (varF -> empty .)
+    R_BREAK         reduce using rule 51 (varF -> empty .)
+    TO              reduce using rule 51 (varF -> empty .)
+    OR              reduce using rule 51 (varF -> empty .)
+    AND             reduce using rule 51 (varF -> empty .)
+    DO              reduce using rule 51 (varF -> empty .)
+
+
+state 120
+
+    (42) arrfunc -> L_BREAK . exp COMMA exp R_BREAK empty
+    (43) arrfunc -> L_BREAK . exp R_BREAK empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 162
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 121
+
+    (72) conditional -> WHILE L_PAR . exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 163
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 122
+
+    (73) nonconditional -> FROM VAR . arr nonconditionalF
+    (74) nonconditional -> FROM VAR . nonconditionalF
+    (22) arr -> . L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty
+    (23) arr -> . L_BREAK CTE_INT R_BREAK empty
+    (75) nonconditionalF -> . exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_BREAK         shift and go to state 44
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    arr                            shift and go to state 164
+    nonconditionalF                shift and go to state 165
+    exp                            shift and go to state 166
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 123
+
+    (8) classT -> LESS INHERIT ID GREATER classF .
+
+    CLASS           reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    VARS            reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    VOID            reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    MAIN            reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    INT             reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    FLOAT           reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    CHAR            reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    STRING          reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+    ID              reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
+
+
+state 124
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS . func R_CURPAR SEMICOLON empty
+    (24) func -> . type funcT
+    (25) func -> . VOID funcT
+    (17) type -> . INT empty
+    (18) type -> . FLOAT empty
+    (19) type -> . CHAR empty
+    (20) type -> . STRING empty
+    (21) type -> . ID empty
+
+    VOID            shift and go to state 15
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+    CHAR            shift and go to state 19
+    STRING          shift and go to state 20
+    ID              shift and go to state 5
+
+    func                           shift and go to state 167
+    type                           shift and go to state 14
+
+state 125
+
+    (22) arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK . empty
+    (106) empty -> .
+
+    COMMA           reduce using rule 106 (empty -> .)
+    COLON           reduce using rule 106 (empty -> .)
+    L_PAR           reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    CTE_INT         reduce using rule 106 (empty -> .)
+    CTE_FLOAT       reduce using rule 106 (empty -> .)
+    CTE_STRING      reduce using rule 106 (empty -> .)
+    VAR             reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 168
+
+state 126
+
+    (27) funcF -> parameter R_PAR SEMICOLON . dec L_CURPAR statement R_CURPAR empty
+    (12) dec -> . VAR arr decF
+    (13) dec -> . VAR decF
+
+    VAR             shift and go to state 26
+
+    dec                            shift and go to state 169
+
+state 127
+
+    (28) funcF -> R_PAR SEMICOLON dec . L_CURPAR statement R_CURPAR empty
+
+    L_CURPAR        shift and go to state 170
+
+
+state 128
+
+    (29) parameter -> VAR COLON type . SEMICOLON parameterF
+
+    SEMICOLON       shift and go to state 171
+
+
+state 129
+
+    (32) main -> MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty .
+
+    $end            reduce using rule 32 (main -> MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty .)
+
+
+state 130
+
+    (66) assigmentF -> EQUAL exp . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 172
+
+state 131
+
+    (78) exp -> ex . expT
+    (79) expT -> . LESS expf
+    (80) expT -> . GREATER expf
+    (81) expT -> . LESS_TH expf
+    (82) expT -> . GREAT_TH expf
+    (83) expT -> . SAME expf
+    (84) expT -> . DIF expf
+    (85) expT -> . empty
+    (106) empty -> .
+
+    LESS            shift and go to state 174
+    GREATER         shift and go to state 175
+    LESS_TH         shift and go to state 176
+    GREAT_TH        shift and go to state 177
+    SAME            shift and go to state 178
+    DIF             shift and go to state 179
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    expT                           shift and go to state 173
+    empty                          shift and go to state 180
+
+state 132
+
+    (88) ex -> term . exF
+    (89) exF -> . PLUS ex
+    (90) exF -> . MINUS ex
+    (91) exF -> . empty
+    (106) empty -> .
+
+    PLUS            shift and go to state 182
+    MINUS           shift and go to state 183
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    exF                            shift and go to state 181
+    empty                          shift and go to state 184
+
+state 133
+
+    (92) term -> factor . termF
+    (93) termF -> . MULT term
+    (94) termF -> . DIV term
+    (95) termF -> . empty
+    (106) empty -> .
+
+    MULT            shift and go to state 186
+    DIV             shift and go to state 187
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    termF                          shift and go to state 185
+    empty                          shift and go to state 188
+
+state 134
+
+    (96) factor -> L_PAR . exp R_PAR empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 189
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 135
+
+    (97) factor -> factorT .
+
+    MULT            reduce using rule 97 (factor -> factorT .)
+    DIV             reduce using rule 97 (factor -> factorT .)
+    PLUS            reduce using rule 97 (factor -> factorT .)
+    MINUS           reduce using rule 97 (factor -> factorT .)
+    LESS            reduce using rule 97 (factor -> factorT .)
+    GREATER         reduce using rule 97 (factor -> factorT .)
+    LESS_TH         reduce using rule 97 (factor -> factorT .)
+    GREAT_TH        reduce using rule 97 (factor -> factorT .)
+    SAME            reduce using rule 97 (factor -> factorT .)
+    DIF             reduce using rule 97 (factor -> factorT .)
+    R_CURPAR        reduce using rule 97 (factor -> factorT .)
+    SEMICOLON       reduce using rule 97 (factor -> factorT .)
+    R_PAR           reduce using rule 97 (factor -> factorT .)
+    COMMA           reduce using rule 97 (factor -> factorT .)
+    R_BREAK         reduce using rule 97 (factor -> factorT .)
+    TO              reduce using rule 97 (factor -> factorT .)
+    OR              reduce using rule 97 (factor -> factorT .)
+    AND             reduce using rule 97 (factor -> factorT .)
+    DO              reduce using rule 97 (factor -> factorT .)
+
+
+state 136
+
+    (98) factorT -> PLUS . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    factorF                        shift and go to state 190
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 137
+
+    (100) factorT -> factorF .
+
+    MULT            reduce using rule 100 (factorT -> factorF .)
+    DIV             reduce using rule 100 (factorT -> factorF .)
+    PLUS            reduce using rule 100 (factorT -> factorF .)
+    MINUS           reduce using rule 100 (factorT -> factorF .)
+    LESS            reduce using rule 100 (factorT -> factorF .)
+    GREATER         reduce using rule 100 (factorT -> factorF .)
+    LESS_TH         reduce using rule 100 (factorT -> factorF .)
+    GREAT_TH        reduce using rule 100 (factorT -> factorF .)
+    SAME            reduce using rule 100 (factorT -> factorF .)
+    DIF             reduce using rule 100 (factorT -> factorF .)
+    R_CURPAR        reduce using rule 100 (factorT -> factorF .)
+    SEMICOLON       reduce using rule 100 (factorT -> factorF .)
+    R_PAR           reduce using rule 100 (factorT -> factorF .)
+    COMMA           reduce using rule 100 (factorT -> factorF .)
+    R_BREAK         reduce using rule 100 (factorT -> factorF .)
+    TO              reduce using rule 100 (factorT -> factorF .)
+    OR              reduce using rule 100 (factorT -> factorF .)
+    AND             reduce using rule 100 (factorT -> factorF .)
+    DO              reduce using rule 100 (factorT -> factorF .)
+
+
+state 138
+
+    (99) factorT -> MINUS . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    factorF                        shift and go to state 191
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 139
+
+    (101) factorF -> varcte . empty
+    (106) empty -> .
+
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 192
+
+state 140
+
+    (102) varcte -> var . empty
+    (106) empty -> .
+
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 193
+
+state 141
+
+    (103) varcte -> CTE_INT . empty
+    (106) empty -> .
+
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 194
+
+state 142
+
+    (104) varcte -> CTE_FLOAT . empty
+    (106) empty -> .
+
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 195
+
+state 143
+
+    (105) varcte -> CTE_STRING . empty
+    (106) empty -> .
+
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 196
+
+state 144
+
+    (49) var -> ID . DOT VAR varF
+
+    DOT             shift and go to state 197
+
+
+state 145
+
+    (67) assigmentF -> ope exp . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 198
+
+state 146
+
+    (68) ope -> PLUS_EQ empty .
+
+    L_PAR           reduce using rule 68 (ope -> PLUS_EQ empty .)
+    PLUS            reduce using rule 68 (ope -> PLUS_EQ empty .)
+    MINUS           reduce using rule 68 (ope -> PLUS_EQ empty .)
+    CTE_INT         reduce using rule 68 (ope -> PLUS_EQ empty .)
+    CTE_FLOAT       reduce using rule 68 (ope -> PLUS_EQ empty .)
+    CTE_STRING      reduce using rule 68 (ope -> PLUS_EQ empty .)
+    VAR             reduce using rule 68 (ope -> PLUS_EQ empty .)
+    ID              reduce using rule 68 (ope -> PLUS_EQ empty .)
+
+
+state 147
+
+    (69) ope -> MIN_EQ empty .
+
+    L_PAR           reduce using rule 69 (ope -> MIN_EQ empty .)
+    PLUS            reduce using rule 69 (ope -> MIN_EQ empty .)
+    MINUS           reduce using rule 69 (ope -> MIN_EQ empty .)
+    CTE_INT         reduce using rule 69 (ope -> MIN_EQ empty .)
+    CTE_FLOAT       reduce using rule 69 (ope -> MIN_EQ empty .)
+    CTE_STRING      reduce using rule 69 (ope -> MIN_EQ empty .)
+    VAR             reduce using rule 69 (ope -> MIN_EQ empty .)
+    ID              reduce using rule 69 (ope -> MIN_EQ empty .)
+
+
+state 148
+
+    (70) ope -> MULT_EQ empty .
+
+    L_PAR           reduce using rule 70 (ope -> MULT_EQ empty .)
+    PLUS            reduce using rule 70 (ope -> MULT_EQ empty .)
+    MINUS           reduce using rule 70 (ope -> MULT_EQ empty .)
+    CTE_INT         reduce using rule 70 (ope -> MULT_EQ empty .)
+    CTE_FLOAT       reduce using rule 70 (ope -> MULT_EQ empty .)
+    CTE_STRING      reduce using rule 70 (ope -> MULT_EQ empty .)
+    VAR             reduce using rule 70 (ope -> MULT_EQ empty .)
+    ID              reduce using rule 70 (ope -> MULT_EQ empty .)
+
+
+state 149
+
+    (71) ope -> DIV_EQ empty .
+
+    L_PAR           reduce using rule 71 (ope -> DIV_EQ empty .)
+    PLUS            reduce using rule 71 (ope -> DIV_EQ empty .)
+    MINUS           reduce using rule 71 (ope -> DIV_EQ empty .)
+    CTE_INT         reduce using rule 71 (ope -> DIV_EQ empty .)
+    CTE_FLOAT       reduce using rule 71 (ope -> DIV_EQ empty .)
+    CTE_STRING      reduce using rule 71 (ope -> DIV_EQ empty .)
+    VAR             reduce using rule 71 (ope -> DIV_EQ empty .)
+    ID              reduce using rule 71 (ope -> DIV_EQ empty .)
+
+
+state 150
+
+    (40) void -> ID DOT ID . L_PAR param R_PAR SEMICOLON empty
+
+    L_PAR           shift and go to state 199
+
+
+state 151
+
+    (49) var -> ID DOT VAR . varF
+    (50) varF -> . arrfunc empty
+    (51) varF -> . empty
+    (42) arrfunc -> . L_BREAK exp COMMA exp R_BREAK empty
+    (43) arrfunc -> . L_BREAK exp R_BREAK empty
+    (106) empty -> .
+
+    L_BREAK         shift and go to state 120
+    EQUAL           reduce using rule 106 (empty -> .)
+    PLUS_EQ         reduce using rule 106 (empty -> .)
+    MIN_EQ          reduce using rule 106 (empty -> .)
+    MULT_EQ         reduce using rule 106 (empty -> .)
+    DIV_EQ          reduce using rule 106 (empty -> .)
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    varF                           shift and go to state 200
+    arrfunc                        shift and go to state 118
+    empty                          shift and go to state 119
+
+state 152
+
+    (41) void -> ID L_PAR param . R_PAR SEMICOLON empty
+
+    R_PAR           shift and go to state 201
+
+
+state 153
+
+    (44) param -> var . paramF
+    (45) paramF -> . COMMA param
+    (46) paramF -> . empty
+    (106) empty -> .
+
+    COMMA           shift and go to state 203
+    R_PAR           reduce using rule 106 (empty -> .)
+
+    paramF                         shift and go to state 202
+    empty                          shift and go to state 204
+
+state 154
+
+    (47) return -> RETURN L_PAR exp . R_PAR SEMICOLON empty
+
+    R_PAR           shift and go to state 205
+
+
+state 155
+
+    (52) read -> READ L_PAR readF .
+
+    R_CURPAR        reduce using rule 52 (read -> READ L_PAR readF .)
+    SEMICOLON       reduce using rule 52 (read -> READ L_PAR readF .)
+
+
+state 156
+
+    (53) readF -> var . COMMA readF
+    (54) readF -> var . R_PAR SEMICOLON empty
+
+    COMMA           shift and go to state 206
+    R_PAR           shift and go to state 207
+
+
+state 157
+
+    (55) write -> WRITE L_PAR writeT .
+
+    R_CURPAR        reduce using rule 55 (write -> WRITE L_PAR writeT .)
+    SEMICOLON       reduce using rule 55 (write -> WRITE L_PAR writeT .)
+
+
+state 158
+
+    (56) writeT -> CTE_STRING . writeF
+    (105) varcte -> CTE_STRING . empty
+    (58) writeF -> . COMMA writeT
+    (59) writeF -> . R_PAR SEMICOLON empty
+    (106) empty -> .
+
+  ! shift/reduce conflict for COMMA resolved as shift
+  ! shift/reduce conflict for R_PAR resolved as shift
+    COMMA           shift and go to state 209
+    R_PAR           shift and go to state 210
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+
+  ! COMMA           [ reduce using rule 106 (empty -> .) ]
+  ! R_PAR           [ reduce using rule 106 (empty -> .) ]
+
+    writeF                         shift and go to state 208
+    empty                          shift and go to state 196
+
+state 159
+
+    (57) writeT -> exp . writeF
+    (58) writeF -> . COMMA writeT
+    (59) writeF -> . R_PAR SEMICOLON empty
+
+    COMMA           shift and go to state 209
+    R_PAR           shift and go to state 210
+
+    writeF                         shift and go to state 211
+
+state 160
+
+    (62) if -> IF L_PAR exp . R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+
+    R_PAR           shift and go to state 212
+
+
+state 161
+
+    (50) varF -> arrfunc empty .
+
+    EQUAL           reduce using rule 50 (varF -> arrfunc empty .)
+    PLUS_EQ         reduce using rule 50 (varF -> arrfunc empty .)
+    MIN_EQ          reduce using rule 50 (varF -> arrfunc empty .)
+    MULT_EQ         reduce using rule 50 (varF -> arrfunc empty .)
+    DIV_EQ          reduce using rule 50 (varF -> arrfunc empty .)
+    MULT            reduce using rule 50 (varF -> arrfunc empty .)
+    DIV             reduce using rule 50 (varF -> arrfunc empty .)
+    PLUS            reduce using rule 50 (varF -> arrfunc empty .)
+    MINUS           reduce using rule 50 (varF -> arrfunc empty .)
+    LESS            reduce using rule 50 (varF -> arrfunc empty .)
+    GREATER         reduce using rule 50 (varF -> arrfunc empty .)
+    LESS_TH         reduce using rule 50 (varF -> arrfunc empty .)
+    GREAT_TH        reduce using rule 50 (varF -> arrfunc empty .)
+    SAME            reduce using rule 50 (varF -> arrfunc empty .)
+    DIF             reduce using rule 50 (varF -> arrfunc empty .)
+    R_CURPAR        reduce using rule 50 (varF -> arrfunc empty .)
+    SEMICOLON       reduce using rule 50 (varF -> arrfunc empty .)
+    COMMA           reduce using rule 50 (varF -> arrfunc empty .)
+    R_PAR           reduce using rule 50 (varF -> arrfunc empty .)
+    R_BREAK         reduce using rule 50 (varF -> arrfunc empty .)
+    TO              reduce using rule 50 (varF -> arrfunc empty .)
+    OR              reduce using rule 50 (varF -> arrfunc empty .)
+    AND             reduce using rule 50 (varF -> arrfunc empty .)
+    DO              reduce using rule 50 (varF -> arrfunc empty .)
+
+
+state 162
+
+    (42) arrfunc -> L_BREAK exp . COMMA exp R_BREAK empty
+    (43) arrfunc -> L_BREAK exp . R_BREAK empty
+
+    COMMA           shift and go to state 213
+    R_BREAK         shift and go to state 214
+
+
+state 163
+
+    (72) conditional -> WHILE L_PAR exp . R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    R_PAR           shift and go to state 215
+
+
+state 164
+
+    (73) nonconditional -> FROM VAR arr . nonconditionalF
+    (75) nonconditionalF -> . exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    nonconditionalF                shift and go to state 216
+    exp                            shift and go to state 166
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 165
+
+    (74) nonconditional -> FROM VAR nonconditionalF .
+
+    R_CURPAR        reduce using rule 74 (nonconditional -> FROM VAR nonconditionalF .)
+    SEMICOLON       reduce using rule 74 (nonconditional -> FROM VAR nonconditionalF .)
+
+
+state 166
+
+    (75) nonconditionalF -> exp . TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    TO              shift and go to state 217
+
+
+state 167
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func . R_CURPAR SEMICOLON empty
+
+    R_CURPAR        shift and go to state 218
+
+
+state 168
+
+    (22) arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .
+
+    COMMA           reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    COLON           reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    L_PAR           reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    PLUS            reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    MINUS           reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    CTE_INT         reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    CTE_FLOAT       reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    CTE_STRING      reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    VAR             reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+    ID              reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
+
+
+state 169
+
+    (27) funcF -> parameter R_PAR SEMICOLON dec . L_CURPAR statement R_CURPAR empty
+
+    L_CURPAR        shift and go to state 219
+
+
+state 170
+
+    (28) funcF -> R_PAR SEMICOLON dec L_CURPAR . statement R_CURPAR empty
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 220
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 171
+
+    (29) parameter -> VAR COLON type SEMICOLON . parameterF
+    (30) parameterF -> . parameter
+    (31) parameterF -> . empty
+    (29) parameter -> . VAR COLON type SEMICOLON parameterF
+    (106) empty -> .
+
+    VAR             shift and go to state 65
+    R_PAR           reduce using rule 106 (empty -> .)
+
+    parameterF                     shift and go to state 221
+    parameter                      shift and go to state 222
+    empty                          shift and go to state 223
+
+state 172
+
+    (66) assigmentF -> EQUAL exp empty .
+
+    R_CURPAR        reduce using rule 66 (assigmentF -> EQUAL exp empty .)
+    SEMICOLON       reduce using rule 66 (assigmentF -> EQUAL exp empty .)
+
+
+state 173
+
+    (78) exp -> ex expT .
+
+    R_CURPAR        reduce using rule 78 (exp -> ex expT .)
+    SEMICOLON       reduce using rule 78 (exp -> ex expT .)
+    R_PAR           reduce using rule 78 (exp -> ex expT .)
+    COMMA           reduce using rule 78 (exp -> ex expT .)
+    R_BREAK         reduce using rule 78 (exp -> ex expT .)
+    TO              reduce using rule 78 (exp -> ex expT .)
+    DO              reduce using rule 78 (exp -> ex expT .)
+
+
+state 174
+
+    (79) expT -> LESS . expf
+    (86) expf -> . ex empty
+    (87) expf -> . ex bool empty
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    expf                           shift and go to state 224
+    ex                             shift and go to state 225
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 175
+
+    (80) expT -> GREATER . expf
+    (86) expf -> . ex empty
+    (87) expf -> . ex bool empty
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    expf                           shift and go to state 226
+    ex                             shift and go to state 225
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 176
+
+    (81) expT -> LESS_TH . expf
+    (86) expf -> . ex empty
+    (87) expf -> . ex bool empty
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    expf                           shift and go to state 227
+    ex                             shift and go to state 225
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 177
+
+    (82) expT -> GREAT_TH . expf
+    (86) expf -> . ex empty
+    (87) expf -> . ex bool empty
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    expf                           shift and go to state 228
+    ex                             shift and go to state 225
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 178
+
+    (83) expT -> SAME . expf
+    (86) expf -> . ex empty
+    (87) expf -> . ex bool empty
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    expf                           shift and go to state 229
+    ex                             shift and go to state 225
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 179
+
+    (84) expT -> DIF . expf
+    (86) expf -> . ex empty
+    (87) expf -> . ex bool empty
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    expf                           shift and go to state 230
+    ex                             shift and go to state 225
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 180
+
+    (85) expT -> empty .
+
+    R_CURPAR        reduce using rule 85 (expT -> empty .)
+    SEMICOLON       reduce using rule 85 (expT -> empty .)
+    R_PAR           reduce using rule 85 (expT -> empty .)
+    COMMA           reduce using rule 85 (expT -> empty .)
+    R_BREAK         reduce using rule 85 (expT -> empty .)
+    TO              reduce using rule 85 (expT -> empty .)
+    DO              reduce using rule 85 (expT -> empty .)
+
+
+state 181
+
+    (88) ex -> term exF .
+
+    LESS            reduce using rule 88 (ex -> term exF .)
+    GREATER         reduce using rule 88 (ex -> term exF .)
+    LESS_TH         reduce using rule 88 (ex -> term exF .)
+    GREAT_TH        reduce using rule 88 (ex -> term exF .)
+    SAME            reduce using rule 88 (ex -> term exF .)
+    DIF             reduce using rule 88 (ex -> term exF .)
+    R_CURPAR        reduce using rule 88 (ex -> term exF .)
+    SEMICOLON       reduce using rule 88 (ex -> term exF .)
+    R_PAR           reduce using rule 88 (ex -> term exF .)
+    COMMA           reduce using rule 88 (ex -> term exF .)
+    R_BREAK         reduce using rule 88 (ex -> term exF .)
+    TO              reduce using rule 88 (ex -> term exF .)
+    OR              reduce using rule 88 (ex -> term exF .)
+    AND             reduce using rule 88 (ex -> term exF .)
+    DO              reduce using rule 88 (ex -> term exF .)
+
+
+state 182
+
+    (89) exF -> PLUS . ex
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    ex                             shift and go to state 231
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 183
+
+    (90) exF -> MINUS . ex
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    ex                             shift and go to state 232
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 184
+
+    (91) exF -> empty .
+
+    LESS            reduce using rule 91 (exF -> empty .)
+    GREATER         reduce using rule 91 (exF -> empty .)
+    LESS_TH         reduce using rule 91 (exF -> empty .)
+    GREAT_TH        reduce using rule 91 (exF -> empty .)
+    SAME            reduce using rule 91 (exF -> empty .)
+    DIF             reduce using rule 91 (exF -> empty .)
+    R_CURPAR        reduce using rule 91 (exF -> empty .)
+    SEMICOLON       reduce using rule 91 (exF -> empty .)
+    R_PAR           reduce using rule 91 (exF -> empty .)
+    COMMA           reduce using rule 91 (exF -> empty .)
+    R_BREAK         reduce using rule 91 (exF -> empty .)
+    TO              reduce using rule 91 (exF -> empty .)
+    OR              reduce using rule 91 (exF -> empty .)
+    AND             reduce using rule 91 (exF -> empty .)
+    DO              reduce using rule 91 (exF -> empty .)
+
+
+state 185
+
+    (92) term -> factor termF .
+
+    PLUS            reduce using rule 92 (term -> factor termF .)
+    MINUS           reduce using rule 92 (term -> factor termF .)
+    LESS            reduce using rule 92 (term -> factor termF .)
+    GREATER         reduce using rule 92 (term -> factor termF .)
+    LESS_TH         reduce using rule 92 (term -> factor termF .)
+    GREAT_TH        reduce using rule 92 (term -> factor termF .)
+    SAME            reduce using rule 92 (term -> factor termF .)
+    DIF             reduce using rule 92 (term -> factor termF .)
+    R_CURPAR        reduce using rule 92 (term -> factor termF .)
+    SEMICOLON       reduce using rule 92 (term -> factor termF .)
+    R_PAR           reduce using rule 92 (term -> factor termF .)
+    COMMA           reduce using rule 92 (term -> factor termF .)
+    R_BREAK         reduce using rule 92 (term -> factor termF .)
+    TO              reduce using rule 92 (term -> factor termF .)
+    OR              reduce using rule 92 (term -> factor termF .)
+    AND             reduce using rule 92 (term -> factor termF .)
+    DO              reduce using rule 92 (term -> factor termF .)
+
+
+state 186
+
+    (93) termF -> MULT . term
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    term                           shift and go to state 233
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 187
+
+    (94) termF -> DIV . term
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    term                           shift and go to state 234
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 188
+
+    (95) termF -> empty .
+
+    PLUS            reduce using rule 95 (termF -> empty .)
+    MINUS           reduce using rule 95 (termF -> empty .)
+    LESS            reduce using rule 95 (termF -> empty .)
+    GREATER         reduce using rule 95 (termF -> empty .)
+    LESS_TH         reduce using rule 95 (termF -> empty .)
+    GREAT_TH        reduce using rule 95 (termF -> empty .)
+    SAME            reduce using rule 95 (termF -> empty .)
+    DIF             reduce using rule 95 (termF -> empty .)
+    R_CURPAR        reduce using rule 95 (termF -> empty .)
+    SEMICOLON       reduce using rule 95 (termF -> empty .)
+    R_PAR           reduce using rule 95 (termF -> empty .)
+    COMMA           reduce using rule 95 (termF -> empty .)
+    R_BREAK         reduce using rule 95 (termF -> empty .)
+    TO              reduce using rule 95 (termF -> empty .)
+    OR              reduce using rule 95 (termF -> empty .)
+    AND             reduce using rule 95 (termF -> empty .)
+    DO              reduce using rule 95 (termF -> empty .)
+
+
+state 189
+
+    (96) factor -> L_PAR exp . R_PAR empty
+
+    R_PAR           shift and go to state 235
+
+
+state 190
+
+    (98) factorT -> PLUS factorF .
+
+    MULT            reduce using rule 98 (factorT -> PLUS factorF .)
+    DIV             reduce using rule 98 (factorT -> PLUS factorF .)
+    PLUS            reduce using rule 98 (factorT -> PLUS factorF .)
+    MINUS           reduce using rule 98 (factorT -> PLUS factorF .)
+    LESS            reduce using rule 98 (factorT -> PLUS factorF .)
+    GREATER         reduce using rule 98 (factorT -> PLUS factorF .)
+    LESS_TH         reduce using rule 98 (factorT -> PLUS factorF .)
+    GREAT_TH        reduce using rule 98 (factorT -> PLUS factorF .)
+    SAME            reduce using rule 98 (factorT -> PLUS factorF .)
+    DIF             reduce using rule 98 (factorT -> PLUS factorF .)
+    R_CURPAR        reduce using rule 98 (factorT -> PLUS factorF .)
+    SEMICOLON       reduce using rule 98 (factorT -> PLUS factorF .)
+    R_PAR           reduce using rule 98 (factorT -> PLUS factorF .)
+    COMMA           reduce using rule 98 (factorT -> PLUS factorF .)
+    R_BREAK         reduce using rule 98 (factorT -> PLUS factorF .)
+    TO              reduce using rule 98 (factorT -> PLUS factorF .)
+    OR              reduce using rule 98 (factorT -> PLUS factorF .)
+    AND             reduce using rule 98 (factorT -> PLUS factorF .)
+    DO              reduce using rule 98 (factorT -> PLUS factorF .)
+
+
+state 191
+
+    (99) factorT -> MINUS factorF .
+
+    MULT            reduce using rule 99 (factorT -> MINUS factorF .)
+    DIV             reduce using rule 99 (factorT -> MINUS factorF .)
+    PLUS            reduce using rule 99 (factorT -> MINUS factorF .)
+    MINUS           reduce using rule 99 (factorT -> MINUS factorF .)
+    LESS            reduce using rule 99 (factorT -> MINUS factorF .)
+    GREATER         reduce using rule 99 (factorT -> MINUS factorF .)
+    LESS_TH         reduce using rule 99 (factorT -> MINUS factorF .)
+    GREAT_TH        reduce using rule 99 (factorT -> MINUS factorF .)
+    SAME            reduce using rule 99 (factorT -> MINUS factorF .)
+    DIF             reduce using rule 99 (factorT -> MINUS factorF .)
+    R_CURPAR        reduce using rule 99 (factorT -> MINUS factorF .)
+    SEMICOLON       reduce using rule 99 (factorT -> MINUS factorF .)
+    R_PAR           reduce using rule 99 (factorT -> MINUS factorF .)
+    COMMA           reduce using rule 99 (factorT -> MINUS factorF .)
+    R_BREAK         reduce using rule 99 (factorT -> MINUS factorF .)
+    TO              reduce using rule 99 (factorT -> MINUS factorF .)
+    OR              reduce using rule 99 (factorT -> MINUS factorF .)
+    AND             reduce using rule 99 (factorT -> MINUS factorF .)
+    DO              reduce using rule 99 (factorT -> MINUS factorF .)
+
+
+state 192
+
+    (101) factorF -> varcte empty .
+
+    MULT            reduce using rule 101 (factorF -> varcte empty .)
+    DIV             reduce using rule 101 (factorF -> varcte empty .)
+    PLUS            reduce using rule 101 (factorF -> varcte empty .)
+    MINUS           reduce using rule 101 (factorF -> varcte empty .)
+    LESS            reduce using rule 101 (factorF -> varcte empty .)
+    GREATER         reduce using rule 101 (factorF -> varcte empty .)
+    LESS_TH         reduce using rule 101 (factorF -> varcte empty .)
+    GREAT_TH        reduce using rule 101 (factorF -> varcte empty .)
+    SAME            reduce using rule 101 (factorF -> varcte empty .)
+    DIF             reduce using rule 101 (factorF -> varcte empty .)
+    R_CURPAR        reduce using rule 101 (factorF -> varcte empty .)
+    SEMICOLON       reduce using rule 101 (factorF -> varcte empty .)
+    R_PAR           reduce using rule 101 (factorF -> varcte empty .)
+    COMMA           reduce using rule 101 (factorF -> varcte empty .)
+    R_BREAK         reduce using rule 101 (factorF -> varcte empty .)
+    TO              reduce using rule 101 (factorF -> varcte empty .)
+    OR              reduce using rule 101 (factorF -> varcte empty .)
+    AND             reduce using rule 101 (factorF -> varcte empty .)
+    DO              reduce using rule 101 (factorF -> varcte empty .)
+
+
+state 193
+
+    (102) varcte -> var empty .
+
+    MULT            reduce using rule 102 (varcte -> var empty .)
+    DIV             reduce using rule 102 (varcte -> var empty .)
+    PLUS            reduce using rule 102 (varcte -> var empty .)
+    MINUS           reduce using rule 102 (varcte -> var empty .)
+    LESS            reduce using rule 102 (varcte -> var empty .)
+    GREATER         reduce using rule 102 (varcte -> var empty .)
+    LESS_TH         reduce using rule 102 (varcte -> var empty .)
+    GREAT_TH        reduce using rule 102 (varcte -> var empty .)
+    SAME            reduce using rule 102 (varcte -> var empty .)
+    DIF             reduce using rule 102 (varcte -> var empty .)
+    R_CURPAR        reduce using rule 102 (varcte -> var empty .)
+    SEMICOLON       reduce using rule 102 (varcte -> var empty .)
+    R_PAR           reduce using rule 102 (varcte -> var empty .)
+    COMMA           reduce using rule 102 (varcte -> var empty .)
+    R_BREAK         reduce using rule 102 (varcte -> var empty .)
+    TO              reduce using rule 102 (varcte -> var empty .)
+    OR              reduce using rule 102 (varcte -> var empty .)
+    AND             reduce using rule 102 (varcte -> var empty .)
+    DO              reduce using rule 102 (varcte -> var empty .)
+
+
+state 194
+
+    (103) varcte -> CTE_INT empty .
+
+    MULT            reduce using rule 103 (varcte -> CTE_INT empty .)
+    DIV             reduce using rule 103 (varcte -> CTE_INT empty .)
+    PLUS            reduce using rule 103 (varcte -> CTE_INT empty .)
+    MINUS           reduce using rule 103 (varcte -> CTE_INT empty .)
+    LESS            reduce using rule 103 (varcte -> CTE_INT empty .)
+    GREATER         reduce using rule 103 (varcte -> CTE_INT empty .)
+    LESS_TH         reduce using rule 103 (varcte -> CTE_INT empty .)
+    GREAT_TH        reduce using rule 103 (varcte -> CTE_INT empty .)
+    SAME            reduce using rule 103 (varcte -> CTE_INT empty .)
+    DIF             reduce using rule 103 (varcte -> CTE_INT empty .)
+    R_CURPAR        reduce using rule 103 (varcte -> CTE_INT empty .)
+    SEMICOLON       reduce using rule 103 (varcte -> CTE_INT empty .)
+    R_PAR           reduce using rule 103 (varcte -> CTE_INT empty .)
+    COMMA           reduce using rule 103 (varcte -> CTE_INT empty .)
+    R_BREAK         reduce using rule 103 (varcte -> CTE_INT empty .)
+    TO              reduce using rule 103 (varcte -> CTE_INT empty .)
+    OR              reduce using rule 103 (varcte -> CTE_INT empty .)
+    AND             reduce using rule 103 (varcte -> CTE_INT empty .)
+    DO              reduce using rule 103 (varcte -> CTE_INT empty .)
+
+
+state 195
+
+    (104) varcte -> CTE_FLOAT empty .
+
+    MULT            reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    DIV             reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    PLUS            reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    MINUS           reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    LESS            reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    GREATER         reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    LESS_TH         reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    GREAT_TH        reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    SAME            reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    DIF             reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    R_CURPAR        reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    SEMICOLON       reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    R_PAR           reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    COMMA           reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    R_BREAK         reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    TO              reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    OR              reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    AND             reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+    DO              reduce using rule 104 (varcte -> CTE_FLOAT empty .)
+
+
+state 196
+
+    (105) varcte -> CTE_STRING empty .
+
+    MULT            reduce using rule 105 (varcte -> CTE_STRING empty .)
+    DIV             reduce using rule 105 (varcte -> CTE_STRING empty .)
+    PLUS            reduce using rule 105 (varcte -> CTE_STRING empty .)
+    MINUS           reduce using rule 105 (varcte -> CTE_STRING empty .)
+    LESS            reduce using rule 105 (varcte -> CTE_STRING empty .)
+    GREATER         reduce using rule 105 (varcte -> CTE_STRING empty .)
+    LESS_TH         reduce using rule 105 (varcte -> CTE_STRING empty .)
+    GREAT_TH        reduce using rule 105 (varcte -> CTE_STRING empty .)
+    SAME            reduce using rule 105 (varcte -> CTE_STRING empty .)
+    DIF             reduce using rule 105 (varcte -> CTE_STRING empty .)
+    R_CURPAR        reduce using rule 105 (varcte -> CTE_STRING empty .)
+    SEMICOLON       reduce using rule 105 (varcte -> CTE_STRING empty .)
+    R_PAR           reduce using rule 105 (varcte -> CTE_STRING empty .)
+    COMMA           reduce using rule 105 (varcte -> CTE_STRING empty .)
+    R_BREAK         reduce using rule 105 (varcte -> CTE_STRING empty .)
+    TO              reduce using rule 105 (varcte -> CTE_STRING empty .)
+    OR              reduce using rule 105 (varcte -> CTE_STRING empty .)
+    AND             reduce using rule 105 (varcte -> CTE_STRING empty .)
+    DO              reduce using rule 105 (varcte -> CTE_STRING empty .)
+
+
+state 197
+
+    (49) var -> ID DOT . VAR varF
+
+    VAR             shift and go to state 151
+
+
+state 198
+
+    (67) assigmentF -> ope exp empty .
+
+    R_CURPAR        reduce using rule 67 (assigmentF -> ope exp empty .)
+    SEMICOLON       reduce using rule 67 (assigmentF -> ope exp empty .)
+
+
+state 199
+
+    (40) void -> ID DOT ID L_PAR . param R_PAR SEMICOLON empty
+    (44) param -> . var paramF
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    param                          shift and go to state 236
+    var                            shift and go to state 153
+
+state 200
+
+    (49) var -> ID DOT VAR varF .
+
+    EQUAL           reduce using rule 49 (var -> ID DOT VAR varF .)
+    PLUS_EQ         reduce using rule 49 (var -> ID DOT VAR varF .)
+    MIN_EQ          reduce using rule 49 (var -> ID DOT VAR varF .)
+    MULT_EQ         reduce using rule 49 (var -> ID DOT VAR varF .)
+    DIV_EQ          reduce using rule 49 (var -> ID DOT VAR varF .)
+    MULT            reduce using rule 49 (var -> ID DOT VAR varF .)
+    DIV             reduce using rule 49 (var -> ID DOT VAR varF .)
+    PLUS            reduce using rule 49 (var -> ID DOT VAR varF .)
+    MINUS           reduce using rule 49 (var -> ID DOT VAR varF .)
+    LESS            reduce using rule 49 (var -> ID DOT VAR varF .)
+    GREATER         reduce using rule 49 (var -> ID DOT VAR varF .)
+    LESS_TH         reduce using rule 49 (var -> ID DOT VAR varF .)
+    GREAT_TH        reduce using rule 49 (var -> ID DOT VAR varF .)
+    SAME            reduce using rule 49 (var -> ID DOT VAR varF .)
+    DIF             reduce using rule 49 (var -> ID DOT VAR varF .)
+    R_CURPAR        reduce using rule 49 (var -> ID DOT VAR varF .)
+    SEMICOLON       reduce using rule 49 (var -> ID DOT VAR varF .)
+    COMMA           reduce using rule 49 (var -> ID DOT VAR varF .)
+    R_PAR           reduce using rule 49 (var -> ID DOT VAR varF .)
+    R_BREAK         reduce using rule 49 (var -> ID DOT VAR varF .)
+    TO              reduce using rule 49 (var -> ID DOT VAR varF .)
+    OR              reduce using rule 49 (var -> ID DOT VAR varF .)
+    AND             reduce using rule 49 (var -> ID DOT VAR varF .)
+    DO              reduce using rule 49 (var -> ID DOT VAR varF .)
+
+
+state 201
+
+    (41) void -> ID L_PAR param R_PAR . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 237
+
+
+state 202
+
+    (44) param -> var paramF .
+
+    R_PAR           reduce using rule 44 (param -> var paramF .)
+
+
+state 203
+
+    (45) paramF -> COMMA . param
+    (44) param -> . var paramF
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    param                          shift and go to state 238
+    var                            shift and go to state 153
+
+state 204
+
+    (46) paramF -> empty .
+
+    R_PAR           reduce using rule 46 (paramF -> empty .)
+
+
+state 205
+
+    (47) return -> RETURN L_PAR exp R_PAR . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 239
+
+
+state 206
+
+    (53) readF -> var COMMA . readF
+    (53) readF -> . var COMMA readF
+    (54) readF -> . var R_PAR SEMICOLON empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    var                            shift and go to state 156
+    readF                          shift and go to state 240
+
+state 207
+
+    (54) readF -> var R_PAR . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 241
+
+
+state 208
+
+    (56) writeT -> CTE_STRING writeF .
+
+    R_CURPAR        reduce using rule 56 (writeT -> CTE_STRING writeF .)
+    SEMICOLON       reduce using rule 56 (writeT -> CTE_STRING writeF .)
+
+
+state 209
+
+    (58) writeF -> COMMA . writeT
+    (56) writeT -> . CTE_STRING writeF
+    (57) writeT -> . exp writeF
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    CTE_STRING      shift and go to state 158
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    writeT                         shift and go to state 242
+    exp                            shift and go to state 159
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 210
+
+    (59) writeF -> R_PAR . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 243
+
+
+state 211
+
+    (57) writeT -> exp writeF .
+
+    R_CURPAR        reduce using rule 57 (writeT -> exp writeF .)
+    SEMICOLON       reduce using rule 57 (writeT -> exp writeF .)
+
+
+state 212
+
+    (62) if -> IF L_PAR exp R_PAR . THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+
+    THEN            shift and go to state 244
+
+
+state 213
+
+    (42) arrfunc -> L_BREAK exp COMMA . exp R_BREAK empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 245
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 214
+
+    (43) arrfunc -> L_BREAK exp R_BREAK . empty
+    (106) empty -> .
+
+    EQUAL           reduce using rule 106 (empty -> .)
+    PLUS_EQ         reduce using rule 106 (empty -> .)
+    MIN_EQ          reduce using rule 106 (empty -> .)
+    MULT_EQ         reduce using rule 106 (empty -> .)
+    DIV_EQ          reduce using rule 106 (empty -> .)
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 246
+
+state 215
+
+    (72) conditional -> WHILE L_PAR exp R_PAR . DO L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    DO              shift and go to state 247
+
+
+state 216
+
+    (73) nonconditional -> FROM VAR arr nonconditionalF .
+
+    R_CURPAR        reduce using rule 73 (nonconditional -> FROM VAR arr nonconditionalF .)
+    SEMICOLON       reduce using rule 73 (nonconditional -> FROM VAR arr nonconditionalF .)
+
+
+state 217
+
+    (75) nonconditionalF -> exp TO . exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 248
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 218
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 249
+
+
+state 219
+
+    (27) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR . statement R_CURPAR empty
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 250
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 220
+
+    (28) funcF -> R_PAR SEMICOLON dec L_CURPAR statement . R_CURPAR empty
+
+    R_CURPAR        shift and go to state 251
+
+
+state 221
+
+    (29) parameter -> VAR COLON type SEMICOLON parameterF .
+
+    R_PAR           reduce using rule 29 (parameter -> VAR COLON type SEMICOLON parameterF .)
+
+
+state 222
+
+    (30) parameterF -> parameter .
+
+    R_PAR           reduce using rule 30 (parameterF -> parameter .)
+
+
+state 223
+
+    (31) parameterF -> empty .
+
+    R_PAR           reduce using rule 31 (parameterF -> empty .)
+
+
+state 224
+
+    (79) expT -> LESS expf .
+
+    R_CURPAR        reduce using rule 79 (expT -> LESS expf .)
+    SEMICOLON       reduce using rule 79 (expT -> LESS expf .)
+    R_PAR           reduce using rule 79 (expT -> LESS expf .)
+    COMMA           reduce using rule 79 (expT -> LESS expf .)
+    R_BREAK         reduce using rule 79 (expT -> LESS expf .)
+    TO              reduce using rule 79 (expT -> LESS expf .)
+    DO              reduce using rule 79 (expT -> LESS expf .)
+
+
+state 225
+
+    (86) expf -> ex . empty
+    (87) expf -> ex . bool empty
+    (106) empty -> .
+    (76) bool -> . OR exp empty
+    (77) bool -> . AND exp empty
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+    OR              shift and go to state 254
+    AND             shift and go to state 255
+
+    empty                          shift and go to state 252
+    bool                           shift and go to state 253
+
+state 226
+
+    (80) expT -> GREATER expf .
+
+    R_CURPAR        reduce using rule 80 (expT -> GREATER expf .)
+    SEMICOLON       reduce using rule 80 (expT -> GREATER expf .)
+    R_PAR           reduce using rule 80 (expT -> GREATER expf .)
+    COMMA           reduce using rule 80 (expT -> GREATER expf .)
+    R_BREAK         reduce using rule 80 (expT -> GREATER expf .)
+    TO              reduce using rule 80 (expT -> GREATER expf .)
+    DO              reduce using rule 80 (expT -> GREATER expf .)
+
+
+state 227
+
+    (81) expT -> LESS_TH expf .
+
+    R_CURPAR        reduce using rule 81 (expT -> LESS_TH expf .)
+    SEMICOLON       reduce using rule 81 (expT -> LESS_TH expf .)
+    R_PAR           reduce using rule 81 (expT -> LESS_TH expf .)
+    COMMA           reduce using rule 81 (expT -> LESS_TH expf .)
+    R_BREAK         reduce using rule 81 (expT -> LESS_TH expf .)
+    TO              reduce using rule 81 (expT -> LESS_TH expf .)
+    DO              reduce using rule 81 (expT -> LESS_TH expf .)
+
+
+state 228
+
+    (82) expT -> GREAT_TH expf .
+
+    R_CURPAR        reduce using rule 82 (expT -> GREAT_TH expf .)
+    SEMICOLON       reduce using rule 82 (expT -> GREAT_TH expf .)
+    R_PAR           reduce using rule 82 (expT -> GREAT_TH expf .)
+    COMMA           reduce using rule 82 (expT -> GREAT_TH expf .)
+    R_BREAK         reduce using rule 82 (expT -> GREAT_TH expf .)
+    TO              reduce using rule 82 (expT -> GREAT_TH expf .)
+    DO              reduce using rule 82 (expT -> GREAT_TH expf .)
+
+
+state 229
+
+    (83) expT -> SAME expf .
+
+    R_CURPAR        reduce using rule 83 (expT -> SAME expf .)
+    SEMICOLON       reduce using rule 83 (expT -> SAME expf .)
+    R_PAR           reduce using rule 83 (expT -> SAME expf .)
+    COMMA           reduce using rule 83 (expT -> SAME expf .)
+    R_BREAK         reduce using rule 83 (expT -> SAME expf .)
+    TO              reduce using rule 83 (expT -> SAME expf .)
+    DO              reduce using rule 83 (expT -> SAME expf .)
+
+
+state 230
+
+    (84) expT -> DIF expf .
+
+    R_CURPAR        reduce using rule 84 (expT -> DIF expf .)
+    SEMICOLON       reduce using rule 84 (expT -> DIF expf .)
+    R_PAR           reduce using rule 84 (expT -> DIF expf .)
+    COMMA           reduce using rule 84 (expT -> DIF expf .)
+    R_BREAK         reduce using rule 84 (expT -> DIF expf .)
+    TO              reduce using rule 84 (expT -> DIF expf .)
+    DO              reduce using rule 84 (expT -> DIF expf .)
+
+
+state 231
+
+    (89) exF -> PLUS ex .
+
+    LESS            reduce using rule 89 (exF -> PLUS ex .)
+    GREATER         reduce using rule 89 (exF -> PLUS ex .)
+    LESS_TH         reduce using rule 89 (exF -> PLUS ex .)
+    GREAT_TH        reduce using rule 89 (exF -> PLUS ex .)
+    SAME            reduce using rule 89 (exF -> PLUS ex .)
+    DIF             reduce using rule 89 (exF -> PLUS ex .)
+    R_CURPAR        reduce using rule 89 (exF -> PLUS ex .)
+    SEMICOLON       reduce using rule 89 (exF -> PLUS ex .)
+    R_PAR           reduce using rule 89 (exF -> PLUS ex .)
+    COMMA           reduce using rule 89 (exF -> PLUS ex .)
+    R_BREAK         reduce using rule 89 (exF -> PLUS ex .)
+    TO              reduce using rule 89 (exF -> PLUS ex .)
+    OR              reduce using rule 89 (exF -> PLUS ex .)
+    AND             reduce using rule 89 (exF -> PLUS ex .)
+    DO              reduce using rule 89 (exF -> PLUS ex .)
+
+
+state 232
+
+    (90) exF -> MINUS ex .
+
+    LESS            reduce using rule 90 (exF -> MINUS ex .)
+    GREATER         reduce using rule 90 (exF -> MINUS ex .)
+    LESS_TH         reduce using rule 90 (exF -> MINUS ex .)
+    GREAT_TH        reduce using rule 90 (exF -> MINUS ex .)
+    SAME            reduce using rule 90 (exF -> MINUS ex .)
+    DIF             reduce using rule 90 (exF -> MINUS ex .)
+    R_CURPAR        reduce using rule 90 (exF -> MINUS ex .)
+    SEMICOLON       reduce using rule 90 (exF -> MINUS ex .)
+    R_PAR           reduce using rule 90 (exF -> MINUS ex .)
+    COMMA           reduce using rule 90 (exF -> MINUS ex .)
+    R_BREAK         reduce using rule 90 (exF -> MINUS ex .)
+    TO              reduce using rule 90 (exF -> MINUS ex .)
+    OR              reduce using rule 90 (exF -> MINUS ex .)
+    AND             reduce using rule 90 (exF -> MINUS ex .)
+    DO              reduce using rule 90 (exF -> MINUS ex .)
+
+
+state 233
+
+    (93) termF -> MULT term .
+
+    PLUS            reduce using rule 93 (termF -> MULT term .)
+    MINUS           reduce using rule 93 (termF -> MULT term .)
+    LESS            reduce using rule 93 (termF -> MULT term .)
+    GREATER         reduce using rule 93 (termF -> MULT term .)
+    LESS_TH         reduce using rule 93 (termF -> MULT term .)
+    GREAT_TH        reduce using rule 93 (termF -> MULT term .)
+    SAME            reduce using rule 93 (termF -> MULT term .)
+    DIF             reduce using rule 93 (termF -> MULT term .)
+    R_CURPAR        reduce using rule 93 (termF -> MULT term .)
+    SEMICOLON       reduce using rule 93 (termF -> MULT term .)
+    R_PAR           reduce using rule 93 (termF -> MULT term .)
+    COMMA           reduce using rule 93 (termF -> MULT term .)
+    R_BREAK         reduce using rule 93 (termF -> MULT term .)
+    TO              reduce using rule 93 (termF -> MULT term .)
+    OR              reduce using rule 93 (termF -> MULT term .)
+    AND             reduce using rule 93 (termF -> MULT term .)
+    DO              reduce using rule 93 (termF -> MULT term .)
+
+
+state 234
+
+    (94) termF -> DIV term .
+
+    PLUS            reduce using rule 94 (termF -> DIV term .)
+    MINUS           reduce using rule 94 (termF -> DIV term .)
+    LESS            reduce using rule 94 (termF -> DIV term .)
+    GREATER         reduce using rule 94 (termF -> DIV term .)
+    LESS_TH         reduce using rule 94 (termF -> DIV term .)
+    GREAT_TH        reduce using rule 94 (termF -> DIV term .)
+    SAME            reduce using rule 94 (termF -> DIV term .)
+    DIF             reduce using rule 94 (termF -> DIV term .)
+    R_CURPAR        reduce using rule 94 (termF -> DIV term .)
+    SEMICOLON       reduce using rule 94 (termF -> DIV term .)
+    R_PAR           reduce using rule 94 (termF -> DIV term .)
+    COMMA           reduce using rule 94 (termF -> DIV term .)
+    R_BREAK         reduce using rule 94 (termF -> DIV term .)
+    TO              reduce using rule 94 (termF -> DIV term .)
+    OR              reduce using rule 94 (termF -> DIV term .)
+    AND             reduce using rule 94 (termF -> DIV term .)
+    DO              reduce using rule 94 (termF -> DIV term .)
+
+
+state 235
+
+    (96) factor -> L_PAR exp R_PAR . empty
+    (106) empty -> .
+
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 256
+
+state 236
+
+    (40) void -> ID DOT ID L_PAR param . R_PAR SEMICOLON empty
+
+    R_PAR           shift and go to state 257
+
+
+state 237
+
+    (41) void -> ID L_PAR param R_PAR SEMICOLON . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 258
+
+state 238
+
+    (45) paramF -> COMMA param .
+
+    R_PAR           reduce using rule 45 (paramF -> COMMA param .)
+
+
+state 239
+
+    (47) return -> RETURN L_PAR exp R_PAR SEMICOLON . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 259
+
+state 240
+
+    (53) readF -> var COMMA readF .
+
+    R_CURPAR        reduce using rule 53 (readF -> var COMMA readF .)
+    SEMICOLON       reduce using rule 53 (readF -> var COMMA readF .)
+
+
+state 241
+
+    (54) readF -> var R_PAR SEMICOLON . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 260
+
+state 242
+
+    (58) writeF -> COMMA writeT .
+
+    R_CURPAR        reduce using rule 58 (writeF -> COMMA writeT .)
+    SEMICOLON       reduce using rule 58 (writeF -> COMMA writeT .)
+
+
+state 243
+
+    (59) writeF -> R_PAR SEMICOLON . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 261
+
+state 244
+
+    (62) if -> IF L_PAR exp R_PAR THEN . L_CURPAR statement SEMICOLON R_CURPAR ifF
+
+    L_CURPAR        shift and go to state 262
+
+
+state 245
+
+    (42) arrfunc -> L_BREAK exp COMMA exp . R_BREAK empty
+
+    R_BREAK         shift and go to state 263
+
+
+state 246
+
+    (43) arrfunc -> L_BREAK exp R_BREAK empty .
+
+    EQUAL           reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    PLUS_EQ         reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    MIN_EQ          reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    MULT_EQ         reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    DIV_EQ          reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    MULT            reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    DIV             reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    PLUS            reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    MINUS           reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    LESS            reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    GREATER         reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    LESS_TH         reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    GREAT_TH        reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    SAME            reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    DIF             reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    R_CURPAR        reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    SEMICOLON       reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    COMMA           reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    R_PAR           reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    R_BREAK         reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    TO              reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    OR              reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    AND             reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+    DO              reduce using rule 43 (arrfunc -> L_BREAK exp R_BREAK empty .)
+
+
+state 247
+
+    (72) conditional -> WHILE L_PAR exp R_PAR DO . L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    L_CURPAR        shift and go to state 264
+
+
+state 248
+
+    (75) nonconditionalF -> exp TO exp . DO L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    DO              shift and go to state 265
+
+
+state 249
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON . empty
+    (106) empty -> .
+
+    CLASS           reduce using rule 106 (empty -> .)
+    VARS            reduce using rule 106 (empty -> .)
+    VOID            reduce using rule 106 (empty -> .)
+    MAIN            reduce using rule 106 (empty -> .)
+    INT             reduce using rule 106 (empty -> .)
+    FLOAT           reduce using rule 106 (empty -> .)
+    CHAR            reduce using rule 106 (empty -> .)
+    STRING          reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 266
+
+state 250
+
+    (27) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement . R_CURPAR empty
+
+    R_CURPAR        shift and go to state 267
+
+
+state 251
+
+    (28) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR . empty
+    (106) empty -> .
+
+    VOID            reduce using rule 106 (empty -> .)
+    MAIN            reduce using rule 106 (empty -> .)
+    INT             reduce using rule 106 (empty -> .)
+    FLOAT           reduce using rule 106 (empty -> .)
+    CHAR            reduce using rule 106 (empty -> .)
+    STRING          reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 268
+
+state 252
+
+    (86) expf -> ex empty .
+
+    R_CURPAR        reduce using rule 86 (expf -> ex empty .)
+    SEMICOLON       reduce using rule 86 (expf -> ex empty .)
+    R_PAR           reduce using rule 86 (expf -> ex empty .)
+    COMMA           reduce using rule 86 (expf -> ex empty .)
+    R_BREAK         reduce using rule 86 (expf -> ex empty .)
+    TO              reduce using rule 86 (expf -> ex empty .)
+    DO              reduce using rule 86 (expf -> ex empty .)
+
+
+state 253
+
+    (87) expf -> ex bool . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 269
+
+state 254
+
+    (76) bool -> OR . exp empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 270
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 255
+
+    (77) bool -> AND . exp empty
+    (78) exp -> . ex expT
+    (88) ex -> . term exF
+    (92) term -> . factor termF
+    (96) factor -> . L_PAR exp R_PAR empty
+    (97) factor -> . factorT
+    (98) factorT -> . PLUS factorF
+    (99) factorT -> . MINUS factorF
+    (100) factorT -> . factorF
+    (101) factorF -> . varcte empty
+    (102) varcte -> . var empty
+    (103) varcte -> . CTE_INT empty
+    (104) varcte -> . CTE_FLOAT empty
+    (105) varcte -> . CTE_STRING empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 134
+    PLUS            shift and go to state 136
+    MINUS           shift and go to state 138
+    CTE_INT         shift and go to state 141
+    CTE_FLOAT       shift and go to state 142
+    CTE_STRING      shift and go to state 143
+    VAR             shift and go to state 82
+    ID              shift and go to state 144
+
+    exp                            shift and go to state 271
+    ex                             shift and go to state 131
+    term                           shift and go to state 132
+    factor                         shift and go to state 133
+    factorT                        shift and go to state 135
+    factorF                        shift and go to state 137
+    varcte                         shift and go to state 139
+    var                            shift and go to state 140
+
+state 256
+
+    (96) factor -> L_PAR exp R_PAR empty .
+
+    MULT            reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    DIV             reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    PLUS            reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    MINUS           reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    LESS            reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    GREATER         reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    LESS_TH         reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    GREAT_TH        reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    SAME            reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    DIF             reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    R_CURPAR        reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    SEMICOLON       reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    R_PAR           reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    COMMA           reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    R_BREAK         reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    TO              reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    OR              reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    AND             reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+    DO              reduce using rule 96 (factor -> L_PAR exp R_PAR empty .)
+
+
+state 257
+
+    (40) void -> ID DOT ID L_PAR param R_PAR . SEMICOLON empty
+
+    SEMICOLON       shift and go to state 272
+
+
+state 258
+
+    (41) void -> ID L_PAR param R_PAR SEMICOLON empty .
+
+    R_CURPAR        reduce using rule 41 (void -> ID L_PAR param R_PAR SEMICOLON empty .)
+    SEMICOLON       reduce using rule 41 (void -> ID L_PAR param R_PAR SEMICOLON empty .)
+
+
+state 259
+
+    (47) return -> RETURN L_PAR exp R_PAR SEMICOLON empty .
+
+    R_CURPAR        reduce using rule 47 (return -> RETURN L_PAR exp R_PAR SEMICOLON empty .)
+    SEMICOLON       reduce using rule 47 (return -> RETURN L_PAR exp R_PAR SEMICOLON empty .)
+
+
+state 260
+
+    (54) readF -> var R_PAR SEMICOLON empty .
+
+    R_CURPAR        reduce using rule 54 (readF -> var R_PAR SEMICOLON empty .)
+    SEMICOLON       reduce using rule 54 (readF -> var R_PAR SEMICOLON empty .)
+
+
+state 261
+
+    (59) writeF -> R_PAR SEMICOLON empty .
+
+    R_CURPAR        reduce using rule 59 (writeF -> R_PAR SEMICOLON empty .)
+    SEMICOLON       reduce using rule 59 (writeF -> R_PAR SEMICOLON empty .)
+
+
+state 262
+
+    (62) if -> IF L_PAR exp R_PAR THEN L_CURPAR . statement SEMICOLON R_CURPAR ifF
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 273
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 263
+
+    (42) arrfunc -> L_BREAK exp COMMA exp R_BREAK . empty
+    (106) empty -> .
+
+    EQUAL           reduce using rule 106 (empty -> .)
+    PLUS_EQ         reduce using rule 106 (empty -> .)
+    MIN_EQ          reduce using rule 106 (empty -> .)
+    MULT_EQ         reduce using rule 106 (empty -> .)
+    DIV_EQ          reduce using rule 106 (empty -> .)
+    MULT            reduce using rule 106 (empty -> .)
+    DIV             reduce using rule 106 (empty -> .)
+    PLUS            reduce using rule 106 (empty -> .)
+    MINUS           reduce using rule 106 (empty -> .)
+    LESS            reduce using rule 106 (empty -> .)
+    GREATER         reduce using rule 106 (empty -> .)
+    LESS_TH         reduce using rule 106 (empty -> .)
+    GREAT_TH        reduce using rule 106 (empty -> .)
+    SAME            reduce using rule 106 (empty -> .)
+    DIF             reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    OR              reduce using rule 106 (empty -> .)
+    AND             reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 274
+
+state 264
+
+    (72) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR . statement SEMICOLON R_CURPAR empty
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 275
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 265
+
+    (75) nonconditionalF -> exp TO exp DO . L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    L_CURPAR        shift and go to state 276
+
+
+state 266
+
+    (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .
+
+    CLASS           reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    VARS            reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    VOID            reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    MAIN            reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    INT             reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    FLOAT           reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    CHAR            reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    STRING          reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+    ID              reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
+
+
+state 267
+
+    (27) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR . empty
+    (106) empty -> .
+
+    VOID            reduce using rule 106 (empty -> .)
+    MAIN            reduce using rule 106 (empty -> .)
+    INT             reduce using rule 106 (empty -> .)
+    FLOAT           reduce using rule 106 (empty -> .)
+    CHAR            reduce using rule 106 (empty -> .)
+    STRING          reduce using rule 106 (empty -> .)
+    ID              reduce using rule 106 (empty -> .)
+    R_CURPAR        reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 277
+
+state 268
+
+    (28) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .
+
+    VOID            reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    MAIN            reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    INT             reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    FLOAT           reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    CHAR            reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    STRING          reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    ID              reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    R_CURPAR        reduce using rule 28 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+
+
+state 269
+
+    (87) expf -> ex bool empty .
+
+    R_CURPAR        reduce using rule 87 (expf -> ex bool empty .)
+    SEMICOLON       reduce using rule 87 (expf -> ex bool empty .)
+    R_PAR           reduce using rule 87 (expf -> ex bool empty .)
+    COMMA           reduce using rule 87 (expf -> ex bool empty .)
+    R_BREAK         reduce using rule 87 (expf -> ex bool empty .)
+    TO              reduce using rule 87 (expf -> ex bool empty .)
+    DO              reduce using rule 87 (expf -> ex bool empty .)
+
+
+state 270
+
+    (76) bool -> OR exp . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 278
+
+state 271
+
+    (77) bool -> AND exp . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+    R_PAR           reduce using rule 106 (empty -> .)
+    COMMA           reduce using rule 106 (empty -> .)
+    R_BREAK         reduce using rule 106 (empty -> .)
+    TO              reduce using rule 106 (empty -> .)
+    DO              reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 279
+
+state 272
+
+    (40) void -> ID DOT ID L_PAR param R_PAR SEMICOLON . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 280
+
+state 273
+
+    (62) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement . SEMICOLON R_CURPAR ifF
+
+    SEMICOLON       shift and go to state 281
+
+
+state 274
+
+    (42) arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .
+
+    EQUAL           reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    PLUS_EQ         reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    MIN_EQ          reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    MULT_EQ         reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    DIV_EQ          reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    MULT            reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    DIV             reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    PLUS            reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    MINUS           reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    LESS            reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    GREATER         reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    LESS_TH         reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    GREAT_TH        reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    SAME            reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    DIF             reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    R_CURPAR        reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    SEMICOLON       reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    COMMA           reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    R_PAR           reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    R_BREAK         reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    TO              reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    OR              reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    AND             reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+    DO              reduce using rule 42 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
+
+
+state 275
+
+    (72) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement . SEMICOLON R_CURPAR empty
+
+    SEMICOLON       shift and go to state 282
+
+
+state 276
+
+    (75) nonconditionalF -> exp TO exp DO L_CURPAR . statement SEMICOLON R_CURPAR empty
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 283
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 277
+
+    (27) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .
+
+    VOID            reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    MAIN            reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    INT             reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    FLOAT           reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    CHAR            reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    STRING          reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    ID              reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+    R_CURPAR        reduce using rule 27 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
+
+
+state 278
+
+    (76) bool -> OR exp empty .
+
+    R_CURPAR        reduce using rule 76 (bool -> OR exp empty .)
+    SEMICOLON       reduce using rule 76 (bool -> OR exp empty .)
+    R_PAR           reduce using rule 76 (bool -> OR exp empty .)
+    COMMA           reduce using rule 76 (bool -> OR exp empty .)
+    R_BREAK         reduce using rule 76 (bool -> OR exp empty .)
+    TO              reduce using rule 76 (bool -> OR exp empty .)
+    DO              reduce using rule 76 (bool -> OR exp empty .)
+
+
+state 279
+
+    (77) bool -> AND exp empty .
+
+    R_CURPAR        reduce using rule 77 (bool -> AND exp empty .)
+    SEMICOLON       reduce using rule 77 (bool -> AND exp empty .)
+    R_PAR           reduce using rule 77 (bool -> AND exp empty .)
+    COMMA           reduce using rule 77 (bool -> AND exp empty .)
+    R_BREAK         reduce using rule 77 (bool -> AND exp empty .)
+    TO              reduce using rule 77 (bool -> AND exp empty .)
+    DO              reduce using rule 77 (bool -> AND exp empty .)
+
+
+state 280
+
+    (40) void -> ID DOT ID L_PAR param R_PAR SEMICOLON empty .
+
+    R_CURPAR        reduce using rule 40 (void -> ID DOT ID L_PAR param R_PAR SEMICOLON empty .)
+    SEMICOLON       reduce using rule 40 (void -> ID DOT ID L_PAR param R_PAR SEMICOLON empty .)
+
+
+state 281
+
+    (62) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON . R_CURPAR ifF
+
+    R_CURPAR        shift and go to state 284
+
+
+state 282
+
+    (72) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON . R_CURPAR empty
+
+    R_CURPAR        shift and go to state 285
+
+
+state 283
+
+    (75) nonconditionalF -> exp TO exp DO L_CURPAR statement . SEMICOLON R_CURPAR empty
+
+    SEMICOLON       shift and go to state 286
+
+
+state 284
+
+    (62) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR . ifF
+    (63) ifF -> . ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
+    (64) ifF -> . empty
+    (106) empty -> .
+
+    ELSE            shift and go to state 288
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    ifF                            shift and go to state 287
+    empty                          shift and go to state 289
+
+state 285
+
+    (72) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 290
+
+state 286
+
+    (75) nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON . R_CURPAR empty
+
+    R_CURPAR        shift and go to state 291
+
+
+state 287
+
+    (62) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF .
+
+    R_CURPAR        reduce using rule 62 (if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF .)
+    SEMICOLON       reduce using rule 62 (if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF .)
+
+
+state 288
+
+    (63) ifF -> ELSE . L_CURPAR statement SEMICOLON R_CURPAR empty
+
+    L_CURPAR        shift and go to state 292
+
+
+state 289
+
+    (64) ifF -> empty .
+
+    R_CURPAR        reduce using rule 64 (ifF -> empty .)
+    SEMICOLON       reduce using rule 64 (ifF -> empty .)
+
+
+state 290
+
+    (72) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty .
+
+    R_CURPAR        reduce using rule 72 (conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty .)
+    SEMICOLON       reduce using rule 72 (conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty .)
+
+
+state 291
+
+    (75) nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 293
+
+state 292
+
+    (63) ifF -> ELSE L_CURPAR . statement SEMICOLON R_CURPAR empty
+    (33) statement -> . assigment empty
+    (34) statement -> . void empty
+    (35) statement -> . return empty
+    (36) statement -> . read empty
+    (37) statement -> . write empty
+    (38) statement -> . if empty
+    (39) statement -> . repeat empty
+    (65) assigment -> . var assigmentF
+    (40) void -> . ID DOT ID L_PAR param R_PAR SEMICOLON empty
+    (41) void -> . ID L_PAR param R_PAR SEMICOLON empty
+    (47) return -> . RETURN L_PAR exp R_PAR SEMICOLON empty
+    (52) read -> . READ L_PAR readF
+    (55) write -> . WRITE L_PAR writeT
+    (62) if -> . IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    (60) repeat -> . conditional empty
+    (61) repeat -> . nonconditional empty
+    (48) var -> . VAR varF
+    (49) var -> . ID DOT VAR varF
+    (72) conditional -> . WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    (73) nonconditional -> . FROM VAR arr nonconditionalF
+    (74) nonconditional -> . FROM VAR nonconditionalF
+
+    ID              shift and go to state 75
+    RETURN          shift and go to state 76
+    READ            shift and go to state 77
+    WRITE           shift and go to state 78
+    IF              shift and go to state 79
+    VAR             shift and go to state 82
+    WHILE           shift and go to state 83
+    FROM            shift and go to state 84
+
+    statement                      shift and go to state 294
+    assigment                      shift and go to state 67
+    void                           shift and go to state 68
+    return                         shift and go to state 69
+    read                           shift and go to state 70
+    write                          shift and go to state 71
+    if                             shift and go to state 72
+    repeat                         shift and go to state 73
+    var                            shift and go to state 74
+    conditional                    shift and go to state 80
+    nonconditional                 shift and go to state 81
+
+state 293
+
+    (75) nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty .
+
+    R_CURPAR        reduce using rule 75 (nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty .)
+    SEMICOLON       reduce using rule 75 (nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty .)
+
+
+state 294
+
+    (63) ifF -> ELSE L_CURPAR statement . SEMICOLON R_CURPAR empty
+
+    SEMICOLON       shift and go to state 295
+
+
+state 295
+
+    (63) ifF -> ELSE L_CURPAR statement SEMICOLON . R_CURPAR empty
+
+    R_CURPAR        shift and go to state 296
+
+
+state 296
+
+    (63) ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR . empty
+    (106) empty -> .
+
+    R_CURPAR        reduce using rule 106 (empty -> .)
+    SEMICOLON       reduce using rule 106 (empty -> .)
+
+    empty                          shift and go to state 297
+
+state 297
+
+    (63) ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR empty .
+
+    R_CURPAR        reduce using rule 63 (ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR empty .)
+    SEMICOLON       reduce using rule 63 (ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR empty .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for COMMA in state 158 resolved as shift
+WARNING: shift/reduce conflict for R_PAR in state 158 resolved as shift

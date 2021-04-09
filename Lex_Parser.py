@@ -17,13 +17,13 @@ tokens = [
     'METHODS',      #Methods
     'VARS',         #Global variables(vars)
     'VAR',          #variables (var)
-    'FUCTION',      #Function
+    'FUNCTION',      #Function
     'MAIN',         #Main
     'READ',         #Read
     'WRITE',        #Write
     'RETURN',       #Return
     'IF',           #if
-    'THEN'          #then
+    'THEN',         #then
     'ELSE',         #else
     'VOID',         #Void
     'WHILE',        #While
@@ -138,6 +138,26 @@ def t_MAIN(t):
     t.type = 'MAIN'
     return t
 
+def t_INT(t):
+    r'int'
+    t.type = 'INT'
+    return t
+
+def t_FLOAT(t):
+    r'float'
+    t.type = 'FLOAT'
+    return t
+
+def t_CHAR(t):
+    r'char'
+    t.type = 'CHAR'
+    return t
+
+def t_STRING(t):
+    r'string'
+    t.type = 'STRING'
+    return t
+
 def t_READ(t):
     r'read'
     t.type = 'READ'
@@ -220,7 +240,7 @@ def t_CTE_STRING(t):
 
 #Function to count lines
 def t_newline(t):
-    r'\n+'
+    r'\°'
     t.lexer.lineno += len(t.value)
 
 #Function to show lexical error 
@@ -249,12 +269,12 @@ def p_program(p):
     '''
     program  : PROGRAM ID SEMICOLON programT
     
-    programT : class programF
+    programT : class programT
              | vars programF
              | programF
     
     programF : func programF 
-             | empty
+             | main empty
     '''
     p[0] = None
 
@@ -265,7 +285,7 @@ def p_class(p):
     classT : LESS INHERIT ID GREATER classF
             | classF
     
-    classF : SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func SEMICOLON empty
+    classF : SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
     '''
     p[0] = None
 
@@ -277,10 +297,10 @@ def p_vars(p):
 
 def p_dec(p):
     '''
-    dec : VAR arr decT  
-        | VAR decT 
+    dec : VAR arr decF  
+        | VAR decF 
     
-    decT : , dec
+    decF : COMMA dec
           | COLON type SEMICOLON dec
           | COLON type SEMICOLON empty
     '''
@@ -305,20 +325,21 @@ def p_arr(p):
 
 def p_func(p):
     '''
-    func : type funcT | VOID funcT 
+    func : type funcT 
+           | VOID funcT 
     
     funcT : FUNCTION ID L_PAR funcF
   
     funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
-           | R_PAR dec L_CURPAR statement R_CURPAR empty
+           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
     '''
     p[0] = None
 
 def p_paramater(p):
     '''
-    parameter : VAR COLON type SEMICOLON parameterT
+    parameter : VAR COLON type SEMICOLON parameterF
     
-    parameterT : parameter
+    parameterF : parameter
                  | empty
     '''
     p[0] = None
@@ -357,9 +378,9 @@ def p_arrfunc(p):
 
 def p_param(p):
     '''
-    param : var paramT
+    param : var paramF
 
-    paramT : COMMA param
+    paramF : COMMA param
             | empty
     '''
     p[0] = None
@@ -372,19 +393,19 @@ def p_return(p):
 
 def p_var(p):
     '''
-    var : VAR varT  
-        | ID DOT VAR varT  
+    var : VAR varF  
+        | ID DOT VAR varF  
     
-    varT : arrfunc empty
+    varF : arrfunc empty
           | empty
     '''
     p[0] = None
 
 def p_read(p):
     '''
-    read : READ L_PAR readT
+    read : READ L_PAR readF
     
-    readT : var COMMA readT 
+    readF : var COMMA readF 
           | var R_PAR SEMICOLON empty
     '''
     p[0] = None
@@ -410,18 +431,18 @@ def p_repeat(p):
 
 def p_if(p):
     '''
-    if : IF L_PAR exp R_PAR then L_CURPAR statement SEMICOLON R_CURPAR ifT
+    if : IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
 
-    ifT : ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
+    ifF : ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
         | empty
     '''
     p[0] = None
 
 def p_assigment(p):
     '''
-    assigment : var assigmentT
+    assigment : var assigmentF
 
-    assigmentT : exp empty 
+    assigmentF : EQUAL exp empty 
                 | ope exp empty
     '''
     p[0] = None
@@ -429,7 +450,7 @@ def p_assigment(p):
 def p_ope(p):
     '''
     ope : PLUS_EQ empty
-        | LESS_EQ empty
+        | MIN_EQ empty
         | MULT_EQ empty
         | DIV_EQ empty
     '''
@@ -437,17 +458,16 @@ def p_ope(p):
 
 def p_conditional(p):
     '''
-    conditional : while L_PAR exp R_PAR do L_CURPAR statement SEMICOLON R_CURPAR
+    conditional : WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
     '''
     p[0] = None
 
 def p_nonconditional(p):
     '''
-    nonconditional : FROM VAR arr nonconditionalT
-                    | FROM VAR nonconditionalT
+    nonconditional : FROM VAR arr nonconditionalF
+                    | FROM VAR nonconditionalF
 
-    nonconditionalT : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
-        | empty
+    nonconditionalF : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
     '''
     p[0] = None
 
@@ -465,7 +485,7 @@ def p_exp(p):
     expT : LESS expf
           | GREATER expf
           | LESS_TH expf
-          | GREATER_TH expf
+          | GREAT_TH expf
           | SAME expf
           | DIF expf
           | empty
@@ -478,9 +498,9 @@ def p_exp(p):
 
 def p_ex(p):
     '''
-    ex  : term exT
+    ex  : term exF
 
-    exT : PLUS ex
+    exF : PLUS ex
          | MINUS ex
          | empty
     '''
@@ -488,9 +508,9 @@ def p_ex(p):
 
 def p_term(p):
     '''
-    term : factor termT
+    term : factor termF
 
-    termT : MULT term
+    termF : MULT term
          | DIV term
          | empty
     '''
@@ -511,7 +531,7 @@ def p_factor(p):
 
 def p_varcte(p):
     '''
-    varcte  : VAR empty
+    varcte  : var empty
             | CTE_INT empty
             | CTE_FLOAT empty
             | CTE_STRING empty
@@ -522,6 +542,7 @@ def p_varcte(p):
 #Error function
 def p_error(p):
     print("Syntax error found at line %d." % (lexer.lineno))
+    print(p)
 
 #Empty function
 def p_empty(p):
@@ -535,12 +556,16 @@ parser = yacc.yacc()
 #Test Lex and Parser with txt
 #read 1 txt
 try:
-    f = open("pruebas.txt", "r")
+    text = input('Insert test doc (.txt): ')
+    f = open(text, "r")
+    prog = ""
     for s in f:
-        parser.parse(s)
+        stripped_line = s.rstrip()
+        prog += stripped_line + " ° "
+    parser.parse(prog)
     #parser.parse(f.read())
 except EOFError:
-    print('Error')
+    print("Error")
     #parser.parse(s)
 
 
