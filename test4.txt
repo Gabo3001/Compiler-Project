@@ -1,0 +1,22 @@
+program Test4;
+
+int function Func1(a:int; b:float;);
+x: int;
+{
+    a = 1
+}
+
+void function Func2();
+x: string;
+{
+    a = 12.5
+}
+
+float function Func3(c:string;);
+var_test01 : char;
+{
+    f = -123.5
+}
+main(){
+    a = 1
+}
