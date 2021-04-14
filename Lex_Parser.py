@@ -1,8 +1,12 @@
+# LEX_Parser.py by Gabriel Ortega and Paulina Cámara (2021)
+# Lexer and Parser program using ply
+
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
 
-#List of Tokens
+# ***** LEXER *****
+# Tokens
 tokens = [
 
     'PROGRAM',      #program
@@ -13,12 +17,13 @@ tokens = [
     'METHODS',      #Methods
     'VARS',         #Global variables(vars)
     'VAR',          #variables (var)
-    'FUCTION',      #Function
+    'FUNCTION',      #Function
     'MAIN',         #Main
     'READ',         #Read
     'WRITE',        #Write
     'RETURN',       #Return
     'IF',           #if
+    'THEN',         #then
     'ELSE',         #else
     'VOID',         #Void
     'WHILE',        #While
@@ -60,7 +65,8 @@ tokens = [
     'DIF',          #!=
     'SAME'          #==
 ]
-#Definition of tokens
+
+# Definition of tokens
 t_LESS = r'\<'          #<
 t_GREATER = r'\>'       #>
 t_SEMICOLON = r'\;'     #;
@@ -90,6 +96,7 @@ t_DIF = r'\=\='         #!=
 t_SAME = r'\=\='        #==
 
 t_ignore = ' \t'
+
 #Definition of complex tokens
 def t_PROGRAM(t):
     r'program'
@@ -129,6 +136,26 @@ def t_FUNCTION(t):
 def t_MAIN(t):
     r'main'
     t.type = 'MAIN'
+    return t
+
+def t_INT(t):
+    r'int'
+    t.type = 'INT'
+    return t
+
+def t_FLOAT(t):
+    r'float'
+    t.type = 'FLOAT'
+    return t
+
+def t_CHAR(t):
+    r'char'
+    t.type = 'CHAR'
+    return t
+
+def t_STRING(t):
+    r'string'
+    t.type = 'STRING'
     return t
 
 def t_READ(t):
@@ -176,6 +203,11 @@ def t_IF(t):
     t.type = 'IF'
     return t
 
+def t_THEN(t):
+    r'then'
+    t.type = 'THEN'
+    return t
+
 def t_ELSE(t):
     r'else'
     t.type = 'ELSE'
@@ -208,8 +240,9 @@ def t_CTE_STRING(t):
 
 #Function to count lines
 def t_newline(t):
-    r'\n+'
+    r'\°'
     t.lexer.lineno += len(t.value)
+
 #Function to show lexical error 
 def t_error(t):
     print('Line: %d, Not valid character: %r' % (t.lexer.lineno, t.value[0]))
@@ -217,7 +250,7 @@ def t_error(t):
 
 lexer = lex.lex()
 
-#Funcion para probar el escaner lexico 
+# Test scanner function
 """def pruebaLex():
     lexer.input('if else print + - "HOLA" program vars 123 123.1 -123.5 class * / gabo_125 Gabo')
 
@@ -229,128 +262,292 @@ lexer = lex.lex()
 
 pruebaLex()"""
 
-"""#__________PARSER____________
-#Definicion de gramatica
+# ***** PARSER *****
+
+# Grammar definition
 def p_program(p):
     '''
     program  : PROGRAM ID SEMICOLON programT
     
-    programT : vars programF
+    programT : class programT
+             | vars programF
              | programF
     
-    programF : bloque empty
+    programF : func programF 
+             | main empty
+    '''
+    p[0] = None
+
+def p_class(p):
+    '''
+    class : CLASS ID classT
+    
+    classT : LESS INHERIT ID GREATER classF
+            | classF
+    
+    classF : SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
     '''
     p[0] = None
 
 def p_vars(p):
     '''
-    vars  : VAR varsT
+    vars  : VARS dec empty
+    '''
+    p[0] = None
+
+def p_dec(p):
+    '''
+    dec : VAR arr decF  
+        | VAR decF 
     
-    varsT : ID COMMA varsT
-          | ID COLON tipo SEMICOLON varsF
+    decF : COMMA dec
+          | COLON type SEMICOLON dec
+          | COLON type SEMICOLON empty
+    '''
+    p[0] = None
+
+def p_type(p):
+    '''
+    type  : INT empty
+          | FLOAT empty
+          | CHAR empty
+          | STRING empty
+          | ID empty
+    '''
+    p[0] = None
+
+def p_arr(p):
+    '''
+    arr : L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty
+        | L_BREAK CTE_INT R_BREAK  empty 
+    '''
+    p[0] = None
+
+def p_func(p):
+    '''
+    func : type funcT 
+           | VOID funcT 
     
-    varsF : varsT
+    funcT : FUNCTION ID L_PAR funcF
+  
+    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+    '''
+    p[0] = None
+
+def p_paramater(p):
+    '''
+    parameter : VAR COLON type SEMICOLON parameterF
+    
+    parameterF : parameter
+                 | empty
+    '''
+    p[0] = None
+
+def p_main(p):
+    '''
+    main : MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+    '''
+    p[0] = None
+
+def p_statement(p):
+    '''
+    statement : assigment statementF
+                | void statementF
+                | return statementF
+                | read statementF
+                | write statementF
+                | if statementF
+                | repeat statementF
+
+    statementF : statement
+                | empty
+    '''
+    p[0] = None
+
+def p_void(p):
+    '''
+    void : ID  DOT ID L_PAR param R_PAR SEMICOLON empty
+            | ID L_PAR param R_PAR SEMICOLON empty
+    '''
+    p[0] = None
+
+def p_arrfunc(p):
+    '''
+    arrfunc : L_BREAK exp COMMA exp R_BREAK empty
+            | L_BREAK exp R_BREAK empty
+    '''
+    p[0] = None
+
+def p_param(p):
+    '''
+    param : var paramF
+
+    paramF : COMMA param
+            | empty
+    '''
+    p[0] = None
+
+def p_return(p):
+    '''
+    return : RETURN L_PAR exp R_PAR SEMICOLON empty
+    '''
+    p[0] = None
+
+def p_var(p):
+    '''
+    var : VAR varF  
+        | ID DOT VAR varF  
+    
+    varF : arrfunc empty
           | empty
     '''
     p[0] = None
 
-def p_tipo(p):
+def p_read(p):
     '''
-    tipo  : INT empty
-          | FLOAT empty
-    '''
-    p[0] = None
-
-def p_bloque(p):
-    '''
-    bloque  : L_CURPAR bloqueT
-    bloqueT : estatuto bloqueT
-            | R_CURPAR  empty
-    '''
-    p[0] = None
-
-def p_estatuto(p):
-    '''
-    estatuto  : asignacion empty
-              | condicion empty
-              | escritura empty
-    '''
-    p[0] = None
-
-def p_asignacion(p):
-    '''
-    asignacion  : ID EQ expresion SEMICOLON empty
-    '''
-    p[0] = None
+    read : READ L_PAR readF
     
-def p_escritura(p):
+    readF : var COMMA readF 
+          | var R_PAR SEMICOLON empty
     '''
-    escritura  : PRINT L_PAR escrituraT
-    escrituraT : expresion escrituraF
-               | STRING escrituraF
-    escrituraF : COMMA  escrituraT
+    p[0] = None
+
+def p_write(p):
+    '''
+    write  : WRITE L_PAR writeT
+
+    writeT : CTE_STRING writeF
+            | exp writeF
+
+    writeF : COMMA  writeT
                | R_PAR SEMICOLON empty
     '''
     p[0] = None
 
-def p_expresion(p):
+def p_repeat(p):
     '''
-    expresion  : exp expresionT
-    expresionT : LESS exp empty
-               | GREATER exp empty
-               | DIF exp empty
-               | empty
+    repeat : conditional empty
+            | nonconditional empty
     '''
     p[0] = None
 
-def p_condicion(p):
+def p_if(p):
     '''
-    condicion  : IF L_PAR expresion R_PAR bloque condicionT
-    condicionT : ELSE bloque empty
-               | empty
+    if : IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+
+    ifF : ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
+        | empty
+    '''
+    p[0] = None
+
+def p_assigment(p):
+    '''
+    assigment : var assigmentF
+
+    assigmentF : EQUAL exp empty 
+                | ope exp empty
+    '''
+    p[0] = None
+
+def p_ope(p):
+    '''
+    ope : PLUS_EQ empty
+        | MIN_EQ empty
+        | MULT_EQ empty
+        | DIV_EQ empty
+    '''
+    p[0] = None
+
+def p_conditional(p):
+    '''
+    conditional : WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    '''
+    p[0] = None
+
+def p_nonconditional(p):
+    '''
+    nonconditional : FROM VAR arr nonconditionalF
+                    | FROM VAR nonconditionalF
+
+    nonconditionalF : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    '''
+    p[0] = None
+
+def p_bool(p):
+    '''
+    bool : OR exp empty
+        | AND exp empty
     '''
     p[0] = None
 
 def p_exp(p):
     '''
-    exp  : termino expT
-    expT : PLUS exp
-         | MINUS exp
+    exp : ex expT
+
+    expT : LESS expf
+          | GREATER expf
+          | LESS_TH expf
+          | GREAT_TH expf
+          | SAME expf
+          | DIF expf
+          | empty
+
+    expf : ex empty
+          | ex bool empty
+    '''
+    p[0] = None
+
+
+def p_ex(p):
+    '''
+    ex  : term exF
+
+    exF : PLUS ex
+         | MINUS ex
          | empty
     '''
     p[0] = None
 
-def p_termino(p):
+def p_term(p):
     '''
-    termino  : factor terminoT
-    terminoT : MULT termino
-         | DIV termino
+    term : factor termF
+
+    termF : MULT term
+         | DIV term
          | empty
     '''
     p[0] = None
 
 def p_factor(p):
     '''
-    factor  : L_PAR expresion R_PAR empty
+    factor  : L_PAR exp R_PAR empty
             | factorT
+
     factorT : PLUS factorF
             | MINUS factorF
             | factorF
+
     factorF : varcte empty
     '''
     p[0] = None
 
 def p_varcte(p):
     '''
-    varcte  : ID empty
-            | INT empty
-            | FLOAT empty
+    varcte  : var empty
+            | CTE_INT empty
+            | CTE_FLOAT empty
+            | CTE_STRING empty
     '''
     p[0] = None
-#Funcion de manejo de errores
+
+
+#Error function
 def p_error(p):
     print("Syntax error found at line %d." % (lexer.lineno))
+    print(p)
 
+#Empty function
 def p_empty(p):
     '''
     empty : 
@@ -359,11 +556,31 @@ def p_empty(p):
 
 parser = yacc.yacc()
 
+#Test Lex and Parser with txt
+#read 1 txt
 try:
-    f = open("pruebas.txt", "r")
+    text = input('Insert test doc (.txt): ')
+    f = open(text, "r")
+    prog = ""
     for s in f:
-        parser.parse(s)
+        stripped_line = s.rstrip()
+        prog += stripped_line + " ° "
+    parser.parse(prog)
     #parser.parse(f.read())
 except EOFError:
-    print('Error')
-    #parser.parse(s)"""
+    print("Error")
+    #parser.parse(s)
+
+
+#insert name and read txt
+"""
+while True:
+    try:
+        text = input('Insert test doc (.txt): ')
+        f = open(text, "r")
+        lexer.lineno = 1
+        for s in f:
+            parser.parse(s)
+    except EOFError:
+        print('Error')
+"""

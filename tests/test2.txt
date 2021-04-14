@@ -1,0 +1,27 @@
+program Test2;
+class Clase1; {
+    attributes
+    a, b: int;
+    c[1,2], d[3]: float;
+    e: char;
+    f: string;
+    methods
+    int function Func1(a:int; b:float;);
+    x: int;
+    {
+        a = 1
+    }
+};
+class Clase2 <inherit Class1>; {
+    attributes
+    a : int;
+    methods
+    void function Func2();
+    x: string;
+    {
+        a = 12.5
+    }
+};
+main(){
+    a = 1
+}
