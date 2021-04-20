@@ -1,0 +1,18 @@
+program Test5;
+vars
+ave, beto: int;
+float function Func3(c:string;);
+var_test01 : char;
+{
+    f = -123.5
+}
+void function Func2();
+x,y,z: string;
+a,b,c: int;
+{
+    a = 12.5
+}
+
+main(){
+    a = 1
+}

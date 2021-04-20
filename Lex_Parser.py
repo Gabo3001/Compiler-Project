@@ -4,6 +4,10 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
+from datastruct import DirProcess
+
+dic = DirProcess()
+
 
 # ***** LEXER *****
 # Tokens
@@ -267,8 +271,14 @@ pruebaLex()"""
 # Grammar definition
 def p_program(p):
     '''
-    program  : PROGRAM ID SEMICOLON programT
-    
+    program : PROGRAM ID SEMICOLON programT
+    '''
+    dic.add_prog(p[2])
+    #print(p[2])
+    p[0] = None
+
+def p_programT(p):
+    '''
     programT : class programT
              | vars programF
              | programF
@@ -281,7 +291,12 @@ def p_program(p):
 def p_class(p):
     '''
     class : CLASS ID classT
-    
+    '''
+    # print(p[2])
+    p[0] = None
+
+def p_classT(p):
+    '''
     classT : LESS INHERIT ID GREATER classF
             | classF
     
@@ -293,18 +308,32 @@ def p_vars(p):
     '''
     vars  : VARS dec empty
     '''
+    dic.add_process(p[1]+":"+p[2])
+    #print(p[1]+":"+p[2])
     p[0] = None
 
 def p_dec(p):
     '''
     dec : VAR arr decF  
         | VAR decF 
-    
+    '''
+    if len(p) == 4:
+      p[0] = p[1]+p[2]+"."+p[3]
+    elif p[2] != None:
+      p[0] = p[1]+"."+p[2]
+
+def p_decF(p):
+    ''' 
     decF : COMMA dec
           | COLON type SEMICOLON dec
           | COLON type SEMICOLON empty
     '''
-    p[0] = None
+    if p[1] == ",":
+      p[0] = p[2]
+    elif p[4] == None:
+      p[0] = "("+p[2]+")"
+    else:
+      p[0] = "("+p[2]+")." + p[4]
 
 def p_type(p):
     '''
@@ -314,33 +343,64 @@ def p_type(p):
           | STRING empty
           | ID empty
     '''
-    p[0] = None
+    p[0] = p[1]
 
 def p_arr(p):
     '''
     arr : L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty
         | L_BREAK CTE_INT R_BREAK  empty 
     '''
-    p[0] = None
+    if p[3] == ",":
+      p[0] = "[" + str(p[2]) + "," + str(p[4]) + "]"
+    else:
+      p[0] = "[" + str(p[2]) + "]"
 
 def p_func(p):
     '''
-    func : type funcT 
-           | VOID funcT 
-    
-    funcT : FUNCTION ID L_PAR funcF
-  
+    func : typeFunc FUNCTION ID L_PAR funcF
+    '''
+    dic.add_process(p[3]+"("+p[1]+")" +p[5])
+    #print(p[3]+"("+p[1]+")" +p[5])
+    p[0] = None
+
+def p_funcF(p):
+    '''
     funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
            | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
     '''
-    p[0] = None
+    if len(p) == 9:
+      p[0] = ":"+p[4]
+    else:
+      p[0] = ":"+p[3]
+
+def p_typeFunc(p):
+    '''
+    typeFunc  : INT empty
+              | FLOAT empty
+              | CHAR empty
+              | STRING empty
+              | ID empty
+              | VOID empty
+    '''
+    p[0] = p[1]
+
 
 def p_paramater(p):
     '''
-    parameter : VAR COLON type SEMICOLON parameterF
+    parameter : VAR COLON typepar SEMICOLON parameterF
     
     parameterF : parameter
                  | empty
+    '''
+    p[0] = None
+
+def p_typepar(p):
+    '''
+    typepar  : INT empty
+          | FLOAT empty
+          | CHAR empty
+          | STRING empty
+          | ID empty
     '''
     p[0] = None
 
@@ -467,7 +527,7 @@ def p_conditional(p):
 
 def p_nonconditional(p):
     '''
-    nonconditional : FROM VAR arr nonconditionalF
+    nonconditional : FROM VAR arrfunc nonconditionalF
                     | FROM VAR nonconditionalF
 
     nonconditionalF : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
@@ -570,7 +630,6 @@ try:
 except EOFError:
     print("Error")
     #parser.parse(s)
-
 
 #insert name and read txt
 """
