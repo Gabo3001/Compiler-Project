@@ -231,8 +231,8 @@ def t_CTE_INT(t):
     t.value = int(t.value)
     return t
 
-def t_CTE_HAR(t):
-    r'"([^\"|^\'])"'
+def t_CTE_CHAR(t):
+    r"'[a-zA-Z0-9!@#$%^&*()]'"
     t.value = str(t.value)
     return t
 
