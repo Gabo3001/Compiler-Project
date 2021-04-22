@@ -1,3 +1,5 @@
+import sys
+
 class HashTable:
   #Constructor de objeto hash
   def __init__(self):
@@ -76,9 +78,13 @@ class DirProcess(HashTable):
       name = s[0]
       prosT = s[1].replace(')', '') 
 
-    key = self.func_hash(name)
-    self.dic[key] = Funcfunc(name, prosT)
-    #self.dic[key].printFunc()
+    if self.is_occupied(name):
+      print('La funcion "{}" ya fue declarada'.format(name))
+      sys.exit()
+    else:
+      key = self.func_hash(name)
+      self.dic[key] = Funcfunc(name, prosT)
+      #self.dic[key].printFunc()
 
     # agregar variables
     aux2 = list(reversed(aux[1].split(".")))
@@ -99,12 +105,20 @@ class DirProcess(HashTable):
           lvl2 = int(a[1].replace(']', ''))
         else:
           lvl1 = int(v[1].replace(']', ''))
-        self.dic[key].vars.add_var(v[0], vtype, lvl1, lvl2)
-       # self.dic[key].vars.get_item(v[0]).printObj()
+        if self.dic[key].vars.is_occupied(v[0]):
+            print('Nombre de variable "{}" ya declarada'.format(v[0]))
+            sys.exit()
+        else:
+          self.dic[key].vars.add_var(v[0], vtype, lvl1, lvl2)
+          #self.dic[key].vars.get_item(v[0]).printObj()
 
       else:
-        self.dic[key].vars.add_var(item, vtype)
-        #self.dic[key].vars.get_item(item).printObj()
+        if self.dic[key].vars.is_occupied(item):
+          print('Nombre de variable "{}" ya declarada'.format(item))
+          sys.exit()
+        else:
+          self.dic[key].vars.add_var(item, vtype)
+          #self.dic[key].vars.get_item(item).printObj()
 
   def add_prog(self, line):
     key = self.func_hash("Program")
