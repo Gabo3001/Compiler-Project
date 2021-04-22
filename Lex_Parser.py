@@ -49,10 +49,9 @@ tokens = [
     'INT',          #int
     'FLOAT',        #float
     'CHAR',         #char
-    'STRING',       #string
     'CTE_INT',      #Cte.int
     'CTE_FLOAT',    #Cte.float
-    'CTE_STRING',   #Cte.string
+    'CTE_CHAR',     #Cte.char
     'EQUAL',        #=
     'PLUS',         #+
     'MINUS',        #-
@@ -157,11 +156,6 @@ def t_CHAR(t):
     t.type = 'CHAR'
     return t
 
-def t_STRING(t):
-    r'string'
-    t.type = 'STRING'
-    return t
-
 def t_READ(t):
     r'read'
     t.type = 'READ'
@@ -237,14 +231,19 @@ def t_CTE_INT(t):
     t.value = int(t.value)
     return t
 
-def t_CTE_STRING(t):
-    r'"[a-zA-Z0-9!@#$%^&*()]*"'
-    t.type = 'CTE_STRING'
+def t_CTE_CHAR(t):
+    r'"([^\"|^\'])"'
+    t.value = str(t.value)
     return t
+
+#Function to allow comments
+def t_comment(t):
+    r'\#.*'
+    pass
 
 #Function to count lines
 def t_newline(t):
-    r'\°'
+    r'\n+'
     t.lexer.lineno += len(t.value)
 
 #Function to show lexical error 
@@ -257,13 +256,11 @@ lexer = lex.lex()
 # Test scanner function
 """def pruebaLex():
     lexer.input('if else print + - "HOLA" program vars 123 123.1 -123.5 class * / gabo_125 Gabo')
-
     while True:
         tok = lexer.token()
         if not tok:
             break
         print(tok)
-
 pruebaLex()"""
 
 # ***** PARSER *****
@@ -340,7 +337,6 @@ def p_type(p):
     type  : INT empty
           | FLOAT empty
           | CHAR empty
-          | STRING empty
           | ID empty
     '''
     p[0] = p[1]
@@ -378,7 +374,6 @@ def p_typeFunc(p):
     typeFunc  : INT empty
               | FLOAT empty
               | CHAR empty
-              | STRING empty
               | ID empty
               | VOID empty
     '''
@@ -399,7 +394,6 @@ def p_typepar(p):
     typepar  : INT empty
           | FLOAT empty
           | CHAR empty
-          | STRING empty
           | ID empty
     '''
     p[0] = None
@@ -419,7 +413,6 @@ def p_statement(p):
                 | write statementF
                 | if statementF
                 | repeat statementF
-
     statementF : statement
                 | empty
     '''
@@ -442,7 +435,6 @@ def p_arrfunc(p):
 def p_param(p):
     '''
     param : var paramF
-
     paramF : COMMA param
             | empty
     '''
@@ -476,10 +468,8 @@ def p_read(p):
 def p_write(p):
     '''
     write  : WRITE L_PAR writeT
-
-    writeT : CTE_STRING writeF
+    writeT : CTE_CHAR writeF
             | exp writeF
-
     writeF : COMMA  writeT
                | R_PAR SEMICOLON empty
     '''
@@ -495,7 +485,6 @@ def p_repeat(p):
 def p_if(p):
     '''
     if : IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
-
     ifF : ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
         | empty
     '''
@@ -504,7 +493,6 @@ def p_if(p):
 def p_assigment(p):
     '''
     assigment : var assigmentF
-
     assigmentF : EQUAL exp empty 
                 | ope exp empty
     '''
@@ -529,7 +517,6 @@ def p_nonconditional(p):
     '''
     nonconditional : FROM VAR arrfunc nonconditionalF
                     | FROM VAR nonconditionalF
-
     nonconditionalF : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
     '''
     p[0] = None
@@ -544,7 +531,6 @@ def p_bool(p):
 def p_exp(p):
     '''
     exp : ex expT
-
     expT : LESS expf
           | GREATER expf
           | LESS_TH expf
@@ -552,7 +538,6 @@ def p_exp(p):
           | SAME expf
           | DIF expf
           | empty
-
     expf : ex empty
           | ex bool empty
     '''
@@ -562,7 +547,6 @@ def p_exp(p):
 def p_ex(p):
     '''
     ex  : term exF
-
     exF : PLUS ex
          | MINUS ex
          | empty
@@ -572,7 +556,6 @@ def p_ex(p):
 def p_term(p):
     '''
     term : factor termF
-
     termF : MULT term
          | DIV term
          | empty
@@ -583,11 +566,9 @@ def p_factor(p):
     '''
     factor  : L_PAR exp R_PAR empty
             | factorT
-
     factorT : PLUS factorF
             | MINUS factorF
             | factorF
-
     factorF : varcte empty
     '''
     p[0] = None
@@ -597,7 +578,7 @@ def p_varcte(p):
     varcte  : var empty
             | CTE_INT empty
             | CTE_FLOAT empty
-            | CTE_STRING empty
+            | CTE_CHAR empty
     '''
     p[0] = None
 
@@ -620,16 +601,10 @@ parser = yacc.yacc()
 #read 1 txt
 try:
     text = input('Insert test doc (.txt): ')
-    f = open(text, "r")
-    prog = ""
-    for s in f:
-        stripped_line = s.rstrip()
-        prog += stripped_line + " ° "
-    parser.parse(prog)
-    #parser.parse(f.read())
+    with open(text, 'r') as file:
+        parser.parse(file.read())
 except EOFError:
     print("Error")
-    #parser.parse(s)
 
 #insert name and read txt
 """

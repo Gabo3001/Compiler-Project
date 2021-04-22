@@ -4,7 +4,6 @@ class Clase1; {
     a, b: int;
     c[1,2], d[3]: float;
     e: char;
-    f: string;
     methods
     int function Func1(a:int; b:float;);
     x: int;
@@ -17,7 +16,7 @@ class Clase2 <inherit Class1>; {
     a : int;
     methods
     void function Func2();
-    x: string;
+    x: float;
     {
         a = 12.5
     }
