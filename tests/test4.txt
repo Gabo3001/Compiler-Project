@@ -7,12 +7,12 @@ x: int;
 }
 
 void function Func2();
-x: string;
+x: char;
 {
     a = 12.5
 }
 
-float function Func3(c:string;);
+float function Func3(c:char;);
 var_test01 : char;
 {
     f = -123.5
