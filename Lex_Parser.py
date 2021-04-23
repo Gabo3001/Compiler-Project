@@ -420,6 +420,7 @@ def p_void(p):
     '''
     void : ID  DOT ID L_PAR param R_PAR SEMICOLON empty
             | ID L_PAR param R_PAR SEMICOLON empty
+            | ID L_PAR R_PAR SEMICOLON empty
     '''
     p[0] = None
 
@@ -432,7 +433,7 @@ def p_arrfunc(p):
 
 def p_param(p):
     '''
-    param : var paramF
+    param : exp paramF
 
     paramF : COMMA param
             | empty
