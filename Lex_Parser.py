@@ -238,8 +238,13 @@ def t_CTE_CHAR(t):
 
 #Function to count lines
 def t_newline(t):
-    r'\°'
+    r'\n+'
     t.lexer.lineno += len(t.value)
+
+#Function to add comments
+def t_comment(t):
+    r'\#.*'
+    pass
 
 #Function to show lexical error 
 def t_error(t):
@@ -612,16 +617,10 @@ parser = yacc.yacc()
 #read 1 txt
 try:
     text = input('Insert test doc (.txt): ')
-    f = open(text, "r")
-    prog = ""
-    for s in f:
-        stripped_line = s.rstrip()
-        prog += stripped_line + " ° "
-    parser.parse(prog)
-    #parser.parse(f.read())
+    with open(text, 'r') as file:
+        parser.parse(file.read())
 except EOFError:
     print("Error")
-    #parser.parse(s)
 
 #insert name and read txt
 """

@@ -1,11 +1,12 @@
 program Test5;
+#Declaracion de variables
 vars
 ave, beto: int;
 
 float function Func3(c:char;);
 var_test01 : char;
 {
-    f = -123.5
+    f = -123.5 #f toma el valor de -123.5
 }
 
 void function Func2();
@@ -14,7 +15,7 @@ a,b,c: int;
 {
     a = 12.5
 }
-
+#Inicio de funcion main
 main(){
     ave = 1
 }
