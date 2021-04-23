@@ -49,10 +49,9 @@ tokens = [
     'INT',          #int
     'FLOAT',        #float
     'CHAR',         #char
-    'STRING',       #string
     'CTE_INT',      #Cte.int
     'CTE_FLOAT',    #Cte.float
-    'CTE_STRING',   #Cte.string
+    'CTE_CHAR',     #Cte.char
     'EQUAL',        #=
     'PLUS',         #+
     'MINUS',        #-
@@ -157,11 +156,6 @@ def t_CHAR(t):
     t.type = 'CHAR'
     return t
 
-def t_STRING(t):
-    r'string'
-    t.type = 'STRING'
-    return t
-
 def t_READ(t):
     r'read'
     t.type = 'READ'
@@ -237,9 +231,9 @@ def t_CTE_INT(t):
     t.value = int(t.value)
     return t
 
-def t_CTE_STRING(t):
-    r'"[a-zA-Z0-9!@#$%^&*()]*"'
-    t.type = 'CTE_STRING'
+def t_CTE_CHAR(t):
+    r"'[a-zA-Z0-9!@#$%^&*()]'"
+    t.value = str(t.value)
     return t
 
 #Function to count lines
@@ -340,7 +334,6 @@ def p_type(p):
     type  : INT empty
           | FLOAT empty
           | CHAR empty
-          | STRING empty
           | ID empty
     '''
     p[0] = p[1]
@@ -378,7 +371,6 @@ def p_typeFunc(p):
     typeFunc  : INT empty
               | FLOAT empty
               | CHAR empty
-              | STRING empty
               | ID empty
               | VOID empty
     '''
@@ -399,7 +391,6 @@ def p_typepar(p):
     typepar  : INT empty
           | FLOAT empty
           | CHAR empty
-          | STRING empty
           | ID empty
     '''
     p[0] = None
@@ -477,7 +468,7 @@ def p_write(p):
     '''
     write  : WRITE L_PAR writeT
 
-    writeT : CTE_STRING writeF
+    writeT : CTE_CHAR writeF
             | exp writeF
 
     writeF : COMMA  writeT
@@ -597,7 +588,7 @@ def p_varcte(p):
     varcte  : var empty
             | CTE_INT empty
             | CTE_FLOAT empty
-            | CTE_STRING empty
+            | CTE_CHAR empty
     '''
     p[0] = None
 

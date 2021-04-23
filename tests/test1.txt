@@ -1,4 +1,0 @@
-program Test1;
-main(){
-    a = 1
-}
