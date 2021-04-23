@@ -1,0 +1,16 @@
+program Test3;
+vars
+a, b, c: int;
+d: float;
+e[30]: char;
+f,g,h: char;
+main(){
+    a = 1
+    b = 2 + a
+    read(c);
+    d = c / b
+    write(d);
+    read(f,g);
+    write(f,g);
+    write(b + c);
+}

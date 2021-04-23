@@ -21,6 +21,8 @@ class Clase2 <inherit Class1>; {
         a = 12.5
     }
 };
+vars
+a, b: int;
 main(){
     a = 1
 }

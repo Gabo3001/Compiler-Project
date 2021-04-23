@@ -1,11 +1,13 @@
 program Test5;
 vars
 ave, beto: int;
+
 float function Func3(c:char;);
 var_test01 : char;
 {
     f = -123.5
 }
+
 void function Func2();
 x,y,z: char;
 a,b,c: int;
@@ -14,5 +16,5 @@ a,b,c: int;
 }
 
 main(){
-    a = 1
+    ave = 1
 }

@@ -1,0 +1,38 @@
+program Test4;
+vars
+gab: int;
+pau: float;
+
+int function Func1(a:int; b:int;);
+x: int;
+{
+    x = a * 3
+    return(x + b);
+}
+
+void function Func2();
+x: char;
+{
+    x = 'a'
+    write(x);
+}
+
+float function Func3(c:float;);
+var_test01 : float;
+{
+    var_test01 = c / 3
+    return(var_test01);
+}
+
+void function Func4(x:int; y:int;);
+z: int;
+{
+    z = x - y
+    write(z);
+}
+
+main(){
+    gab = 8
+    pau = 17.8
+    write(gab, pau);
+}

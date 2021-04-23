@@ -1,9 +1,0 @@
-program Test3;
-vars
-a, b: int;
-c[1,2], d[3]: float;
-e[30]: char;
-e,f,g,h,i: char;
-main(){
-    a = 1
-}
