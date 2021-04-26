@@ -1,0 +1,9 @@
+program Test3;
+vars
+a, b, c: int;
+d: float;
+e: char;
+f,g,h: char;
+main(){
+    a = a * (b + c) 
+}
