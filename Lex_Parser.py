@@ -5,9 +5,20 @@ import ply.lex as lex
 import ply.yacc as yacc
 import sys
 from datastruct import DirProcess
+from collections import deque
+from ObjQuad import Quadruple
 
+pilaO = deque()
+poper = deque()
+ptypes = deque()
 dic = DirProcess()
 
+global_int = 0
+global_float = 1000
+global_char = 2000
+global_bool = 3000
+
+quadruples = []
 
 # ***** LEXER *****
 # Tokens
@@ -756,11 +767,15 @@ def p_var(p):
     '''
     var : VAR varF  
         | ID DOT VAR varF  
-    
+    '''
+    if len(p) == 3:
+        p[0] = p[1]
+
+def p_varF(p):
+    '''
     varF : arrfunc empty
           | empty
     '''
-    p[0] = None
 
 def p_read(p):
     '''
@@ -859,27 +874,27 @@ def p_exp(p):
 
 def p_ex(p):
     '''
-    ex  : term exF
+    ex  : term np_addEx exF
 
-    exF : PLUS ex
-         | MINUS ex
+    exF : PLUS np_addOp ex
+         | MINUS np_addOp ex
          | empty
     '''
     p[0] = None
 
 def p_term(p):
     '''
-    term : factor termF
+    term : factor np_addTerm termF
 
-    termF : MULT term
-         | DIV term
+    termF : MULT np_addOp term
+         | DIV np_addOp term
          | empty
     '''
     p[0] = None
 
 def p_factor(p):
     '''
-    factor  : L_PAR exp R_PAR empty
+    factor  : L_PAR np_addPar exp R_PAR np_popPar empty
             | factorT
 
     factorT : PLUS factorF
@@ -892,7 +907,7 @@ def p_factor(p):
 
 def p_varcte(p):
     '''
-    varcte  : var empty
+    varcte  : var np_addId empty
             | CTE_INT empty
             | CTE_FLOAT empty
             | CTE_CHAR empty
@@ -912,6 +927,85 @@ def p_empty(p):
     '''
     p[0] = None
 
+# ***** NEURALGIC POINTS *****
+
+def p_np_addId(p):
+    'np_addId : '
+    pilaO.append(p[-1])
+    check_type_id(p[-1])
+
+def check_type_id(check):
+    if dic.get_item("Program").vars.is_occupied(check):
+        ptypes.append(dic.get_item("Program").vars.get_item(check).Obj_type)
+
+def p_np_addOp(p):
+    'np_addOp : '
+    poper.append(p[-1])
+
+def p_np_addPar(p):
+    'np_addPar : '
+    poper.append(p[-1])
+
+def p_np_popPar(p):
+    'np_popPar : '
+    if poper[-1] != '(':
+        print('Error with fake bottom')
+        sys.exit()
+    else:
+        poper.pop()
+
+def p_np_addTerm(p):
+    'np_addTerm : '
+    generateQuad(['*','/'])
+
+def p_np_addEx(p):
+    'np_addEx : '
+    generateQuad(['+','-'])
+
+#Function that will generate the quadruples
+def generateQuad(check):
+    if len(poper) > 0:
+        if poper[-1] in check:
+            op = poper.pop()
+            opdo_der = pilaO.pop()
+            opdoT_der = ptypes.pop()
+            opdo_izq = pilaO.pop()
+            opdoT_izq = ptypes.pop()
+            tempType = semanticCube[opdoT_der][opdoT_izq][op]
+            if tempType == 'error':
+                print('Error trying to generate quadruple')
+                sys.exit()
+            else:
+                temp = generate_temporal(tempType)
+                pilaO.append(temp)
+                ptypes.append(tempType)
+                quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))
+
+def generate_temporal(tempType):
+    global global_int, global_float, global_char, global_bool
+    temp = ""
+    if tempType == 'int':
+        if global_int > 999: 
+            error('Limit of variables of type {} reached'.format(tempType))
+        temp = "ti" + str(global_int + 1)
+        global_int += 1
+    elif tempType == 'float':
+        if global_float > 1999: 
+            error('Limit of variables of type {} reached'.format(tempType))
+        temp = "tf" + str(global_float - 999)
+        global_float += 1
+    elif tempType == 'char':
+        if global_char > 2999: 
+            error('Limit of variables of type {} reached'.format(tempType))
+        temp = "tc" + str(global_char - 1999)
+        global_char += 1
+    elif tempType == 'bool':
+        if global_bool > 3999: 
+            error('Limit of variables of type {} reached'.format(tempType))
+        temp = "tb" + str(global_bool- 2999)
+        global_bool += 1
+    return temp
+
 parser = yacc.yacc()
 
 #Test Lex and Parser with txt
@@ -922,6 +1016,12 @@ try:
         parser.parse(file.read())
 except EOFError:
     print("Error")
+
+print(pilaO) 
+print(poper)
+print(ptypes)
+for item in quadruples:
+    print(item.get_quad())
 
 #insert name and read txt
 """
