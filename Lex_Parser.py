@@ -4,19 +4,30 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
-from datastruct import DirProcess
+from datastruct import HashTable, Funcfunc
 from collections import deque
 from ObjQuad import Quadruple
+
+dic = HashTable()
+
+pvars = deque()
+pvarsT = deque()
+currFunc = ''
+currType = ''
+progName = ''
 
 pilaO = deque()
 poper = deque()
 ptypes = deque()
-dic = DirProcess()
 
-global_int = 0
-global_float = 1000
-global_char = 2000
-global_bool = 3000
+global_int = 1000
+global_float = 2000
+global_char = 3000
+global_bool = 4000
+local_int = 5000
+local_float = 6000
+local_char = 7000
+local_bool = 8000
 
 quadruples = []
 
@@ -582,10 +593,8 @@ semanticCube = {
 # Grammar definition
 def p_program(p):
     '''
-    program : PROGRAM ID SEMICOLON programT
+    program : PROGRAM ID np_getcurrFunc SEMICOLON programT
     '''
-    dic.add_prog(p[2])
-    #print(p[2])
     p[0] = None
 
 def p_programT(p):
@@ -617,34 +626,28 @@ def p_classT(p):
 
 def p_vars(p):
     '''
-    vars  : VARS dec empty
+    vars  : VARS dec np_AddFunc empty
     '''
-    dic.add_process(p[1]+":"+p[2])
-    #print(p[1]+":"+p[2])
     p[0] = None
 
 def p_dec(p):
     '''
-    dec : VAR arr decF  
-        | VAR decF 
+    dec : VAR arr np_getDecArr decF  
+        | VAR np_getDec decF 
     '''
-    if len(p) == 4:
-      p[0] = p[1]+p[2]+"."+p[3]
-    elif p[2] != None:
-      p[0] = p[1]+"."+p[2]
+    if len(p) == 5:
+      p[0] = p[1]+p[2]
+    else:
+      p[0] = p[1]
 
 def p_decF(p):
     ''' 
-    decF : COMMA dec
-          | COLON type SEMICOLON dec
-          | COLON type SEMICOLON empty
+    decF : COMMA dec 
+          | COLON type np_getVarType SEMICOLON np_getDec dec 
+          | COLON type np_getVarType SEMICOLON np_getDec np_addToDic empty
     '''
     if p[1] == ",":
       p[0] = p[2]
-    elif p[4] == None:
-      p[0] = "("+p[2]+")"
-    else:
-      p[0] = "("+p[2]+")." + p[4]
 
 def p_type(p):
     '''
@@ -667,10 +670,8 @@ def p_arr(p):
 
 def p_func(p):
     '''
-    func : typeFunc FUNCTION ID L_PAR funcF
+    func : typeFunc FUNCTION ID np_getcurrFunc np_AddFunc L_PAR funcF
     '''
-    dic.add_process(p[3]+"("+p[1]+")" +p[5])
-    #print(p[3]+"("+p[1]+")" +p[5])
     p[0] = None
 
 def p_funcF(p):
@@ -678,10 +679,6 @@ def p_funcF(p):
     funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
            | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
     '''
-    if len(p) == 9:
-      p[0] = ":"+p[4]
-    else:
-      p[0] = ":"+p[3]
 
 def p_typeFunc(p):
     '''
@@ -919,6 +916,8 @@ def p_varcte(p):
 def p_error(p):
     print("Syntax error found at line %d." % (lexer.lineno))
     print(p)
+    sys.exit()
+
 
 #Empty function
 def p_empty(p):
@@ -929,6 +928,140 @@ def p_empty(p):
 
 # ***** NEURALGIC POINTS *****
 
+def p_np_getcurrFunc(p):
+    'np_getcurrFunc : '
+    global currFunc
+    currFunc = p[-1]
+
+def p_np_getDec(p):
+    'np_getDec : '
+    pvars.append(p[-1])
+
+def p_np_getDecArr(p):
+    'np_getDecArr : '
+    pvars.append(p[-2]+p[-1])
+
+def p_np_getVarType(p):
+    'np_getVarType : '
+    pvarsT.append(p[-1])
+
+def p_np_AddFunc(p):
+    'np_AddFunc : '
+    global currFunc, progName
+    if p[-2] == 'vars':
+        progName = currFunc
+    else:
+        key = dic.func_hash(currFunc)
+        dic.dic[key] = Funcfunc(currFunc, p[-4])
+        dic.dic[key].printFunc()
+  
+def p_np_addToDic(p):
+    'np_addToDic : '
+    global currFunc, progName
+    if progName == "":
+        key = dic.func_hash('Program')  
+        dic.dic[key] = Funcfunc(currFunc, "program")
+        dic.dic[key].printFunc()
+        progName = currFunc
+        while pvars:
+            addVars(key)
+    else: 
+        key = dic.func_hash(currFunc)
+        while pvars:
+            addVars(key)
+#Function that add variable to process table
+def addVars(key):
+    global currType, currFunc
+    item = pvars[-1]
+    if item == ";":
+        currType = pvarsT.pop()
+        pvars.pop()
+    elif item[-1] == "]":
+        lvl1 = 1
+        lvl2 = 1
+        v = item.split("[")
+        if "," in v[1]:
+            a = v[1].split(",")
+            lvl1 = int(a[0])
+            lvl2 = int(a[1].replace(']', ''))
+        else:
+            lvl1 = int(v[1].replace(']', ''))
+        if dic.dic[key].vars.is_occupied(v[0]):
+            print('Nombre de variable "{}" ya declarada'.format(v[0]))
+            sys.exit()
+        else:
+            memo = getMemo()
+            dic.dic[key].vars.add_var(v[0], currType, memo, lvl1, lvl2)
+            dic.dic[key].vars.get_item(v[0]).printObj()
+            pvars.pop()
+
+    else:
+        if dic.dic[key].vars.is_occupied(item):
+            print('Nombre de variable "{}" ya declarada'.format(item))
+            sys.exit()
+        else:
+            memo = getMemo()
+            dic.dic[key].vars.add_var(item, currType, memo)
+            dic.dic[key].vars.get_item(item).printObj()
+            pvars.pop()
+#function that returns the memory number of the function
+def getMemo():
+    global currFunc, currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
+    memo = ""
+    print(currFunc)
+    if currFunc == progName:
+        if currType == 'int':
+            if global_int > 1999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = global_int
+            global_int += 1
+        elif currType == 'float':
+            if global_float > 2999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = global_float
+            global_float += 1
+        elif currType == 'char':
+            if global_char > 3999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = global_char
+            global_char += 1
+        elif currType == 'bool':
+            if global_bool > 4999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = global_bool
+            global_bool += 1
+        return memo
+    else: 
+        if currType == 'int':
+            if local_int > 5999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = local_int
+            local_int += 1
+        elif currType == 'float':
+            if local_float > 6999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = local_float
+            local_float += 1
+        elif currType == 'char':
+            if local_char > 7999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = local_char
+            local_char += 1
+        elif currType == 'bool':
+            if local_bool > 8999: 
+                print('Limit of variables of type {} reached'.format(currType))
+                sys.exit()
+            memo = local_bool
+            local_bool += 1
+        return memo
+
 def p_np_addId(p):
     'np_addId : '
     pilaO.append(p[-1])
@@ -937,6 +1070,9 @@ def p_np_addId(p):
 def check_type_id(check):
     if dic.get_item("Program").vars.is_occupied(check):
         ptypes.append(dic.get_item("Program").vars.get_item(check).Obj_type)
+    else: 
+        print('Variable {} not defined'.format(check))
+        sys.exit()
 
 def p_np_addOp(p):
     'np_addOp : '
@@ -980,29 +1116,39 @@ def generateQuad(check):
                 pilaO.append(temp)
                 ptypes.append(tempType)
                 quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))
+                """ BORRARFINAL
+                if type(opdo_izq) == str:
+                    opdo_izq = dic.get_item("Program").vars.get_item(opdo_izq).memo
+                if type(opdo_der) == str:
+                    opdo_der = dic.get_item("Program").vars.get_item(opdo_der).memo
+                quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))"""
 
 def generate_temporal(tempType):
     global global_int, global_float, global_char, global_bool
     temp = ""
     if tempType == 'int':
-        if global_int > 999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = "ti" + str(global_int + 1)
+        if global_int > 1999: 
+            print('Limit of variables of type {} reached'.format(tempType))
+            sys.error()
+        temp = global_int
         global_int += 1
     elif tempType == 'float':
-        if global_float > 1999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = "tf" + str(global_float - 999)
+        if global_float > 2999: 
+            print('Limit of variables of type {} reached'.format(tempType))
+            sys.error()
+        temp = global_float
         global_float += 1
     elif tempType == 'char':
-        if global_char > 2999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = "tc" + str(global_char - 1999)
+        if global_char > 3999: 
+            print('Limit of variables of type {} reached'.format(tempType))
+            sys.error()
+        temp = global_char
         global_char += 1
     elif tempType == 'bool':
-        if global_bool > 3999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = "tb" + str(global_bool- 2999)
+        if global_bool > 4999: 
+            print('Limit of variables of type {} reached'.format(tempType))
+            sys.error()
+        temp = global_bool
         global_bool += 1
     return temp
 
