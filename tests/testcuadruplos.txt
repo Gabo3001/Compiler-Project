@@ -5,5 +5,5 @@ d: float;
 e: char;
 f,g,h: char;
 main(){
-    a = a * (b + c) 
+    a = a * (b + c) > b | a != b 
 }
