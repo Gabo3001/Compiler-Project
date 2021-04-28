@@ -117,7 +117,7 @@ t_MULT_EQ = r'\*\='     #*=
 t_DIV_EQ = r'\/\='      #/=
 t_LESS_TH = r'\<\='     #<=
 t_GREAT_TH = r'\>\='    #>=
-t_DIF = r'\=\='         #!=
+t_DIF = r'\!\='         #!=
 t_SAME = r'\=\='        #==
 
 t_ignore = ' \t'
@@ -846,25 +846,32 @@ def p_nonconditional(p):
 
 def p_bool(p):
     '''
-    bool : OR exp empty
-        | AND exp empty
+    bool : logical np_addBool boolF
+
+    boolF : OR np_addOp bool
+        | AND np_addOp bool
+        | empty
+    '''
+    p[0] = None
+
+def p_logical(p):
+    '''
+    logical : ex np_addLogical logicalF
+
+    logicalF : LESS np_addOp logical
+            | GREATER np_addOp logical
+            | LESS_TH np_addOp logical
+            | GREAT_TH np_addOp logical
+            | SAME np_addOp logical
+            | DIF np_addOp logical
+            | empty
     '''
     p[0] = None
 
 def p_exp(p):
     '''
-    exp : ex expT
+    exp : bool empty
 
-    expT : LESS expf
-          | GREATER expf
-          | LESS_TH expf
-          | GREAT_TH expf
-          | SAME expf
-          | DIF expf
-          | empty
-
-    expf : ex empty
-          | ex bool empty
     '''
     p[0] = None
 
@@ -1008,7 +1015,6 @@ def addVars(key):
 def getMemo():
     global currFunc, currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     memo = ""
-    print(currFunc)
     if currFunc == progName:
         if currType == 'int':
             if global_int > 1999: 
@@ -1097,6 +1103,14 @@ def p_np_addTerm(p):
 def p_np_addEx(p):
     'np_addEx : '
     generateQuad(['+','-'])
+
+def p_np_addLogical(p):
+    'np_addLogical : '
+    generateQuad(['<','>','>=','<=','==','!='])
+
+def p_np_addBool(p):
+    'np_addBool : '
+    generateQuad(['|','&'])
 
 #Function that will generate the quadruples
 def generateQuad(check):
