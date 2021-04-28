@@ -39,19 +39,20 @@ class HashTable:
     return False
 
 class Objeto:
-  def __init__(self, name, Obj_type, level1 = 1, level2 = 1):
+  def __init__(self, name, Obj_type, memo, level1 = 1, level2 = 1):
     self.name = name
     self.Obj_type = Obj_type
     self.level1 = level1
     self.level2 = level2
+    self.memo = memo
 
   def printObj(self):
-    print("Name:{}, Type: {}, Lvl1:{}, Lvl2:{}".format(self.name, self.Obj_type, self.level1, self.level2))
+    print("Name:{}, Type: {}, Memo:{}, Lvl1:{}, Lvl2:{}".format(self.name, self.Obj_type, self.memo, self.level1, self.level2))
 
 class VarTab(HashTable):
-  def add_var(self, name, obj_ty, lev1 = 1, lev2 = 1):
+  def add_var(self, name, obj_ty, memo, lev1 = 1, lev2 = 1):
     aux = self.func_hash(name)
-    self.dic[aux] = Objeto(name,obj_ty,lev1,lev2)
+    self.dic[aux] = Objeto(name,obj_ty,memo,lev1,lev2)
 
 
 class Funcfunc:
@@ -62,68 +63,3 @@ class Funcfunc:
   
   def printFunc(self):
     print("Name:{}, Type: {}".format(self.name, self.func_type))
-
-class DirProcess(HashTable):
-  def add_process(self, line):
-    aux = line.split(":")
-    name = ""
-    prosT = ""
-
-    #agregr pross
-    if aux[0] == "vars":
-      name = "Program"
-      prosT = "program"
-    else:
-      s = aux[0].split("(")
-      name = s[0]
-      prosT = s[1].replace(')', '') 
-
-    if self.is_occupied(name):
-      print('La funcion "{}" ya fue declarada'.format(name))
-      sys.exit()
-    else:
-      key = self.func_hash(name)
-      self.dic[key] = Funcfunc(name, prosT)
-      #self.dic[key].printFunc()
-
-    # agregar variables
-    aux2 = list(reversed(aux[1].split(".")))
-    vtype = ""
-
-    for item in aux2:
-      if item[0] == "(":
-        item = item.replace('(', '') 
-        vtype = item.replace(')', '') 
-
-      elif item[-1] == "]":
-        lvl1 = 1
-        lvl2 = 1
-        v = item.split("[")
-        if "," in v[1]:
-          a = v[1].split(",")
-          lvl1 = int(a[0])
-          lvl2 = int(a[1].replace(']', ''))
-        else:
-          lvl1 = int(v[1].replace(']', ''))
-        if self.dic[key].vars.is_occupied(v[0]):
-            print('Nombre de variable "{}" ya declarada'.format(item))
-            sys.exit()
-        else:
-          self.dic[key].vars.add_var(v[0], vtype, lvl1, lvl2)
-          #self.dic[key].vars.get_item(v[0]).printObj()
-
-      else:
-        if self.dic[key].vars.is_occupied(item):
-          print('Nombre de variable "{}" ya declarada'.format(item))
-          sys.exit()
-        else:
-          self.dic[key].vars.add_var(item, vtype)
-          #self.dic[key].vars.get_item(item).printObj()
-
-  def add_prog(self, line):
-    key = self.func_hash("Program")
-    if self.is_occupied("Program"):
-      self.dic[key].name = line
-    else:
-      self.dic[key] = Funcfunc(line, "program")
-    #self.dic[key].printFunc()
