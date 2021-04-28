@@ -307,7 +307,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'int'
         },
         'float':{
             '-': 'float',
@@ -325,7 +326,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'char':{
             '-': 'error',
@@ -343,7 +345,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'bool':{
             '-': 'error',
@@ -361,7 +364,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         }
     },
     'float':{
@@ -381,7 +385,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'float':{
             '-': 'float',
@@ -399,7 +404,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'float'
         },
         'char':{
             '-': 'error',
@@ -417,7 +423,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'bool':{
             '-': 'error',
@@ -435,7 +442,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         }
     },
     'char':{
@@ -455,7 +463,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'float':{
             '-': 'error',
@@ -473,7 +482,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'char':{
             '-': 'error',
@@ -491,7 +501,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'char'
         },
         'bool':{
             '-': 'error',
@@ -509,7 +520,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         }
     },
     'bool':{
@@ -529,7 +541,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'float':{
             '-': 'error',
@@ -547,7 +560,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'char':{
             '-': 'error',
@@ -565,7 +579,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'error',
-            '|': 'error'
+            '|': 'error',
+            '=': 'error'
         },
         'bool':{
             '-': 'error',
@@ -583,7 +598,8 @@ semanticCube = {
             '!=': 'bool',
             '==': 'bool',
             '&': 'bool',
-            '|': 'bool'
+            '|': 'bool',
+            '=': 'bool'
         }
     }
 }
@@ -813,10 +829,10 @@ def p_if(p):
 
 def p_assigment(p):
     '''
-    assigment : var assigmentF
+    assigment : var np_addId assigmentF
 
-    assigmentF : EQUAL exp empty 
-                | ope exp empty
+    assigmentF : EQUAL np_addOp exp np_doAssign empty 
+                | ope np_addOp exp np_doAssign empty
     '''
     p[0] = None
 
@@ -994,8 +1010,7 @@ def addVars(key):
         else:
             lvl1 = int(v[1].replace(']', ''))
         if dic.dic[key].vars.is_occupied(v[0]):
-            print('Nombre de variable "{}" ya declarada'.format(v[0]))
-            sys.exit()
+            error('Variable "{}" has already been declared'.format(v[0]))
         else:
             memo = getMemo()
             dic.dic[key].vars.add_var(v[0], currType, memo, lvl1, lvl2)
@@ -1004,8 +1019,7 @@ def addVars(key):
 
     else:
         if dic.dic[key].vars.is_occupied(item):
-            print('Nombre de variable "{}" ya declarada'.format(item))
-            sys.exit()
+            error('Variable "{}" has already been declared'.format(item))
         else:
             memo = getMemo()
             dic.dic[key].vars.add_var(item, currType, memo)
@@ -1018,67 +1032,59 @@ def getMemo():
     if currFunc == progName:
         if currType == 'int':
             if global_int > 1999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = global_int
             global_int += 1
         elif currType == 'float':
             if global_float > 2999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = global_float
             global_float += 1
         elif currType == 'char':
             if global_char > 3999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = global_char
             global_char += 1
         elif currType == 'bool':
             if global_bool > 4999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = global_bool
             global_bool += 1
         return memo
     else: 
         if currType == 'int':
             if local_int > 5999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = local_int
             local_int += 1
         elif currType == 'float':
             if local_float > 6999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = local_float
             local_float += 1
         elif currType == 'char':
             if local_char > 7999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = local_char
             local_char += 1
         elif currType == 'bool':
             if local_bool > 8999: 
-                print('Limit of variables of type {} reached'.format(currType))
-                sys.exit()
+                error('Limit of variables of type {} reached'.format(currType))
             memo = local_bool
             local_bool += 1
         return memo
 
 def p_np_addId(p):
     'np_addId : '
-    pilaO.append(p[-1])
     check_type_id(p[-1])
+    pilaO.append(p[-1])
+    
 
 def check_type_id(check):
     if dic.get_item("Program").vars.is_occupied(check):
         ptypes.append(dic.get_item("Program").vars.get_item(check).Obj_type)
     else: 
-        print('Variable {} not defined'.format(check))
-        sys.exit()
+        error('Variable {} not defined'.format(check))
 
 def p_np_addOp(p):
     'np_addOp : '
@@ -1091,8 +1097,7 @@ def p_np_addPar(p):
 def p_np_popPar(p):
     'np_popPar : '
     if poper[-1] != '(':
-        print('Error with fake bottom')
-        sys.exit()
+        error('Error with fake bottom')
     else:
         poper.pop()
 
@@ -1112,6 +1117,19 @@ def p_np_addBool(p):
     'np_addBool : '
     generateQuad(['|','&'])
 
+def p_np_doAssign(p):
+    'np_doAssign : '
+    op = poper.pop()
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
+    opdo_der = pilaO.pop()
+    opdoT_der = ptypes.pop()
+    check = semanticCube[opdoT_der][tempT][op]
+    if check != 'error':
+        quadruples.append(Quadruple(op, opdo_der, None, temp))
+    else:
+        error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
+
 #Function that will generate the quadruples
 def generateQuad(check):
     if len(poper) > 0:
@@ -1123,8 +1141,7 @@ def generateQuad(check):
             opdoT_izq = ptypes.pop()
             tempType = semanticCube[opdoT_der][opdoT_izq][op]
             if tempType == 'error':
-                print('Error trying to generate quadruple')
-                sys.exit()
+                error('Error trying to generate quadruple')
             else:
                 temp = generate_temporal(tempType)
                 pilaO.append(temp)
@@ -1142,29 +1159,29 @@ def generate_temporal(tempType):
     temp = ""
     if tempType == 'int':
         if global_int > 1999: 
-            print('Limit of variables of type {} reached'.format(tempType))
-            sys.error()
+            error('Limit of variables of type {} reached'.format(tempType))
         temp = global_int
         global_int += 1
     elif tempType == 'float':
         if global_float > 2999: 
-            print('Limit of variables of type {} reached'.format(tempType))
-            sys.error()
+            error('Limit of variables of type {} reached'.format(tempType))
         temp = global_float
         global_float += 1
     elif tempType == 'char':
         if global_char > 3999: 
-            print('Limit of variables of type {} reached'.format(tempType))
-            sys.error()
+            error('Limit of variables of type {} reached'.format(tempType))
         temp = global_char
         global_char += 1
     elif tempType == 'bool':
         if global_bool > 4999: 
-            print('Limit of variables of type {} reached'.format(tempType))
-            sys.error()
+            error('Limit of variables of type {} reached'.format(tempType))
         temp = global_bool
         global_bool += 1
     return temp
+
+def error(line):
+    print(line)
+    sys.exit()
 
 parser = yacc.yacc()
 
