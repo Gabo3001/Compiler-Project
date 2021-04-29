@@ -71,9 +71,11 @@ tokens = [
     'INT',          #int
     'FLOAT',        #float
     'CHAR',         #char
+    'BOOL',         #bool
     'CTE_INT',      #Cte.int
     'CTE_FLOAT',    #Cte.float
     'CTE_CHAR',     #Cte.char
+    'CTE_BOOL',      #Cte.bool
     'EQUAL',        #=
     'PLUS',         #+
     'MINUS',        #-
@@ -178,6 +180,11 @@ def t_CHAR(t):
     t.type = 'CHAR'
     return t
 
+def t_BOOL(t):
+    r'bool'
+    t.type = 'BOOL'
+    return t
+
 def t_READ(t):
     r'read'
     t.type = 'READ'
@@ -256,6 +263,11 @@ def t_CTE_INT(t):
 def t_CTE_CHAR(t):
     r"'[a-zA-Z0-9!@#$%^&*()]'"
     t.value = str(t.value)
+    return t
+
+def t_CTE_BOOL(t):
+    r'(True|False)'
+    t.value = bool(t.value)
     return t
 
 #Function to count lines
@@ -670,6 +682,7 @@ def p_type(p):
     type  : INT empty
           | FLOAT empty
           | CHAR empty
+          | BOOL empty
           | ID empty
     '''
     p[0] = p[1]
@@ -701,6 +714,7 @@ def p_typeFunc(p):
     typeFunc  : INT empty
               | FLOAT empty
               | CHAR empty
+              | BOOL empty
               | ID empty
               | VOID empty
     '''
@@ -721,6 +735,7 @@ def p_typepar(p):
     typepar  : INT empty
           | FLOAT empty
           | CHAR empty
+          | BOOL empty
           | ID empty
     '''
     p[0] = None
@@ -931,6 +946,7 @@ def p_varcte(p):
             | CTE_INT empty
             | CTE_FLOAT empty
             | CTE_CHAR empty
+            | CTE_BOOL empty
     '''
     p[0] = None
 
