@@ -75,7 +75,8 @@ tokens = [
     'CTE_INT',      #Cte.int
     'CTE_FLOAT',    #Cte.float
     'CTE_CHAR',     #Cte.char
-    'CTE_BOOL',      #Cte.bool
+    'CTE_STRING',   #Cte.String
+    'CTE_BOOL',     #Cte.bool
     'EQUAL',        #=
     'PLUS',         #+
     'MINUS',        #-
@@ -265,6 +266,9 @@ def t_CTE_CHAR(t):
     t.value = str(t.value)
     return t
 
+def t_CTE_STRING(t):
+    r'"[a-zA-Z0-9!@#$%^&*()]*"'
+    t.value = str(t.value)
 def t_CTE_BOOL(t):
     r'(True|False)'
     t.value = bool(t.value)
@@ -326,11 +330,11 @@ semanticCube = {
             '-': 'float',
             '*': 'float',
             '/': 'float',
-            '-=': 'float',
-            '*=': 'float',
-            '/=': 'float',
+            '-=': 'error',
+            '*=': 'error',
+            '/=': 'error',
             '+': 'float',
-            '+=': 'float',
+            '+=': 'error',
             '<': 'bool',
             '>': 'bool',
             '<=': 'bool',
@@ -809,8 +813,8 @@ def p_read(p):
     '''
     read : READ L_PAR readF
     
-    readF : var COMMA readF 
-          | var R_PAR SEMICOLON empty
+    readF : var np_addRead COMMA readF 
+          | var np_addRead R_PAR SEMICOLON empty
     '''
     p[0] = None
 
@@ -818,7 +822,7 @@ def p_write(p):
     '''
     write  : WRITE L_PAR writeT
 
-    writeT : CTE_CHAR writeF
+    writeT : CTE_STRING writeF
             | exp writeF
 
     writeF : COMMA  writeT
@@ -858,7 +862,7 @@ def p_ope(p):
         | MULT_EQ empty
         | DIV_EQ empty
     '''
-    p[0] = None
+    p[0] = p[1]
 
 def p_conditional(p):
     '''
@@ -967,23 +971,28 @@ def p_empty(p):
 
 # ***** NEURALGIC POINTS *****
 
+#Neuralgic point to get currect function
 def p_np_getcurrFunc(p):
     'np_getcurrFunc : '
     global currFunc
     currFunc = p[-1]
 
+#Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
     'np_getDec : '
     pvars.append(p[-1])
 
+#Neuralgic point to add variable with array to vars stack
 def p_np_getDecArr(p):
     'np_getDecArr : '
     pvars.append(p[-2]+p[-1])
 
+#Neuralgic point to add variable type to vars type stack
 def p_np_getVarType(p):
     'np_getVarType : '
     pvarsT.append(p[-1])
 
+#Neuralgic point to add function to process diactionary
 def p_np_AddFunc(p):
     'np_AddFunc : '
     global currFunc, progName
@@ -993,12 +1002,13 @@ def p_np_AddFunc(p):
         key = dic.func_hash(currFunc)
         dic.dic[key] = Funcfunc(currFunc, p[-4])
         dic.dic[key].printFunc()
-  
+
+#Neuralgic point to start adding variable to process table
 def p_np_addToDic(p):
     'np_addToDic : '
     global currFunc, progName
     if progName == "":
-        key = dic.func_hash('Program')  
+        key = dic.func_hash(currFunc)  
         dic.dic[key] = Funcfunc(currFunc, "program")
         dic.dic[key].printFunc()
         progName = currFunc
@@ -1008,6 +1018,7 @@ def p_np_addToDic(p):
         key = dic.func_hash(currFunc)
         while pvars:
             addVars(key)
+
 #Function that add variable to process table
 def addVars(key):
     global currType, currFunc
@@ -1041,6 +1052,7 @@ def addVars(key):
             dic.dic[key].vars.add_var(item, currType, memo)
             dic.dic[key].vars.get_item(item).printObj()
             pvars.pop()
+
 #function that returns the memory number of the function
 def getMemo():
     global currFunc, currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
@@ -1090,26 +1102,31 @@ def getMemo():
             local_bool += 1
         return memo
 
+#Neuralgic point to add id in id stack
 def p_np_addId(p):
     'np_addId : '
     check_type_id(p[-1])
     pilaO.append(p[-1])
-    
 
+#Function to check type of ids
 def check_type_id(check):
-    if dic.get_item("Program").vars.is_occupied(check):
-        ptypes.append(dic.get_item("Program").vars.get_item(check).Obj_type)
+    global currFunc
+    if dic.get_item(currFunc).vars.is_occupied(check):
+        ptypes.append(dic.get_item(currFunc).vars.get_item(check).Obj_type)
     else: 
         error('Variable {} not defined'.format(check))
 
+#Neuralgic point to add operator in opertator stack
 def p_np_addOp(p):
     'np_addOp : '
     poper.append(p[-1])
 
+#Neuralgic point to add parentesis in operator stack
 def p_np_addPar(p):
     'np_addPar : '
     poper.append(p[-1])
 
+#Neuralgic point to pop fake bottom in operator stack
 def p_np_popPar(p):
     'np_popPar : '
     if poper[-1] != '(':
@@ -1117,22 +1134,27 @@ def p_np_popPar(p):
     else:
         poper.pop()
 
+#Neuralgic point to start generation quadruple from a term
 def p_np_addTerm(p):
     'np_addTerm : '
     generateQuad(['*','/'])
 
+#Neuralgic point to start generation quadruple from a ex
 def p_np_addEx(p):
     'np_addEx : '
     generateQuad(['+','-'])
 
+#Neuralgic point to start generation quadruple from a Logical
 def p_np_addLogical(p):
     'np_addLogical : '
     generateQuad(['<','>','>=','<=','==','!='])
 
+#Neuralgic point to start generation quadruple from a bool
 def p_np_addBool(p):
     'np_addBool : '
     generateQuad(['|','&'])
 
+#Neuralgic point to generate assigment quadruple
 def p_np_doAssign(p):
     'np_doAssign : '
     op = poper.pop()
@@ -1146,8 +1168,18 @@ def p_np_doAssign(p):
     else:
         error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
 
+#Neuralgic point to generate read quadruple
+def p_np_addRead(p):
+    'np_addRead : '
+    if dic.get_item(currFunc).vars.is_occupied(p[-1]):
+        quadruples.append(Quadruple('read', None, None, p[-1]))
+    else: 
+        error('Variable {} not defined'.format(p[-1]))
+
+
 #Function that will generate the quadruples
 def generateQuad(check):
+    global currFunc
     if len(poper) > 0:
         if poper[-1] in check:
             op = poper.pop()
@@ -1165,11 +1197,12 @@ def generateQuad(check):
                 quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))
                 """ BORRARFINAL
                 if type(opdo_izq) == str:
-                    opdo_izq = dic.get_item("Program").vars.get_item(opdo_izq).memo
+                    opdo_izq = dic.get_item(currFunc).vars.get_item(opdo_izq).memo
                 if type(opdo_der) == str:
-                    opdo_der = dic.get_item("Program").vars.get_item(opdo_der).memo
+                    opdo_der = dic.get_item(currFunc).vars.get_item(opdo_der).memo
                 quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))"""
 
+#function to generate temporal
 def generate_temporal(tempType):
     global global_int, global_float, global_char, global_bool
     temp = ""
@@ -1195,6 +1228,7 @@ def generate_temporal(tempType):
         global_bool += 1
     return temp
 
+#Function to display errors
 def error(line):
     print(line)
     sys.exit()
