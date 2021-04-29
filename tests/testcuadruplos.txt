@@ -4,6 +4,9 @@ a, b, c: int;
 d: float;
 e: char;
 f,g,h: char;
+i: bool;
 main(){
-    a = a * (b + c) > b | a != b 
+    i = a * (b + c) > b | a != b 
+    read(a,b);
+    read(a);
 }
