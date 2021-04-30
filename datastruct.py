@@ -16,11 +16,6 @@ class HashTable:
       index += 1
     return h % self.MAX
 
-  #Funcion add item, almacena un valor a partir del resultado de nuestra función hash
-  def add_item(self, key, val):
-    aux = self.func_hash(key)
-    self.dic[aux] =  val
-
   #Funcion get item, regresa el valor almacenado en la llave, en caso de haber alguno
   def get_item(self, key):
     aux = self.func_hash(key)
@@ -38,6 +33,7 @@ class HashTable:
       return True
     return False
 
+
 class Objeto:
   def __init__(self, name, Obj_type, memo, level1 = 1, level2 = 1):
     self.name = name
@@ -52,7 +48,7 @@ class Objeto:
 class VarTab(HashTable):
   def add_var(self, name, obj_ty, memo, lev1 = 1, lev2 = 1):
     aux = self.func_hash(name)
-    self.dic[aux] = Objeto(name,obj_ty,memo,lev1,lev2)
+    self.dic[aux] = Objeto(name,obj_ty, memo, lev1,lev2)
 
 
 class Funcfunc:
@@ -63,3 +59,34 @@ class Funcfunc:
   
   def printFunc(self):
     print("Name:{}, Type: {}".format(self.name, self.func_type))
+
+class DirProcess(HashTable):
+# Functions  
+  def addFunc(self, name, func_type):
+    key = self.func_hash(name)  
+    self.dic[key] = Funcfunc(name, func_type)
+  
+  def funcPrint(self, name):
+    key = self.func_hash(name)
+    self.dic[key].printFunc()
+
+# Vars
+  def getVarMemo(self, key, var):
+      aux1 = self.func_hash(key)
+      return self.dic[aux1].vars.get_item(var).memo
+
+  def addVar(self, key, var, obj_ty, memo, lev1 = 1, lev2 = 1):
+    aux = self.func_hash(key)
+    self.dic[aux].vars.add_var(var, obj_ty, memo, lev1,lev2)
+
+  def varPrint(self, key, var):
+    aux = self.func_hash(key)
+    self.dic[aux].vars.get_item(var).printObj()
+
+  def varOccupied(self, key, var):
+    aux = self.func_hash(key)
+    return self.dic[aux].vars.is_occupied(var)
+
+  def getVarType(self, key, var):
+    aux = self.func_hash(key)
+    return self.dic[aux].vars.get_item(var).Obj_type

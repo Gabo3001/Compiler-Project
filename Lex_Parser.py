@@ -4,11 +4,11 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
-from datastruct import HashTable, Funcfunc
+from datastruct import DirProcess
 from collections import deque
 from ObjQuad import Quadruple
 
-dic = HashTable()
+dic = DirProcess()
 
 pvars = deque()
 pvarsT = deque()
@@ -992,14 +992,12 @@ def p_np_addFunc(p):
   global currFunc, progName
   currFunc = p[-1]
   if p[-2] == 'program':
-      key = dic.func_hash(currFunc)  
-      dic.dic[key] = Funcfunc(currFunc, "program")
-      dic.dic[key].printFunc()
+      dic.addFunc(currFunc, "program")
+      dic.funcPrint(currFunc)
       progName = currFunc
   else:
-      key = dic.func_hash(currFunc)
-      dic.dic[key] = Funcfunc(currFunc, p[-3])
-      dic.dic[key].printFunc()
+      dic.addFunc(currFunc, p[-3])
+      dic.funcPrint(currFunc)
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
@@ -1020,13 +1018,12 @@ def p_np_getVarType(p):
 def p_np_addToDic(p):
     'np_addToDic : '
     global currFunc, progName
-    key = dic.func_hash(currFunc)  
     if progName == currFunc:
         while pvars:
-            addVars(key)
+            addVars(currFunc)
     else: 
         while pvars:
-            addVars(key)
+            addVars(currFunc)
 
 #Function that add variable to process table
 def addVars(key):
@@ -1045,21 +1042,21 @@ def addVars(key):
             lvl2 = int(a[1].replace(']', ''))
         else:
             lvl1 = int(v[1].replace(']', ''))
-        if dic.dic[key].vars.is_occupied(v[0]):
+        if dic.varOccupied(key,v[0]):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
             memo = getMemo()
-            dic.dic[key].vars.add_var(v[0], currType, memo, lvl1, lvl2)
-            dic.dic[key].vars.get_item(v[0]).printObj()
+            dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
+            dic.varPrint(key, v[0])
             pvars.pop()
 
     else:
-        if dic.dic[key].vars.is_occupied(item):
+        if dic.varOccupied(key,item):
             error('Variable "{}" has already been declared'.format(item))
         else:
             memo = getMemo()
-            dic.dic[key].vars.add_var(item, currType, memo)
-            dic.dic[key].vars.get_item(item).printObj()
+            dic.addVar(key, item, currType, memo)
+            dic.varPrint(key, item)
             pvars.pop()
 
 #function that returns the memory number of the function
@@ -1202,8 +1199,8 @@ def p_np_addConstBool(p):
 #Function to check type of ids
 def check_type_id(check):
     global currFunc
-    if dic.get_item(currFunc).vars.is_occupied(check):
-        ptypes.append(dic.get_item(currFunc).vars.get_item(check).Obj_type)
+    if dic.varOccupied(currFunc,check):
+        ptypes.append(dic.getVarType(currFunc, check))
     else: 
         error('Variable "{}" not defined'.format(check))
 
@@ -1262,7 +1259,7 @@ def p_np_doAssign(p):
 #Neuralgic point to generate read quadruple
 def p_np_addRead(p):
     'np_addRead : '
-    if dic.get_item(currFunc).vars.is_occupied(p[-1]):
+    if dic.varOccupied(currFunc, p[-1]):
         quadruples.append(Quadruple('read', None, None, p[-1]))
     else: 
         error('Variable {} not defined'.format(p[-1]))
