@@ -800,7 +800,7 @@ def p_param(p):
 
 def p_return(p):
     '''
-    return : RETURN L_PAR exp R_PAR SEMICOLON empty
+    return : RETURN L_PAR exp np_addReturn R_PAR SEMICOLON empty
     '''
     p[0] = None
 
@@ -1278,6 +1278,7 @@ def p_np_addRead(p):
     else: 
         error('Variable {} not defined'.format(p[-1]))
 
+#Neuralgic point to generate write quadruple
 def p_np_addWrite(p):
     'np_addWrite : '
     if len(pilaO) > 0:
@@ -1285,6 +1286,13 @@ def p_np_addWrite(p):
         opdo = pilaO.pop()
         quadruples.append(Quadruple('write', None, None, opdo))
 
+#Neuralgic point to generate return quadruple
+def p_np_addReturn(p):
+    'np_addReturn : '
+    if len(pilaO) > 0:
+        ptypes.pop()
+        opdo = pilaO.pop()
+        quadruples.append(Quadruple('return', None, None, opdo))
 
 #Function that will generate the quadruples
 def generateQuad(check):
