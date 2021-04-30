@@ -625,7 +625,7 @@ semanticCube = {
 # Grammar definition
 def p_program(p):
     '''
-    program : PROGRAM ID np_getcurrFunc SEMICOLON programT
+    program : PROGRAM ID np_addFunc SEMICOLON programT
     '''
     p[0] = None
 
@@ -658,7 +658,7 @@ def p_classT(p):
 
 def p_vars(p):
     '''
-    vars  : VARS dec np_AddFunc empty
+    vars  : VARS dec empty
     '''
     p[0] = None
 
@@ -703,7 +703,7 @@ def p_arr(p):
 
 def p_func(p):
     '''
-    func : typeFunc FUNCTION ID np_getcurrFunc np_AddFunc L_PAR funcF
+    func : typeFunc FUNCTION ID np_addFunc L_PAR funcF
     '''
     p[0] = None
 
@@ -746,7 +746,7 @@ def p_typepar(p):
 
 def p_main(p):
     '''
-    main : MAIN L_PAR R_PAR L_CURPAR statement R_CURPAR empty
+    main : MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty
     '''
     p[0] = None
 
@@ -972,10 +972,24 @@ def p_empty(p):
 # ***** NEURALGIC POINTS *****
 
 #Neuralgic point to get currect function
-def p_np_getcurrFunc(p):
-    'np_getcurrFunc : '
-    global currFunc
-    currFunc = p[-1]
+def p_np_getMainFunc(p):
+  'np_getMainFunc : '
+  global currFunc, progName
+  currFunc = progName
+
+def p_np_addFunc(p):
+  'np_addFunc : '
+  global currFunc, progName
+  currFunc = p[-1]
+  if p[-2] == 'program':
+      key = dic.func_hash(currFunc)  
+      dic.dic[key] = Funcfunc(currFunc, "program")
+      dic.dic[key].printFunc()
+      progName = currFunc
+  else:
+      key = dic.func_hash(currFunc)
+      dic.dic[key] = Funcfunc(currFunc, p[-3])
+      dic.dic[key].printFunc()
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
@@ -992,30 +1006,15 @@ def p_np_getVarType(p):
     'np_getVarType : '
     pvarsT.append(p[-1])
 
-#Neuralgic point to add function to process diactionary
-def p_np_AddFunc(p):
-    'np_AddFunc : '
-    global currFunc, progName
-    if p[-2] == 'vars':
-        progName = currFunc
-    else:
-        key = dic.func_hash(currFunc)
-        dic.dic[key] = Funcfunc(currFunc, p[-4])
-        dic.dic[key].printFunc()
-
 #Neuralgic point to start adding variable to process table
 def p_np_addToDic(p):
     'np_addToDic : '
     global currFunc, progName
-    if progName == "":
-        key = dic.func_hash(currFunc)  
-        dic.dic[key] = Funcfunc(currFunc, "program")
-        dic.dic[key].printFunc()
-        progName = currFunc
+    key = dic.func_hash(currFunc)  
+    if progName == currFunc:
         while pvars:
             addVars(key)
     else: 
-        key = dic.func_hash(currFunc)
         while pvars:
             addVars(key)
 
@@ -1114,7 +1113,7 @@ def check_type_id(check):
     if dic.get_item(currFunc).vars.is_occupied(check):
         ptypes.append(dic.get_item(currFunc).vars.get_item(check).Obj_type)
     else: 
-        error('Variable {} not defined'.format(check))
+        error('Variable "{}" not defined'.format(check))
 
 #Neuralgic point to add operator in opertator stack
 def p_np_addOp(p):
