@@ -8,9 +8,9 @@ main(){
     a = 1
     b = 2 + a
     read(c);
-    d = c / b
+    d = d / b
     write(d);
     read(f,g);
-    write(f,g);
+    write(f,g,"Hello World");
     write(b + c);
 }
