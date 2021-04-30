@@ -28,6 +28,13 @@ local_int = 5000
 local_float = 6000
 local_char = 7000
 local_bool = 8000
+const_int = 9000
+const_float = 10000
+const_char = 11000
+const_bool = 12000
+const_string = 13000
+
+const_table = {}
 
 quadruples = []
 
@@ -246,6 +253,11 @@ def t_VAR(t):
     t.type = 'VAR'
     return t
 
+def t_CTE_BOOL(t):
+    r'(True|False)'
+    t.value = bool(t.value)
+    return t
+
 def t_ID(t):
     r'[A-Z][a-zA-Z0-9]*'
     t.type = 'ID'
@@ -269,9 +281,6 @@ def t_CTE_CHAR(t):
 def t_CTE_STRING(t):
     r'"[a-zA-Z0-9!@#$%^&*()]*"'
     t.value = str(t.value)
-def t_CTE_BOOL(t):
-    r'(True|False)'
-    t.value = bool(t.value)
     return t
 
 #Function to count lines
@@ -947,10 +956,10 @@ def p_factor(p):
 def p_varcte(p):
     '''
     varcte  : var np_addId empty
-            | CTE_INT empty
-            | CTE_FLOAT empty
-            | CTE_CHAR empty
-            | CTE_BOOL empty
+            | CTE_INT np_addConstInt empty
+            | CTE_FLOAT np_addConstFloat empty
+            | CTE_CHAR np_addConstChar empty
+            | CTE_BOOL np_addConstBool empty
     '''
     p[0] = None
 
@@ -971,12 +980,13 @@ def p_empty(p):
 
 # ***** NEURALGIC POINTS *****
 
-#Neuralgic point to get currect function
+#Neuralgic point to get program name when main start
 def p_np_getMainFunc(p):
   'np_getMainFunc : '
   global currFunc, progName
   currFunc = progName
 
+#Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
   'np_addFunc : '
   global currFunc, progName
@@ -1101,11 +1111,93 @@ def getMemo():
             local_bool += 1
         return memo
 
-#Neuralgic point to add id in id stack
+#Function that return memory number of a constant
+def get_const_memo(vart):
+    global const_int, const_float, const_char, const_bool, const_string 
+    if vart == 'int':
+        if const_int > 9999: 
+            error('Limit of variables of type {} reached'.format(vart))
+        memo = const_int
+        const_int += 1
+    elif vart == 'float':
+        if const_float > 10999: 
+            error('Limit of variables of type {} reached'.format(vart))
+        memo = const_float
+        const_float += 1
+    elif vart == 'char':
+        if const_char > 11999: 
+            error('Limit of variables of type {} reached'.format(vart))
+        memo = const_char
+        const_char += 1
+    elif vart == 'bool':
+        if const_bool > 12999: 
+            error('Limit of variables of type {} reached'.format(vart))
+        memo = const_bool
+        const_bool += 1
+    elif vart == 'string':
+        if const_string > 13999: 
+            error('Limit of variables of type {} reached'.format(vart))
+        memo = const_string
+        const_string += 1
+    return memo
+
+#Neuralgic point to add id in operand stack
 def p_np_addId(p):
     'np_addId : '
     check_type_id(p[-1])
     pilaO.append(p[-1])
+
+#Neuralgic point that add constant int in operand stack
+def p_np_addConstInt(p):
+    'np_addConstInt : '
+    global const_int
+    if p[-1] not in const_table:
+        aux = get_const_memo('int')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'int'
+        }
+    pilaO.append(const_table[p[-1]]['memo'])
+    ptypes.append('int')
+
+#Neuralgic point that add constant float in operand stack
+def p_np_addConstFloat(p):
+    'np_addConstFloat : '
+    global const_float
+    if p[-1] not in const_table:
+        aux = get_const_memo('float')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'float'
+        }
+    pilaO.append(const_table[p[-1]]['memo'])
+    ptypes.append('float')
+
+#Neuralgic point that add constant char in operand stack
+def p_np_addConstChar(p):
+    'np_addConstChar : '
+    global const_char
+    if p[-1] not in const_table:
+        aux = get_const_memo('char')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'char'
+        }
+    pilaO.append(const_table[p[-1]]['memo'])
+    ptypes.append('char')
+
+#Neuralgic point that add constant bool in operand stack
+def p_np_addConstBool(p):
+    'np_addConstBool : '
+    global const_bool
+    if p[-1] not in const_table:
+        aux = get_const_memo('bool')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'bool'
+        }
+    pilaO.append(const_table[p[-1]]['memo'])
+    ptypes.append('bool')
 
 #Function to check type of ids
 def check_type_id(check):

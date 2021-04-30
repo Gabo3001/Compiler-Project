@@ -118,10 +118,10 @@ Rule 112   factorT -> MINUS factorF
 Rule 113   factorT -> factorF
 Rule 114   factorF -> varcte empty
 Rule 115   varcte -> var np_addId empty
-Rule 116   varcte -> CTE_INT empty
-Rule 117   varcte -> CTE_FLOAT empty
-Rule 118   varcte -> CTE_CHAR empty
-Rule 119   varcte -> CTE_BOOL empty
+Rule 116   varcte -> CTE_INT np_addConstInt empty
+Rule 117   varcte -> CTE_FLOAT np_addConstFloat empty
+Rule 118   varcte -> CTE_CHAR np_addConstChar empty
+Rule 119   varcte -> CTE_BOOL np_addConstBool empty
 Rule 120   empty -> <empty>
 Rule 121   np_getMainFunc -> <empty>
 Rule 122   np_addFunc -> <empty>
@@ -130,15 +130,19 @@ Rule 124   np_getDecArr -> <empty>
 Rule 125   np_getVarType -> <empty>
 Rule 126   np_addToDic -> <empty>
 Rule 127   np_addId -> <empty>
-Rule 128   np_addOp -> <empty>
-Rule 129   np_addPar -> <empty>
-Rule 130   np_popPar -> <empty>
-Rule 131   np_addTerm -> <empty>
-Rule 132   np_addEx -> <empty>
-Rule 133   np_addLogical -> <empty>
-Rule 134   np_addBool -> <empty>
-Rule 135   np_doAssign -> <empty>
-Rule 136   np_addRead -> <empty>
+Rule 128   np_addConstInt -> <empty>
+Rule 129   np_addConstFloat -> <empty>
+Rule 130   np_addConstChar -> <empty>
+Rule 131   np_addConstBool -> <empty>
+Rule 132   np_addOp -> <empty>
+Rule 133   np_addPar -> <empty>
+Rule 134   np_popPar -> <empty>
+Rule 135   np_addTerm -> <empty>
+Rule 136   np_addEx -> <empty>
+Rule 137   np_addLogical -> <empty>
+Rule 138   np_addBool -> <empty>
+Rule 139   np_doAssign -> <empty>
+Rule 140   np_addRead -> <empty>
 
 Terminals, with rules where they appear
 
@@ -232,6 +236,10 @@ main                 : 6
 nonconditional       : 73
 nonconditionalF      : 85 86
 np_addBool           : 88
+np_addConstBool      : 119
+np_addConstChar      : 118
+np_addConstFloat     : 117
+np_addConstInt       : 116
 np_addEx             : 101
 np_addFunc           : 1 24
 np_addId             : 77 115
@@ -1923,10 +1931,10 @@ state 122
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -1968,10 +1976,10 @@ state 123
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2027,10 +2035,10 @@ state 125
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2072,10 +2080,10 @@ state 126
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2264,10 +2272,10 @@ state 132
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2307,10 +2315,10 @@ state 133
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2354,10 +2362,10 @@ state 134
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2517,34 +2525,34 @@ state 147
 state 148
 
     (78) assigmentF -> EQUAL . np_addOp exp np_doAssign empty
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
     np_addOp                       shift and go to state 200
 
 state 149
 
     (79) assigmentF -> ope . np_addOp exp np_doAssign empty
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
     np_addOp                       shift and go to state 201
 
@@ -2680,17 +2688,17 @@ state 156
 state 157
 
     (109) factor -> L_PAR . np_addPar exp R_PAR np_popPar empty
-    (129) np_addPar -> .
+    (133) np_addPar -> .
 
-    L_PAR           reduce using rule 129 (np_addPar -> .)
-    PLUS            reduce using rule 129 (np_addPar -> .)
-    MINUS           reduce using rule 129 (np_addPar -> .)
-    CTE_INT         reduce using rule 129 (np_addPar -> .)
-    CTE_FLOAT       reduce using rule 129 (np_addPar -> .)
-    CTE_CHAR        reduce using rule 129 (np_addPar -> .)
-    CTE_BOOL        reduce using rule 129 (np_addPar -> .)
-    VAR             reduce using rule 129 (np_addPar -> .)
-    ID              reduce using rule 129 (np_addPar -> .)
+    L_PAR           reduce using rule 133 (np_addPar -> .)
+    PLUS            reduce using rule 133 (np_addPar -> .)
+    MINUS           reduce using rule 133 (np_addPar -> .)
+    CTE_INT         reduce using rule 133 (np_addPar -> .)
+    CTE_FLOAT       reduce using rule 133 (np_addPar -> .)
+    CTE_CHAR        reduce using rule 133 (np_addPar -> .)
+    CTE_BOOL        reduce using rule 133 (np_addPar -> .)
+    VAR             reduce using rule 133 (np_addPar -> .)
+    ID              reduce using rule 133 (np_addPar -> .)
 
     np_addPar                      shift and go to state 209
 
@@ -2747,124 +2755,124 @@ state 161
 state 162
 
     (88) bool -> logical . np_addBool boolF
-    (134) np_addBool -> .
+    (138) np_addBool -> .
 
-    OR              reduce using rule 134 (np_addBool -> .)
-    AND             reduce using rule 134 (np_addBool -> .)
-    COMMA           reduce using rule 134 (np_addBool -> .)
-    R_PAR           reduce using rule 134 (np_addBool -> .)
-    R_BREAK         reduce using rule 134 (np_addBool -> .)
-    TO              reduce using rule 134 (np_addBool -> .)
-    ID              reduce using rule 134 (np_addBool -> .)
-    RETURN          reduce using rule 134 (np_addBool -> .)
-    READ            reduce using rule 134 (np_addBool -> .)
-    WRITE           reduce using rule 134 (np_addBool -> .)
-    IF              reduce using rule 134 (np_addBool -> .)
-    VAR             reduce using rule 134 (np_addBool -> .)
-    WHILE           reduce using rule 134 (np_addBool -> .)
-    FROM            reduce using rule 134 (np_addBool -> .)
-    R_CURPAR        reduce using rule 134 (np_addBool -> .)
-    SEMICOLON       reduce using rule 134 (np_addBool -> .)
-    DO              reduce using rule 134 (np_addBool -> .)
+    OR              reduce using rule 138 (np_addBool -> .)
+    AND             reduce using rule 138 (np_addBool -> .)
+    COMMA           reduce using rule 138 (np_addBool -> .)
+    R_PAR           reduce using rule 138 (np_addBool -> .)
+    R_BREAK         reduce using rule 138 (np_addBool -> .)
+    TO              reduce using rule 138 (np_addBool -> .)
+    ID              reduce using rule 138 (np_addBool -> .)
+    RETURN          reduce using rule 138 (np_addBool -> .)
+    READ            reduce using rule 138 (np_addBool -> .)
+    WRITE           reduce using rule 138 (np_addBool -> .)
+    IF              reduce using rule 138 (np_addBool -> .)
+    VAR             reduce using rule 138 (np_addBool -> .)
+    WHILE           reduce using rule 138 (np_addBool -> .)
+    FROM            reduce using rule 138 (np_addBool -> .)
+    R_CURPAR        reduce using rule 138 (np_addBool -> .)
+    SEMICOLON       reduce using rule 138 (np_addBool -> .)
+    DO              reduce using rule 138 (np_addBool -> .)
 
     np_addBool                     shift and go to state 216
 
 state 163
 
     (92) logical -> ex . np_addLogical logicalF
-    (133) np_addLogical -> .
+    (137) np_addLogical -> .
 
-    LESS            reduce using rule 133 (np_addLogical -> .)
-    GREATER         reduce using rule 133 (np_addLogical -> .)
-    LESS_TH         reduce using rule 133 (np_addLogical -> .)
-    GREAT_TH        reduce using rule 133 (np_addLogical -> .)
-    SAME            reduce using rule 133 (np_addLogical -> .)
-    DIF             reduce using rule 133 (np_addLogical -> .)
-    OR              reduce using rule 133 (np_addLogical -> .)
-    AND             reduce using rule 133 (np_addLogical -> .)
-    COMMA           reduce using rule 133 (np_addLogical -> .)
-    R_PAR           reduce using rule 133 (np_addLogical -> .)
-    R_BREAK         reduce using rule 133 (np_addLogical -> .)
-    TO              reduce using rule 133 (np_addLogical -> .)
-    ID              reduce using rule 133 (np_addLogical -> .)
-    RETURN          reduce using rule 133 (np_addLogical -> .)
-    READ            reduce using rule 133 (np_addLogical -> .)
-    WRITE           reduce using rule 133 (np_addLogical -> .)
-    IF              reduce using rule 133 (np_addLogical -> .)
-    VAR             reduce using rule 133 (np_addLogical -> .)
-    WHILE           reduce using rule 133 (np_addLogical -> .)
-    FROM            reduce using rule 133 (np_addLogical -> .)
-    R_CURPAR        reduce using rule 133 (np_addLogical -> .)
-    SEMICOLON       reduce using rule 133 (np_addLogical -> .)
-    DO              reduce using rule 133 (np_addLogical -> .)
+    LESS            reduce using rule 137 (np_addLogical -> .)
+    GREATER         reduce using rule 137 (np_addLogical -> .)
+    LESS_TH         reduce using rule 137 (np_addLogical -> .)
+    GREAT_TH        reduce using rule 137 (np_addLogical -> .)
+    SAME            reduce using rule 137 (np_addLogical -> .)
+    DIF             reduce using rule 137 (np_addLogical -> .)
+    OR              reduce using rule 137 (np_addLogical -> .)
+    AND             reduce using rule 137 (np_addLogical -> .)
+    COMMA           reduce using rule 137 (np_addLogical -> .)
+    R_PAR           reduce using rule 137 (np_addLogical -> .)
+    R_BREAK         reduce using rule 137 (np_addLogical -> .)
+    TO              reduce using rule 137 (np_addLogical -> .)
+    ID              reduce using rule 137 (np_addLogical -> .)
+    RETURN          reduce using rule 137 (np_addLogical -> .)
+    READ            reduce using rule 137 (np_addLogical -> .)
+    WRITE           reduce using rule 137 (np_addLogical -> .)
+    IF              reduce using rule 137 (np_addLogical -> .)
+    VAR             reduce using rule 137 (np_addLogical -> .)
+    WHILE           reduce using rule 137 (np_addLogical -> .)
+    FROM            reduce using rule 137 (np_addLogical -> .)
+    R_CURPAR        reduce using rule 137 (np_addLogical -> .)
+    SEMICOLON       reduce using rule 137 (np_addLogical -> .)
+    DO              reduce using rule 137 (np_addLogical -> .)
 
     np_addLogical                  shift and go to state 217
 
 state 164
 
     (101) ex -> term . np_addEx exF
-    (132) np_addEx -> .
+    (136) np_addEx -> .
 
-    PLUS            reduce using rule 132 (np_addEx -> .)
-    MINUS           reduce using rule 132 (np_addEx -> .)
-    LESS            reduce using rule 132 (np_addEx -> .)
-    GREATER         reduce using rule 132 (np_addEx -> .)
-    LESS_TH         reduce using rule 132 (np_addEx -> .)
-    GREAT_TH        reduce using rule 132 (np_addEx -> .)
-    SAME            reduce using rule 132 (np_addEx -> .)
-    DIF             reduce using rule 132 (np_addEx -> .)
-    OR              reduce using rule 132 (np_addEx -> .)
-    AND             reduce using rule 132 (np_addEx -> .)
-    COMMA           reduce using rule 132 (np_addEx -> .)
-    R_PAR           reduce using rule 132 (np_addEx -> .)
-    R_BREAK         reduce using rule 132 (np_addEx -> .)
-    TO              reduce using rule 132 (np_addEx -> .)
-    ID              reduce using rule 132 (np_addEx -> .)
-    RETURN          reduce using rule 132 (np_addEx -> .)
-    READ            reduce using rule 132 (np_addEx -> .)
-    WRITE           reduce using rule 132 (np_addEx -> .)
-    IF              reduce using rule 132 (np_addEx -> .)
-    VAR             reduce using rule 132 (np_addEx -> .)
-    WHILE           reduce using rule 132 (np_addEx -> .)
-    FROM            reduce using rule 132 (np_addEx -> .)
-    R_CURPAR        reduce using rule 132 (np_addEx -> .)
-    SEMICOLON       reduce using rule 132 (np_addEx -> .)
-    DO              reduce using rule 132 (np_addEx -> .)
+    PLUS            reduce using rule 136 (np_addEx -> .)
+    MINUS           reduce using rule 136 (np_addEx -> .)
+    LESS            reduce using rule 136 (np_addEx -> .)
+    GREATER         reduce using rule 136 (np_addEx -> .)
+    LESS_TH         reduce using rule 136 (np_addEx -> .)
+    GREAT_TH        reduce using rule 136 (np_addEx -> .)
+    SAME            reduce using rule 136 (np_addEx -> .)
+    DIF             reduce using rule 136 (np_addEx -> .)
+    OR              reduce using rule 136 (np_addEx -> .)
+    AND             reduce using rule 136 (np_addEx -> .)
+    COMMA           reduce using rule 136 (np_addEx -> .)
+    R_PAR           reduce using rule 136 (np_addEx -> .)
+    R_BREAK         reduce using rule 136 (np_addEx -> .)
+    TO              reduce using rule 136 (np_addEx -> .)
+    ID              reduce using rule 136 (np_addEx -> .)
+    RETURN          reduce using rule 136 (np_addEx -> .)
+    READ            reduce using rule 136 (np_addEx -> .)
+    WRITE           reduce using rule 136 (np_addEx -> .)
+    IF              reduce using rule 136 (np_addEx -> .)
+    VAR             reduce using rule 136 (np_addEx -> .)
+    WHILE           reduce using rule 136 (np_addEx -> .)
+    FROM            reduce using rule 136 (np_addEx -> .)
+    R_CURPAR        reduce using rule 136 (np_addEx -> .)
+    SEMICOLON       reduce using rule 136 (np_addEx -> .)
+    DO              reduce using rule 136 (np_addEx -> .)
 
     np_addEx                       shift and go to state 218
 
 state 165
 
     (105) term -> factor . np_addTerm termF
-    (131) np_addTerm -> .
+    (135) np_addTerm -> .
 
-    MULT            reduce using rule 131 (np_addTerm -> .)
-    DIV             reduce using rule 131 (np_addTerm -> .)
-    PLUS            reduce using rule 131 (np_addTerm -> .)
-    MINUS           reduce using rule 131 (np_addTerm -> .)
-    LESS            reduce using rule 131 (np_addTerm -> .)
-    GREATER         reduce using rule 131 (np_addTerm -> .)
-    LESS_TH         reduce using rule 131 (np_addTerm -> .)
-    GREAT_TH        reduce using rule 131 (np_addTerm -> .)
-    SAME            reduce using rule 131 (np_addTerm -> .)
-    DIF             reduce using rule 131 (np_addTerm -> .)
-    OR              reduce using rule 131 (np_addTerm -> .)
-    AND             reduce using rule 131 (np_addTerm -> .)
-    COMMA           reduce using rule 131 (np_addTerm -> .)
-    R_PAR           reduce using rule 131 (np_addTerm -> .)
-    R_BREAK         reduce using rule 131 (np_addTerm -> .)
-    TO              reduce using rule 131 (np_addTerm -> .)
-    ID              reduce using rule 131 (np_addTerm -> .)
-    RETURN          reduce using rule 131 (np_addTerm -> .)
-    READ            reduce using rule 131 (np_addTerm -> .)
-    WRITE           reduce using rule 131 (np_addTerm -> .)
-    IF              reduce using rule 131 (np_addTerm -> .)
-    VAR             reduce using rule 131 (np_addTerm -> .)
-    WHILE           reduce using rule 131 (np_addTerm -> .)
-    FROM            reduce using rule 131 (np_addTerm -> .)
-    R_CURPAR        reduce using rule 131 (np_addTerm -> .)
-    SEMICOLON       reduce using rule 131 (np_addTerm -> .)
-    DO              reduce using rule 131 (np_addTerm -> .)
+    MULT            reduce using rule 135 (np_addTerm -> .)
+    DIV             reduce using rule 135 (np_addTerm -> .)
+    PLUS            reduce using rule 135 (np_addTerm -> .)
+    MINUS           reduce using rule 135 (np_addTerm -> .)
+    LESS            reduce using rule 135 (np_addTerm -> .)
+    GREATER         reduce using rule 135 (np_addTerm -> .)
+    LESS_TH         reduce using rule 135 (np_addTerm -> .)
+    GREAT_TH        reduce using rule 135 (np_addTerm -> .)
+    SAME            reduce using rule 135 (np_addTerm -> .)
+    DIF             reduce using rule 135 (np_addTerm -> .)
+    OR              reduce using rule 135 (np_addTerm -> .)
+    AND             reduce using rule 135 (np_addTerm -> .)
+    COMMA           reduce using rule 135 (np_addTerm -> .)
+    R_PAR           reduce using rule 135 (np_addTerm -> .)
+    R_BREAK         reduce using rule 135 (np_addTerm -> .)
+    TO              reduce using rule 135 (np_addTerm -> .)
+    ID              reduce using rule 135 (np_addTerm -> .)
+    RETURN          reduce using rule 135 (np_addTerm -> .)
+    READ            reduce using rule 135 (np_addTerm -> .)
+    WRITE           reduce using rule 135 (np_addTerm -> .)
+    IF              reduce using rule 135 (np_addTerm -> .)
+    VAR             reduce using rule 135 (np_addTerm -> .)
+    WHILE           reduce using rule 135 (np_addTerm -> .)
+    FROM            reduce using rule 135 (np_addTerm -> .)
+    R_CURPAR        reduce using rule 135 (np_addTerm -> .)
+    SEMICOLON       reduce using rule 135 (np_addTerm -> .)
+    DO              reduce using rule 135 (np_addTerm -> .)
 
     np_addTerm                     shift and go to state 219
 
@@ -2906,10 +2914,10 @@ state 167
     (111) factorT -> PLUS . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -2962,10 +2970,10 @@ state 169
     (112) factorT -> MINUS . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -3052,143 +3060,143 @@ state 171
 
 state 172
 
-    (116) varcte -> CTE_INT . empty
-    (120) empty -> .
+    (116) varcte -> CTE_INT . np_addConstInt empty
+    (128) np_addConstInt -> .
 
-    MULT            reduce using rule 120 (empty -> .)
-    DIV             reduce using rule 120 (empty -> .)
-    PLUS            reduce using rule 120 (empty -> .)
-    MINUS           reduce using rule 120 (empty -> .)
-    LESS            reduce using rule 120 (empty -> .)
-    GREATER         reduce using rule 120 (empty -> .)
-    LESS_TH         reduce using rule 120 (empty -> .)
-    GREAT_TH        reduce using rule 120 (empty -> .)
-    SAME            reduce using rule 120 (empty -> .)
-    DIF             reduce using rule 120 (empty -> .)
-    OR              reduce using rule 120 (empty -> .)
-    AND             reduce using rule 120 (empty -> .)
-    COMMA           reduce using rule 120 (empty -> .)
-    R_PAR           reduce using rule 120 (empty -> .)
-    R_BREAK         reduce using rule 120 (empty -> .)
-    TO              reduce using rule 120 (empty -> .)
-    ID              reduce using rule 120 (empty -> .)
-    RETURN          reduce using rule 120 (empty -> .)
-    READ            reduce using rule 120 (empty -> .)
-    WRITE           reduce using rule 120 (empty -> .)
-    IF              reduce using rule 120 (empty -> .)
-    VAR             reduce using rule 120 (empty -> .)
-    WHILE           reduce using rule 120 (empty -> .)
-    FROM            reduce using rule 120 (empty -> .)
-    R_CURPAR        reduce using rule 120 (empty -> .)
-    SEMICOLON       reduce using rule 120 (empty -> .)
-    DO              reduce using rule 120 (empty -> .)
+    MULT            reduce using rule 128 (np_addConstInt -> .)
+    DIV             reduce using rule 128 (np_addConstInt -> .)
+    PLUS            reduce using rule 128 (np_addConstInt -> .)
+    MINUS           reduce using rule 128 (np_addConstInt -> .)
+    LESS            reduce using rule 128 (np_addConstInt -> .)
+    GREATER         reduce using rule 128 (np_addConstInt -> .)
+    LESS_TH         reduce using rule 128 (np_addConstInt -> .)
+    GREAT_TH        reduce using rule 128 (np_addConstInt -> .)
+    SAME            reduce using rule 128 (np_addConstInt -> .)
+    DIF             reduce using rule 128 (np_addConstInt -> .)
+    OR              reduce using rule 128 (np_addConstInt -> .)
+    AND             reduce using rule 128 (np_addConstInt -> .)
+    COMMA           reduce using rule 128 (np_addConstInt -> .)
+    R_PAR           reduce using rule 128 (np_addConstInt -> .)
+    R_BREAK         reduce using rule 128 (np_addConstInt -> .)
+    TO              reduce using rule 128 (np_addConstInt -> .)
+    ID              reduce using rule 128 (np_addConstInt -> .)
+    RETURN          reduce using rule 128 (np_addConstInt -> .)
+    READ            reduce using rule 128 (np_addConstInt -> .)
+    WRITE           reduce using rule 128 (np_addConstInt -> .)
+    IF              reduce using rule 128 (np_addConstInt -> .)
+    VAR             reduce using rule 128 (np_addConstInt -> .)
+    WHILE           reduce using rule 128 (np_addConstInt -> .)
+    FROM            reduce using rule 128 (np_addConstInt -> .)
+    R_CURPAR        reduce using rule 128 (np_addConstInt -> .)
+    SEMICOLON       reduce using rule 128 (np_addConstInt -> .)
+    DO              reduce using rule 128 (np_addConstInt -> .)
 
-    empty                          shift and go to state 224
+    np_addConstInt                 shift and go to state 224
 
 state 173
 
-    (117) varcte -> CTE_FLOAT . empty
-    (120) empty -> .
+    (117) varcte -> CTE_FLOAT . np_addConstFloat empty
+    (129) np_addConstFloat -> .
 
-    MULT            reduce using rule 120 (empty -> .)
-    DIV             reduce using rule 120 (empty -> .)
-    PLUS            reduce using rule 120 (empty -> .)
-    MINUS           reduce using rule 120 (empty -> .)
-    LESS            reduce using rule 120 (empty -> .)
-    GREATER         reduce using rule 120 (empty -> .)
-    LESS_TH         reduce using rule 120 (empty -> .)
-    GREAT_TH        reduce using rule 120 (empty -> .)
-    SAME            reduce using rule 120 (empty -> .)
-    DIF             reduce using rule 120 (empty -> .)
-    OR              reduce using rule 120 (empty -> .)
-    AND             reduce using rule 120 (empty -> .)
-    COMMA           reduce using rule 120 (empty -> .)
-    R_PAR           reduce using rule 120 (empty -> .)
-    R_BREAK         reduce using rule 120 (empty -> .)
-    TO              reduce using rule 120 (empty -> .)
-    ID              reduce using rule 120 (empty -> .)
-    RETURN          reduce using rule 120 (empty -> .)
-    READ            reduce using rule 120 (empty -> .)
-    WRITE           reduce using rule 120 (empty -> .)
-    IF              reduce using rule 120 (empty -> .)
-    VAR             reduce using rule 120 (empty -> .)
-    WHILE           reduce using rule 120 (empty -> .)
-    FROM            reduce using rule 120 (empty -> .)
-    R_CURPAR        reduce using rule 120 (empty -> .)
-    SEMICOLON       reduce using rule 120 (empty -> .)
-    DO              reduce using rule 120 (empty -> .)
+    MULT            reduce using rule 129 (np_addConstFloat -> .)
+    DIV             reduce using rule 129 (np_addConstFloat -> .)
+    PLUS            reduce using rule 129 (np_addConstFloat -> .)
+    MINUS           reduce using rule 129 (np_addConstFloat -> .)
+    LESS            reduce using rule 129 (np_addConstFloat -> .)
+    GREATER         reduce using rule 129 (np_addConstFloat -> .)
+    LESS_TH         reduce using rule 129 (np_addConstFloat -> .)
+    GREAT_TH        reduce using rule 129 (np_addConstFloat -> .)
+    SAME            reduce using rule 129 (np_addConstFloat -> .)
+    DIF             reduce using rule 129 (np_addConstFloat -> .)
+    OR              reduce using rule 129 (np_addConstFloat -> .)
+    AND             reduce using rule 129 (np_addConstFloat -> .)
+    COMMA           reduce using rule 129 (np_addConstFloat -> .)
+    R_PAR           reduce using rule 129 (np_addConstFloat -> .)
+    R_BREAK         reduce using rule 129 (np_addConstFloat -> .)
+    TO              reduce using rule 129 (np_addConstFloat -> .)
+    ID              reduce using rule 129 (np_addConstFloat -> .)
+    RETURN          reduce using rule 129 (np_addConstFloat -> .)
+    READ            reduce using rule 129 (np_addConstFloat -> .)
+    WRITE           reduce using rule 129 (np_addConstFloat -> .)
+    IF              reduce using rule 129 (np_addConstFloat -> .)
+    VAR             reduce using rule 129 (np_addConstFloat -> .)
+    WHILE           reduce using rule 129 (np_addConstFloat -> .)
+    FROM            reduce using rule 129 (np_addConstFloat -> .)
+    R_CURPAR        reduce using rule 129 (np_addConstFloat -> .)
+    SEMICOLON       reduce using rule 129 (np_addConstFloat -> .)
+    DO              reduce using rule 129 (np_addConstFloat -> .)
 
-    empty                          shift and go to state 225
+    np_addConstFloat               shift and go to state 225
 
 state 174
 
-    (118) varcte -> CTE_CHAR . empty
-    (120) empty -> .
+    (118) varcte -> CTE_CHAR . np_addConstChar empty
+    (130) np_addConstChar -> .
 
-    MULT            reduce using rule 120 (empty -> .)
-    DIV             reduce using rule 120 (empty -> .)
-    PLUS            reduce using rule 120 (empty -> .)
-    MINUS           reduce using rule 120 (empty -> .)
-    LESS            reduce using rule 120 (empty -> .)
-    GREATER         reduce using rule 120 (empty -> .)
-    LESS_TH         reduce using rule 120 (empty -> .)
-    GREAT_TH        reduce using rule 120 (empty -> .)
-    SAME            reduce using rule 120 (empty -> .)
-    DIF             reduce using rule 120 (empty -> .)
-    OR              reduce using rule 120 (empty -> .)
-    AND             reduce using rule 120 (empty -> .)
-    COMMA           reduce using rule 120 (empty -> .)
-    R_PAR           reduce using rule 120 (empty -> .)
-    R_BREAK         reduce using rule 120 (empty -> .)
-    TO              reduce using rule 120 (empty -> .)
-    ID              reduce using rule 120 (empty -> .)
-    RETURN          reduce using rule 120 (empty -> .)
-    READ            reduce using rule 120 (empty -> .)
-    WRITE           reduce using rule 120 (empty -> .)
-    IF              reduce using rule 120 (empty -> .)
-    VAR             reduce using rule 120 (empty -> .)
-    WHILE           reduce using rule 120 (empty -> .)
-    FROM            reduce using rule 120 (empty -> .)
-    R_CURPAR        reduce using rule 120 (empty -> .)
-    SEMICOLON       reduce using rule 120 (empty -> .)
-    DO              reduce using rule 120 (empty -> .)
+    MULT            reduce using rule 130 (np_addConstChar -> .)
+    DIV             reduce using rule 130 (np_addConstChar -> .)
+    PLUS            reduce using rule 130 (np_addConstChar -> .)
+    MINUS           reduce using rule 130 (np_addConstChar -> .)
+    LESS            reduce using rule 130 (np_addConstChar -> .)
+    GREATER         reduce using rule 130 (np_addConstChar -> .)
+    LESS_TH         reduce using rule 130 (np_addConstChar -> .)
+    GREAT_TH        reduce using rule 130 (np_addConstChar -> .)
+    SAME            reduce using rule 130 (np_addConstChar -> .)
+    DIF             reduce using rule 130 (np_addConstChar -> .)
+    OR              reduce using rule 130 (np_addConstChar -> .)
+    AND             reduce using rule 130 (np_addConstChar -> .)
+    COMMA           reduce using rule 130 (np_addConstChar -> .)
+    R_PAR           reduce using rule 130 (np_addConstChar -> .)
+    R_BREAK         reduce using rule 130 (np_addConstChar -> .)
+    TO              reduce using rule 130 (np_addConstChar -> .)
+    ID              reduce using rule 130 (np_addConstChar -> .)
+    RETURN          reduce using rule 130 (np_addConstChar -> .)
+    READ            reduce using rule 130 (np_addConstChar -> .)
+    WRITE           reduce using rule 130 (np_addConstChar -> .)
+    IF              reduce using rule 130 (np_addConstChar -> .)
+    VAR             reduce using rule 130 (np_addConstChar -> .)
+    WHILE           reduce using rule 130 (np_addConstChar -> .)
+    FROM            reduce using rule 130 (np_addConstChar -> .)
+    R_CURPAR        reduce using rule 130 (np_addConstChar -> .)
+    SEMICOLON       reduce using rule 130 (np_addConstChar -> .)
+    DO              reduce using rule 130 (np_addConstChar -> .)
 
-    empty                          shift and go to state 226
+    np_addConstChar                shift and go to state 226
 
 state 175
 
-    (119) varcte -> CTE_BOOL . empty
-    (120) empty -> .
+    (119) varcte -> CTE_BOOL . np_addConstBool empty
+    (131) np_addConstBool -> .
 
-    MULT            reduce using rule 120 (empty -> .)
-    DIV             reduce using rule 120 (empty -> .)
-    PLUS            reduce using rule 120 (empty -> .)
-    MINUS           reduce using rule 120 (empty -> .)
-    LESS            reduce using rule 120 (empty -> .)
-    GREATER         reduce using rule 120 (empty -> .)
-    LESS_TH         reduce using rule 120 (empty -> .)
-    GREAT_TH        reduce using rule 120 (empty -> .)
-    SAME            reduce using rule 120 (empty -> .)
-    DIF             reduce using rule 120 (empty -> .)
-    OR              reduce using rule 120 (empty -> .)
-    AND             reduce using rule 120 (empty -> .)
-    COMMA           reduce using rule 120 (empty -> .)
-    R_PAR           reduce using rule 120 (empty -> .)
-    R_BREAK         reduce using rule 120 (empty -> .)
-    TO              reduce using rule 120 (empty -> .)
-    ID              reduce using rule 120 (empty -> .)
-    RETURN          reduce using rule 120 (empty -> .)
-    READ            reduce using rule 120 (empty -> .)
-    WRITE           reduce using rule 120 (empty -> .)
-    IF              reduce using rule 120 (empty -> .)
-    VAR             reduce using rule 120 (empty -> .)
-    WHILE           reduce using rule 120 (empty -> .)
-    FROM            reduce using rule 120 (empty -> .)
-    R_CURPAR        reduce using rule 120 (empty -> .)
-    SEMICOLON       reduce using rule 120 (empty -> .)
-    DO              reduce using rule 120 (empty -> .)
+    MULT            reduce using rule 131 (np_addConstBool -> .)
+    DIV             reduce using rule 131 (np_addConstBool -> .)
+    PLUS            reduce using rule 131 (np_addConstBool -> .)
+    MINUS           reduce using rule 131 (np_addConstBool -> .)
+    LESS            reduce using rule 131 (np_addConstBool -> .)
+    GREATER         reduce using rule 131 (np_addConstBool -> .)
+    LESS_TH         reduce using rule 131 (np_addConstBool -> .)
+    GREAT_TH        reduce using rule 131 (np_addConstBool -> .)
+    SAME            reduce using rule 131 (np_addConstBool -> .)
+    DIF             reduce using rule 131 (np_addConstBool -> .)
+    OR              reduce using rule 131 (np_addConstBool -> .)
+    AND             reduce using rule 131 (np_addConstBool -> .)
+    COMMA           reduce using rule 131 (np_addConstBool -> .)
+    R_PAR           reduce using rule 131 (np_addConstBool -> .)
+    R_BREAK         reduce using rule 131 (np_addConstBool -> .)
+    TO              reduce using rule 131 (np_addConstBool -> .)
+    ID              reduce using rule 131 (np_addConstBool -> .)
+    RETURN          reduce using rule 131 (np_addConstBool -> .)
+    READ            reduce using rule 131 (np_addConstBool -> .)
+    WRITE           reduce using rule 131 (np_addConstBool -> .)
+    IF              reduce using rule 131 (np_addConstBool -> .)
+    VAR             reduce using rule 131 (np_addConstBool -> .)
+    WHILE           reduce using rule 131 (np_addConstBool -> .)
+    FROM            reduce using rule 131 (np_addConstBool -> .)
+    R_CURPAR        reduce using rule 131 (np_addConstBool -> .)
+    SEMICOLON       reduce using rule 131 (np_addConstBool -> .)
+    DO              reduce using rule 131 (np_addConstBool -> .)
 
-    empty                          shift and go to state 227
+    np_addConstBool                shift and go to state 227
 
 state 176
 
@@ -3217,10 +3225,10 @@ state 178
 
     (65) readF -> var . np_addRead COMMA readF
     (66) readF -> var . np_addRead R_PAR SEMICOLON empty
-    (136) np_addRead -> .
+    (140) np_addRead -> .
 
-    COMMA           reduce using rule 136 (np_addRead -> .)
-    R_PAR           reduce using rule 136 (np_addRead -> .)
+    COMMA           reduce using rule 140 (np_addRead -> .)
+    R_PAR           reduce using rule 140 (np_addRead -> .)
 
     np_addRead                     shift and go to state 229
 
@@ -3339,10 +3347,10 @@ state 186
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -3549,10 +3557,10 @@ state 200
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -3592,10 +3600,10 @@ state 201
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -3696,10 +3704,10 @@ state 206
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -3785,10 +3793,10 @@ state 209
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -3861,10 +3869,10 @@ state 213
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -4198,141 +4206,149 @@ state 223
 
 state 224
 
-    (116) varcte -> CTE_INT empty .
+    (116) varcte -> CTE_INT np_addConstInt . empty
+    (120) empty -> .
 
-    MULT            reduce using rule 116 (varcte -> CTE_INT empty .)
-    DIV             reduce using rule 116 (varcte -> CTE_INT empty .)
-    PLUS            reduce using rule 116 (varcte -> CTE_INT empty .)
-    MINUS           reduce using rule 116 (varcte -> CTE_INT empty .)
-    LESS            reduce using rule 116 (varcte -> CTE_INT empty .)
-    GREATER         reduce using rule 116 (varcte -> CTE_INT empty .)
-    LESS_TH         reduce using rule 116 (varcte -> CTE_INT empty .)
-    GREAT_TH        reduce using rule 116 (varcte -> CTE_INT empty .)
-    SAME            reduce using rule 116 (varcte -> CTE_INT empty .)
-    DIF             reduce using rule 116 (varcte -> CTE_INT empty .)
-    OR              reduce using rule 116 (varcte -> CTE_INT empty .)
-    AND             reduce using rule 116 (varcte -> CTE_INT empty .)
-    COMMA           reduce using rule 116 (varcte -> CTE_INT empty .)
-    R_PAR           reduce using rule 116 (varcte -> CTE_INT empty .)
-    R_BREAK         reduce using rule 116 (varcte -> CTE_INT empty .)
-    TO              reduce using rule 116 (varcte -> CTE_INT empty .)
-    ID              reduce using rule 116 (varcte -> CTE_INT empty .)
-    RETURN          reduce using rule 116 (varcte -> CTE_INT empty .)
-    READ            reduce using rule 116 (varcte -> CTE_INT empty .)
-    WRITE           reduce using rule 116 (varcte -> CTE_INT empty .)
-    IF              reduce using rule 116 (varcte -> CTE_INT empty .)
-    VAR             reduce using rule 116 (varcte -> CTE_INT empty .)
-    WHILE           reduce using rule 116 (varcte -> CTE_INT empty .)
-    FROM            reduce using rule 116 (varcte -> CTE_INT empty .)
-    R_CURPAR        reduce using rule 116 (varcte -> CTE_INT empty .)
-    SEMICOLON       reduce using rule 116 (varcte -> CTE_INT empty .)
-    DO              reduce using rule 116 (varcte -> CTE_INT empty .)
+    MULT            reduce using rule 120 (empty -> .)
+    DIV             reduce using rule 120 (empty -> .)
+    PLUS            reduce using rule 120 (empty -> .)
+    MINUS           reduce using rule 120 (empty -> .)
+    LESS            reduce using rule 120 (empty -> .)
+    GREATER         reduce using rule 120 (empty -> .)
+    LESS_TH         reduce using rule 120 (empty -> .)
+    GREAT_TH        reduce using rule 120 (empty -> .)
+    SAME            reduce using rule 120 (empty -> .)
+    DIF             reduce using rule 120 (empty -> .)
+    OR              reduce using rule 120 (empty -> .)
+    AND             reduce using rule 120 (empty -> .)
+    COMMA           reduce using rule 120 (empty -> .)
+    R_PAR           reduce using rule 120 (empty -> .)
+    R_BREAK         reduce using rule 120 (empty -> .)
+    TO              reduce using rule 120 (empty -> .)
+    ID              reduce using rule 120 (empty -> .)
+    RETURN          reduce using rule 120 (empty -> .)
+    READ            reduce using rule 120 (empty -> .)
+    WRITE           reduce using rule 120 (empty -> .)
+    IF              reduce using rule 120 (empty -> .)
+    VAR             reduce using rule 120 (empty -> .)
+    WHILE           reduce using rule 120 (empty -> .)
+    FROM            reduce using rule 120 (empty -> .)
+    R_CURPAR        reduce using rule 120 (empty -> .)
+    SEMICOLON       reduce using rule 120 (empty -> .)
+    DO              reduce using rule 120 (empty -> .)
 
+    empty                          shift and go to state 275
 
 state 225
 
-    (117) varcte -> CTE_FLOAT empty .
+    (117) varcte -> CTE_FLOAT np_addConstFloat . empty
+    (120) empty -> .
 
-    MULT            reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    DIV             reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    PLUS            reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    MINUS           reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    LESS            reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    GREATER         reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    LESS_TH         reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    GREAT_TH        reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    SAME            reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    DIF             reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    OR              reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    AND             reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    COMMA           reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    R_PAR           reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    R_BREAK         reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    TO              reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    ID              reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    RETURN          reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    READ            reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    WRITE           reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    IF              reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    VAR             reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    WHILE           reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    FROM            reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    R_CURPAR        reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    SEMICOLON       reduce using rule 117 (varcte -> CTE_FLOAT empty .)
-    DO              reduce using rule 117 (varcte -> CTE_FLOAT empty .)
+    MULT            reduce using rule 120 (empty -> .)
+    DIV             reduce using rule 120 (empty -> .)
+    PLUS            reduce using rule 120 (empty -> .)
+    MINUS           reduce using rule 120 (empty -> .)
+    LESS            reduce using rule 120 (empty -> .)
+    GREATER         reduce using rule 120 (empty -> .)
+    LESS_TH         reduce using rule 120 (empty -> .)
+    GREAT_TH        reduce using rule 120 (empty -> .)
+    SAME            reduce using rule 120 (empty -> .)
+    DIF             reduce using rule 120 (empty -> .)
+    OR              reduce using rule 120 (empty -> .)
+    AND             reduce using rule 120 (empty -> .)
+    COMMA           reduce using rule 120 (empty -> .)
+    R_PAR           reduce using rule 120 (empty -> .)
+    R_BREAK         reduce using rule 120 (empty -> .)
+    TO              reduce using rule 120 (empty -> .)
+    ID              reduce using rule 120 (empty -> .)
+    RETURN          reduce using rule 120 (empty -> .)
+    READ            reduce using rule 120 (empty -> .)
+    WRITE           reduce using rule 120 (empty -> .)
+    IF              reduce using rule 120 (empty -> .)
+    VAR             reduce using rule 120 (empty -> .)
+    WHILE           reduce using rule 120 (empty -> .)
+    FROM            reduce using rule 120 (empty -> .)
+    R_CURPAR        reduce using rule 120 (empty -> .)
+    SEMICOLON       reduce using rule 120 (empty -> .)
+    DO              reduce using rule 120 (empty -> .)
 
+    empty                          shift and go to state 276
 
 state 226
 
-    (118) varcte -> CTE_CHAR empty .
+    (118) varcte -> CTE_CHAR np_addConstChar . empty
+    (120) empty -> .
 
-    MULT            reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    DIV             reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    PLUS            reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    MINUS           reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    LESS            reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    GREATER         reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    LESS_TH         reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    GREAT_TH        reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    SAME            reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    DIF             reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    OR              reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    AND             reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    COMMA           reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    R_PAR           reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    R_BREAK         reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    TO              reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    ID              reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    RETURN          reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    READ            reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    WRITE           reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    IF              reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    VAR             reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    WHILE           reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    FROM            reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    R_CURPAR        reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    SEMICOLON       reduce using rule 118 (varcte -> CTE_CHAR empty .)
-    DO              reduce using rule 118 (varcte -> CTE_CHAR empty .)
+    MULT            reduce using rule 120 (empty -> .)
+    DIV             reduce using rule 120 (empty -> .)
+    PLUS            reduce using rule 120 (empty -> .)
+    MINUS           reduce using rule 120 (empty -> .)
+    LESS            reduce using rule 120 (empty -> .)
+    GREATER         reduce using rule 120 (empty -> .)
+    LESS_TH         reduce using rule 120 (empty -> .)
+    GREAT_TH        reduce using rule 120 (empty -> .)
+    SAME            reduce using rule 120 (empty -> .)
+    DIF             reduce using rule 120 (empty -> .)
+    OR              reduce using rule 120 (empty -> .)
+    AND             reduce using rule 120 (empty -> .)
+    COMMA           reduce using rule 120 (empty -> .)
+    R_PAR           reduce using rule 120 (empty -> .)
+    R_BREAK         reduce using rule 120 (empty -> .)
+    TO              reduce using rule 120 (empty -> .)
+    ID              reduce using rule 120 (empty -> .)
+    RETURN          reduce using rule 120 (empty -> .)
+    READ            reduce using rule 120 (empty -> .)
+    WRITE           reduce using rule 120 (empty -> .)
+    IF              reduce using rule 120 (empty -> .)
+    VAR             reduce using rule 120 (empty -> .)
+    WHILE           reduce using rule 120 (empty -> .)
+    FROM            reduce using rule 120 (empty -> .)
+    R_CURPAR        reduce using rule 120 (empty -> .)
+    SEMICOLON       reduce using rule 120 (empty -> .)
+    DO              reduce using rule 120 (empty -> .)
 
+    empty                          shift and go to state 277
 
 state 227
 
-    (119) varcte -> CTE_BOOL empty .
+    (119) varcte -> CTE_BOOL np_addConstBool . empty
+    (120) empty -> .
 
-    MULT            reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    DIV             reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    PLUS            reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    MINUS           reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    LESS            reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    GREATER         reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    LESS_TH         reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    GREAT_TH        reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    SAME            reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    DIF             reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    OR              reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    AND             reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    COMMA           reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    R_PAR           reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    R_BREAK         reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    TO              reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    ID              reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    RETURN          reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    READ            reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    WRITE           reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    IF              reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    VAR             reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    WHILE           reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    FROM            reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    R_CURPAR        reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    SEMICOLON       reduce using rule 119 (varcte -> CTE_BOOL empty .)
-    DO              reduce using rule 119 (varcte -> CTE_BOOL empty .)
+    MULT            reduce using rule 120 (empty -> .)
+    DIV             reduce using rule 120 (empty -> .)
+    PLUS            reduce using rule 120 (empty -> .)
+    MINUS           reduce using rule 120 (empty -> .)
+    LESS            reduce using rule 120 (empty -> .)
+    GREATER         reduce using rule 120 (empty -> .)
+    LESS_TH         reduce using rule 120 (empty -> .)
+    GREAT_TH        reduce using rule 120 (empty -> .)
+    SAME            reduce using rule 120 (empty -> .)
+    DIF             reduce using rule 120 (empty -> .)
+    OR              reduce using rule 120 (empty -> .)
+    AND             reduce using rule 120 (empty -> .)
+    COMMA           reduce using rule 120 (empty -> .)
+    R_PAR           reduce using rule 120 (empty -> .)
+    R_BREAK         reduce using rule 120 (empty -> .)
+    TO              reduce using rule 120 (empty -> .)
+    ID              reduce using rule 120 (empty -> .)
+    RETURN          reduce using rule 120 (empty -> .)
+    READ            reduce using rule 120 (empty -> .)
+    WRITE           reduce using rule 120 (empty -> .)
+    IF              reduce using rule 120 (empty -> .)
+    VAR             reduce using rule 120 (empty -> .)
+    WHILE           reduce using rule 120 (empty -> .)
+    FROM            reduce using rule 120 (empty -> .)
+    R_CURPAR        reduce using rule 120 (empty -> .)
+    SEMICOLON       reduce using rule 120 (empty -> .)
+    DO              reduce using rule 120 (empty -> .)
 
+    empty                          shift and go to state 278
 
 state 228
 
     (59) return -> RETURN L_PAR exp R_PAR . SEMICOLON empty
 
-    SEMICOLON       shift and go to state 275
+    SEMICOLON       shift and go to state 279
 
 
 state 229
@@ -4340,8 +4356,8 @@ state 229
     (65) readF -> var np_addRead . COMMA readF
     (66) readF -> var np_addRead . R_PAR SEMICOLON empty
 
-    COMMA           shift and go to state 276
-    R_PAR           shift and go to state 277
+    COMMA           shift and go to state 280
+    R_PAR           shift and go to state 281
 
 
 state 230
@@ -4377,10 +4393,10 @@ state 231
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -4395,7 +4411,7 @@ state 231
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    writeT                         shift and go to state 278
+    writeT                         shift and go to state 282
     exp                            shift and go to state 181
     bool                           shift and go to state 161
     logical                        shift and go to state 162
@@ -4411,7 +4427,7 @@ state 232
 
     (71) writeF -> R_PAR . SEMICOLON empty
 
-    SEMICOLON       shift and go to state 279
+    SEMICOLON       shift and go to state 283
 
 
 state 233
@@ -4434,7 +4450,7 @@ state 234
 
     (74) if -> IF L_PAR exp R_PAR . THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
 
-    THEN            shift and go to state 280
+    THEN            shift and go to state 284
 
 
 state 235
@@ -4452,10 +4468,10 @@ state 235
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -4469,7 +4485,7 @@ state 235
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    exp                            shift and go to state 281
+    exp                            shift and go to state 285
     bool                           shift and go to state 161
     logical                        shift and go to state 162
     ex                             shift and go to state 163
@@ -4523,13 +4539,13 @@ state 236
     CTE_CHAR        reduce using rule 120 (empty -> .)
     CTE_BOOL        reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 282
+    empty                          shift and go to state 286
 
 state 237
 
     (84) conditional -> WHILE L_PAR exp R_PAR . DO L_CURPAR statement SEMICOLON R_CURPAR empty
 
-    DO              shift and go to state 283
+    DO              shift and go to state 287
 
 
 state 238
@@ -4563,10 +4579,10 @@ state 239
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -4580,7 +4596,7 @@ state 239
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    exp                            shift and go to state 284
+    exp                            shift and go to state 288
     bool                           shift and go to state 161
     logical                        shift and go to state 162
     ex                             shift and go to state 163
@@ -4606,7 +4622,7 @@ state 240
     ID              reduce using rule 120 (empty -> .)
     VOID            reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 285
+    empty                          shift and go to state 289
 
 state 241
 
@@ -4658,7 +4674,7 @@ state 242
     WHILE           shift and go to state 101
     FROM            shift and go to state 102
 
-    statement                      shift and go to state 286
+    statement                      shift and go to state 290
     assigment                      shift and go to state 85
     void                           shift and go to state 86
     return                         shift and go to state 87
@@ -4674,7 +4690,7 @@ state 243
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement . R_CURPAR empty
 
-    R_CURPAR        shift and go to state 287
+    R_CURPAR        shift and go to state 291
 
 
 state 244
@@ -4701,51 +4717,51 @@ state 246
 state 247
 
     (78) assigmentF -> EQUAL np_addOp exp . np_doAssign empty
-    (135) np_doAssign -> .
+    (139) np_doAssign -> .
 
-    ID              reduce using rule 135 (np_doAssign -> .)
-    RETURN          reduce using rule 135 (np_doAssign -> .)
-    READ            reduce using rule 135 (np_doAssign -> .)
-    WRITE           reduce using rule 135 (np_doAssign -> .)
-    IF              reduce using rule 135 (np_doAssign -> .)
-    VAR             reduce using rule 135 (np_doAssign -> .)
-    WHILE           reduce using rule 135 (np_doAssign -> .)
-    FROM            reduce using rule 135 (np_doAssign -> .)
-    R_CURPAR        reduce using rule 135 (np_doAssign -> .)
-    SEMICOLON       reduce using rule 135 (np_doAssign -> .)
+    ID              reduce using rule 139 (np_doAssign -> .)
+    RETURN          reduce using rule 139 (np_doAssign -> .)
+    READ            reduce using rule 139 (np_doAssign -> .)
+    WRITE           reduce using rule 139 (np_doAssign -> .)
+    IF              reduce using rule 139 (np_doAssign -> .)
+    VAR             reduce using rule 139 (np_doAssign -> .)
+    WHILE           reduce using rule 139 (np_doAssign -> .)
+    FROM            reduce using rule 139 (np_doAssign -> .)
+    R_CURPAR        reduce using rule 139 (np_doAssign -> .)
+    SEMICOLON       reduce using rule 139 (np_doAssign -> .)
 
-    np_doAssign                    shift and go to state 288
+    np_doAssign                    shift and go to state 292
 
 state 248
 
     (79) assigmentF -> ope np_addOp exp . np_doAssign empty
-    (135) np_doAssign -> .
+    (139) np_doAssign -> .
 
-    ID              reduce using rule 135 (np_doAssign -> .)
-    RETURN          reduce using rule 135 (np_doAssign -> .)
-    READ            reduce using rule 135 (np_doAssign -> .)
-    WRITE           reduce using rule 135 (np_doAssign -> .)
-    IF              reduce using rule 135 (np_doAssign -> .)
-    VAR             reduce using rule 135 (np_doAssign -> .)
-    WHILE           reduce using rule 135 (np_doAssign -> .)
-    FROM            reduce using rule 135 (np_doAssign -> .)
-    R_CURPAR        reduce using rule 135 (np_doAssign -> .)
-    SEMICOLON       reduce using rule 135 (np_doAssign -> .)
+    ID              reduce using rule 139 (np_doAssign -> .)
+    RETURN          reduce using rule 139 (np_doAssign -> .)
+    READ            reduce using rule 139 (np_doAssign -> .)
+    WRITE           reduce using rule 139 (np_doAssign -> .)
+    IF              reduce using rule 139 (np_doAssign -> .)
+    VAR             reduce using rule 139 (np_doAssign -> .)
+    WHILE           reduce using rule 139 (np_doAssign -> .)
+    FROM            reduce using rule 139 (np_doAssign -> .)
+    R_CURPAR        reduce using rule 139 (np_doAssign -> .)
+    SEMICOLON       reduce using rule 139 (np_doAssign -> .)
 
-    np_doAssign                    shift and go to state 289
+    np_doAssign                    shift and go to state 293
 
 state 249
 
     (51) void -> ID DOT ID L_PAR param . R_PAR SEMICOLON empty
 
-    R_PAR           shift and go to state 290
+    R_PAR           shift and go to state 294
 
 
 state 250
 
     (109) factor -> L_PAR np_addPar exp . R_PAR np_popPar empty
 
-    R_PAR           shift and go to state 291
+    R_PAR           shift and go to state 295
 
 
 state 251
@@ -4764,7 +4780,7 @@ state 251
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 292
+    empty                          shift and go to state 296
 
 state 252
 
@@ -4813,36 +4829,36 @@ state 254
 state 255
 
     (89) boolF -> OR . np_addOp bool
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 293
+    np_addOp                       shift and go to state 297
 
 state 256
 
     (90) boolF -> AND . np_addOp bool
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 294
+    np_addOp                       shift and go to state 298
 
 state 257
 
@@ -4891,104 +4907,104 @@ state 258
 state 259
 
     (93) logicalF -> LESS . np_addOp logical
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 295
+    np_addOp                       shift and go to state 299
 
 state 260
 
     (94) logicalF -> GREATER . np_addOp logical
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 296
+    np_addOp                       shift and go to state 300
 
 state 261
 
     (95) logicalF -> LESS_TH . np_addOp logical
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 297
+    np_addOp                       shift and go to state 301
 
 state 262
 
     (96) logicalF -> GREAT_TH . np_addOp logical
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 298
+    np_addOp                       shift and go to state 302
 
 state 263
 
     (97) logicalF -> SAME . np_addOp logical
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 299
+    np_addOp                       shift and go to state 303
 
 state 264
 
     (98) logicalF -> DIF . np_addOp logical
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 300
+    np_addOp                       shift and go to state 304
 
 state 265
 
@@ -5045,36 +5061,36 @@ state 266
 state 267
 
     (102) exF -> PLUS . np_addOp ex
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 301
+    np_addOp                       shift and go to state 305
 
 state 268
 
     (103) exF -> MINUS . np_addOp ex
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 302
+    np_addOp                       shift and go to state 306
 
 state 269
 
@@ -5139,36 +5155,36 @@ state 270
 state 271
 
     (106) termF -> MULT . np_addOp term
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 303
+    np_addOp                       shift and go to state 307
 
 state 272
 
     (107) termF -> DIV . np_addOp term
-    (128) np_addOp -> .
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 128 (np_addOp -> .)
-    PLUS            reduce using rule 128 (np_addOp -> .)
-    MINUS           reduce using rule 128 (np_addOp -> .)
-    CTE_INT         reduce using rule 128 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 128 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 128 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 128 (np_addOp -> .)
-    VAR             reduce using rule 128 (np_addOp -> .)
-    ID              reduce using rule 128 (np_addOp -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    PLUS            reduce using rule 132 (np_addOp -> .)
+    MINUS           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 304
+    np_addOp                       shift and go to state 308
 
 state 273
 
@@ -5236,6 +5252,138 @@ state 274
 
 state 275
 
+    (116) varcte -> CTE_INT np_addConstInt empty .
+
+    MULT            reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    DIV             reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    PLUS            reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    MINUS           reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    LESS            reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    GREATER         reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    LESS_TH         reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    GREAT_TH        reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    SAME            reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    DIF             reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    OR              reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    AND             reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    COMMA           reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    R_PAR           reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    R_BREAK         reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    TO              reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    ID              reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    RETURN          reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    READ            reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    WRITE           reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    IF              reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    VAR             reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    WHILE           reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    FROM            reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    R_CURPAR        reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    SEMICOLON       reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+    DO              reduce using rule 116 (varcte -> CTE_INT np_addConstInt empty .)
+
+
+state 276
+
+    (117) varcte -> CTE_FLOAT np_addConstFloat empty .
+
+    MULT            reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    DIV             reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    PLUS            reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    MINUS           reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    LESS            reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    GREATER         reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    LESS_TH         reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    GREAT_TH        reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    SAME            reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    DIF             reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    OR              reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    AND             reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    COMMA           reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    R_PAR           reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    R_BREAK         reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    TO              reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    ID              reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    RETURN          reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    READ            reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    WRITE           reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    IF              reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    VAR             reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    WHILE           reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    FROM            reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    R_CURPAR        reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    SEMICOLON       reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+    DO              reduce using rule 117 (varcte -> CTE_FLOAT np_addConstFloat empty .)
+
+
+state 277
+
+    (118) varcte -> CTE_CHAR np_addConstChar empty .
+
+    MULT            reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    DIV             reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    PLUS            reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    MINUS           reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    LESS            reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    GREATER         reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    LESS_TH         reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    GREAT_TH        reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    SAME            reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    DIF             reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    OR              reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    AND             reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    COMMA           reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    R_PAR           reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    R_BREAK         reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    TO              reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    ID              reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    RETURN          reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    READ            reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    WRITE           reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    IF              reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    VAR             reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    WHILE           reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    FROM            reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    R_CURPAR        reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    SEMICOLON       reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+    DO              reduce using rule 118 (varcte -> CTE_CHAR np_addConstChar empty .)
+
+
+state 278
+
+    (119) varcte -> CTE_BOOL np_addConstBool empty .
+
+    MULT            reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    DIV             reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    PLUS            reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    MINUS           reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    LESS            reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    GREATER         reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    LESS_TH         reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    GREAT_TH        reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    SAME            reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    DIF             reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    OR              reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    AND             reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    COMMA           reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    R_PAR           reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    R_BREAK         reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    TO              reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    ID              reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    RETURN          reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    READ            reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    WRITE           reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    IF              reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    VAR             reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    WHILE           reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    FROM            reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    R_CURPAR        reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    SEMICOLON       reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+    DO              reduce using rule 119 (varcte -> CTE_BOOL np_addConstBool empty .)
+
+
+state 279
+
     (59) return -> RETURN L_PAR exp R_PAR SEMICOLON . empty
     (120) empty -> .
 
@@ -5250,9 +5398,9 @@ state 275
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 305
+    empty                          shift and go to state 309
 
-state 276
+state 280
 
     (65) readF -> var np_addRead COMMA . readF
     (65) readF -> . var np_addRead COMMA readF
@@ -5264,16 +5412,16 @@ state 276
     ID              shift and go to state 156
 
     var                            shift and go to state 178
-    readF                          shift and go to state 306
+    readF                          shift and go to state 310
 
-state 277
+state 281
 
     (66) readF -> var np_addRead R_PAR . SEMICOLON empty
 
-    SEMICOLON       shift and go to state 307
+    SEMICOLON       shift and go to state 311
 
 
-state 278
+state 282
 
     (70) writeF -> COMMA writeT .
 
@@ -5289,7 +5437,7 @@ state 278
     SEMICOLON       reduce using rule 70 (writeF -> COMMA writeT .)
 
 
-state 279
+state 283
 
     (71) writeF -> R_PAR SEMICOLON . empty
     (120) empty -> .
@@ -5305,23 +5453,23 @@ state 279
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 308
+    empty                          shift and go to state 312
 
-state 280
+state 284
 
     (74) if -> IF L_PAR exp R_PAR THEN . L_CURPAR statement SEMICOLON R_CURPAR ifF
 
-    L_CURPAR        shift and go to state 309
+    L_CURPAR        shift and go to state 313
 
 
-state 281
+state 285
 
     (54) arrfunc -> L_BREAK exp COMMA exp . R_BREAK empty
 
-    R_BREAK         shift and go to state 310
+    R_BREAK         shift and go to state 314
 
 
-state 282
+state 286
 
     (55) arrfunc -> L_BREAK exp R_BREAK empty .
 
@@ -5364,21 +5512,21 @@ state 282
     CTE_BOOL        reduce using rule 55 (arrfunc -> L_BREAK exp R_BREAK empty .)
 
 
-state 283
+state 287
 
     (84) conditional -> WHILE L_PAR exp R_PAR DO . L_CURPAR statement SEMICOLON R_CURPAR empty
 
-    L_CURPAR        shift and go to state 311
+    L_CURPAR        shift and go to state 315
 
 
-state 284
+state 288
 
     (87) nonconditionalF -> exp TO exp . DO L_CURPAR statement SEMICOLON R_CURPAR empty
 
-    DO              shift and go to state 312
+    DO              shift and go to state 316
 
 
-state 285
+state 289
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .
 
@@ -5393,14 +5541,14 @@ state 285
     VOID            reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
 
 
-state 286
+state 290
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement . R_CURPAR empty
 
-    R_CURPAR        shift and go to state 313
+    R_CURPAR        shift and go to state 317
 
 
-state 287
+state 291
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR . empty
     (120) empty -> .
@@ -5414,9 +5562,9 @@ state 287
     VOID            reduce using rule 120 (empty -> .)
     R_CURPAR        reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 314
+    empty                          shift and go to state 318
 
-state 288
+state 292
 
     (78) assigmentF -> EQUAL np_addOp exp np_doAssign . empty
     (120) empty -> .
@@ -5432,9 +5580,9 @@ state 288
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 315
+    empty                          shift and go to state 319
 
-state 289
+state 293
 
     (79) assigmentF -> ope np_addOp exp np_doAssign . empty
     (120) empty -> .
@@ -5450,51 +5598,51 @@ state 289
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 316
+    empty                          shift and go to state 320
 
-state 290
+state 294
 
     (51) void -> ID DOT ID L_PAR param R_PAR . SEMICOLON empty
 
-    SEMICOLON       shift and go to state 317
+    SEMICOLON       shift and go to state 321
 
 
-state 291
+state 295
 
     (109) factor -> L_PAR np_addPar exp R_PAR . np_popPar empty
-    (130) np_popPar -> .
+    (134) np_popPar -> .
 
-    MULT            reduce using rule 130 (np_popPar -> .)
-    DIV             reduce using rule 130 (np_popPar -> .)
-    PLUS            reduce using rule 130 (np_popPar -> .)
-    MINUS           reduce using rule 130 (np_popPar -> .)
-    LESS            reduce using rule 130 (np_popPar -> .)
-    GREATER         reduce using rule 130 (np_popPar -> .)
-    LESS_TH         reduce using rule 130 (np_popPar -> .)
-    GREAT_TH        reduce using rule 130 (np_popPar -> .)
-    SAME            reduce using rule 130 (np_popPar -> .)
-    DIF             reduce using rule 130 (np_popPar -> .)
-    OR              reduce using rule 130 (np_popPar -> .)
-    AND             reduce using rule 130 (np_popPar -> .)
-    COMMA           reduce using rule 130 (np_popPar -> .)
-    R_PAR           reduce using rule 130 (np_popPar -> .)
-    R_BREAK         reduce using rule 130 (np_popPar -> .)
-    TO              reduce using rule 130 (np_popPar -> .)
-    ID              reduce using rule 130 (np_popPar -> .)
-    RETURN          reduce using rule 130 (np_popPar -> .)
-    READ            reduce using rule 130 (np_popPar -> .)
-    WRITE           reduce using rule 130 (np_popPar -> .)
-    IF              reduce using rule 130 (np_popPar -> .)
-    VAR             reduce using rule 130 (np_popPar -> .)
-    WHILE           reduce using rule 130 (np_popPar -> .)
-    FROM            reduce using rule 130 (np_popPar -> .)
-    R_CURPAR        reduce using rule 130 (np_popPar -> .)
-    SEMICOLON       reduce using rule 130 (np_popPar -> .)
-    DO              reduce using rule 130 (np_popPar -> .)
+    MULT            reduce using rule 134 (np_popPar -> .)
+    DIV             reduce using rule 134 (np_popPar -> .)
+    PLUS            reduce using rule 134 (np_popPar -> .)
+    MINUS           reduce using rule 134 (np_popPar -> .)
+    LESS            reduce using rule 134 (np_popPar -> .)
+    GREATER         reduce using rule 134 (np_popPar -> .)
+    LESS_TH         reduce using rule 134 (np_popPar -> .)
+    GREAT_TH        reduce using rule 134 (np_popPar -> .)
+    SAME            reduce using rule 134 (np_popPar -> .)
+    DIF             reduce using rule 134 (np_popPar -> .)
+    OR              reduce using rule 134 (np_popPar -> .)
+    AND             reduce using rule 134 (np_popPar -> .)
+    COMMA           reduce using rule 134 (np_popPar -> .)
+    R_PAR           reduce using rule 134 (np_popPar -> .)
+    R_BREAK         reduce using rule 134 (np_popPar -> .)
+    TO              reduce using rule 134 (np_popPar -> .)
+    ID              reduce using rule 134 (np_popPar -> .)
+    RETURN          reduce using rule 134 (np_popPar -> .)
+    READ            reduce using rule 134 (np_popPar -> .)
+    WRITE           reduce using rule 134 (np_popPar -> .)
+    IF              reduce using rule 134 (np_popPar -> .)
+    VAR             reduce using rule 134 (np_popPar -> .)
+    WHILE           reduce using rule 134 (np_popPar -> .)
+    FROM            reduce using rule 134 (np_popPar -> .)
+    R_CURPAR        reduce using rule 134 (np_popPar -> .)
+    SEMICOLON       reduce using rule 134 (np_popPar -> .)
+    DO              reduce using rule 134 (np_popPar -> .)
 
-    np_popPar                      shift and go to state 318
+    np_popPar                      shift and go to state 322
 
-state 292
+state 296
 
     (52) void -> ID L_PAR param R_PAR SEMICOLON empty .
 
@@ -5510,7 +5658,7 @@ state 292
     SEMICOLON       reduce using rule 52 (void -> ID L_PAR param R_PAR SEMICOLON empty .)
 
 
-state 293
+state 297
 
     (89) boolF -> OR np_addOp . bool
     (88) bool -> . logical np_addBool boolF
@@ -5524,10 +5672,10 @@ state 293
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5541,7 +5689,7 @@ state 293
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    bool                           shift and go to state 319
+    bool                           shift and go to state 323
     logical                        shift and go to state 162
     ex                             shift and go to state 163
     term                           shift and go to state 164
@@ -5551,7 +5699,7 @@ state 293
     varcte                         shift and go to state 170
     var                            shift and go to state 171
 
-state 294
+state 298
 
     (90) boolF -> AND np_addOp . bool
     (88) bool -> . logical np_addBool boolF
@@ -5565,10 +5713,10 @@ state 294
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5582,7 +5730,7 @@ state 294
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    bool                           shift and go to state 320
+    bool                           shift and go to state 324
     logical                        shift and go to state 162
     ex                             shift and go to state 163
     term                           shift and go to state 164
@@ -5592,7 +5740,7 @@ state 294
     varcte                         shift and go to state 170
     var                            shift and go to state 171
 
-state 295
+state 299
 
     (93) logicalF -> LESS np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -5605,166 +5753,10 @@ state 295
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
-    (60) var -> . VAR varF
-    (61) var -> . ID DOT VAR varF
-
-    L_PAR           shift and go to state 157
-    PLUS            shift and go to state 167
-    MINUS           shift and go to state 169
-    CTE_INT         shift and go to state 172
-    CTE_FLOAT       shift and go to state 173
-    CTE_CHAR        shift and go to state 174
-    CTE_BOOL        shift and go to state 175
-    VAR             shift and go to state 100
-    ID              shift and go to state 156
-
-    logical                        shift and go to state 321
-    ex                             shift and go to state 163
-    term                           shift and go to state 164
-    factor                         shift and go to state 165
-    factorT                        shift and go to state 166
-    factorF                        shift and go to state 168
-    varcte                         shift and go to state 170
-    var                            shift and go to state 171
-
-state 296
-
-    (94) logicalF -> GREATER np_addOp . logical
-    (92) logical -> . ex np_addLogical logicalF
-    (101) ex -> . term np_addEx exF
-    (105) term -> . factor np_addTerm termF
-    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
-    (110) factor -> . factorT
-    (111) factorT -> . PLUS factorF
-    (112) factorT -> . MINUS factorF
-    (113) factorT -> . factorF
-    (114) factorF -> . varcte empty
-    (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
-    (60) var -> . VAR varF
-    (61) var -> . ID DOT VAR varF
-
-    L_PAR           shift and go to state 157
-    PLUS            shift and go to state 167
-    MINUS           shift and go to state 169
-    CTE_INT         shift and go to state 172
-    CTE_FLOAT       shift and go to state 173
-    CTE_CHAR        shift and go to state 174
-    CTE_BOOL        shift and go to state 175
-    VAR             shift and go to state 100
-    ID              shift and go to state 156
-
-    logical                        shift and go to state 322
-    ex                             shift and go to state 163
-    term                           shift and go to state 164
-    factor                         shift and go to state 165
-    factorT                        shift and go to state 166
-    factorF                        shift and go to state 168
-    varcte                         shift and go to state 170
-    var                            shift and go to state 171
-
-state 297
-
-    (95) logicalF -> LESS_TH np_addOp . logical
-    (92) logical -> . ex np_addLogical logicalF
-    (101) ex -> . term np_addEx exF
-    (105) term -> . factor np_addTerm termF
-    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
-    (110) factor -> . factorT
-    (111) factorT -> . PLUS factorF
-    (112) factorT -> . MINUS factorF
-    (113) factorT -> . factorF
-    (114) factorF -> . varcte empty
-    (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
-    (60) var -> . VAR varF
-    (61) var -> . ID DOT VAR varF
-
-    L_PAR           shift and go to state 157
-    PLUS            shift and go to state 167
-    MINUS           shift and go to state 169
-    CTE_INT         shift and go to state 172
-    CTE_FLOAT       shift and go to state 173
-    CTE_CHAR        shift and go to state 174
-    CTE_BOOL        shift and go to state 175
-    VAR             shift and go to state 100
-    ID              shift and go to state 156
-
-    logical                        shift and go to state 323
-    ex                             shift and go to state 163
-    term                           shift and go to state 164
-    factor                         shift and go to state 165
-    factorT                        shift and go to state 166
-    factorF                        shift and go to state 168
-    varcte                         shift and go to state 170
-    var                            shift and go to state 171
-
-state 298
-
-    (96) logicalF -> GREAT_TH np_addOp . logical
-    (92) logical -> . ex np_addLogical logicalF
-    (101) ex -> . term np_addEx exF
-    (105) term -> . factor np_addTerm termF
-    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
-    (110) factor -> . factorT
-    (111) factorT -> . PLUS factorF
-    (112) factorT -> . MINUS factorF
-    (113) factorT -> . factorF
-    (114) factorF -> . varcte empty
-    (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
-    (60) var -> . VAR varF
-    (61) var -> . ID DOT VAR varF
-
-    L_PAR           shift and go to state 157
-    PLUS            shift and go to state 167
-    MINUS           shift and go to state 169
-    CTE_INT         shift and go to state 172
-    CTE_FLOAT       shift and go to state 173
-    CTE_CHAR        shift and go to state 174
-    CTE_BOOL        shift and go to state 175
-    VAR             shift and go to state 100
-    ID              shift and go to state 156
-
-    logical                        shift and go to state 324
-    ex                             shift and go to state 163
-    term                           shift and go to state 164
-    factor                         shift and go to state 165
-    factorT                        shift and go to state 166
-    factorF                        shift and go to state 168
-    varcte                         shift and go to state 170
-    var                            shift and go to state 171
-
-state 299
-
-    (97) logicalF -> SAME np_addOp . logical
-    (92) logical -> . ex np_addLogical logicalF
-    (101) ex -> . term np_addEx exF
-    (105) term -> . factor np_addTerm termF
-    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
-    (110) factor -> . factorT
-    (111) factorT -> . PLUS factorF
-    (112) factorT -> . MINUS factorF
-    (113) factorT -> . factorF
-    (114) factorF -> . varcte empty
-    (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5789,7 +5781,7 @@ state 299
 
 state 300
 
-    (98) logicalF -> DIF np_addOp . logical
+    (94) logicalF -> GREATER np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
     (101) ex -> . term np_addEx exF
     (105) term -> . factor np_addTerm termF
@@ -5800,10 +5792,10 @@ state 300
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5828,7 +5820,8 @@ state 300
 
 state 301
 
-    (102) exF -> PLUS np_addOp . ex
+    (95) logicalF -> LESS_TH np_addOp . logical
+    (92) logical -> . ex np_addLogical logicalF
     (101) ex -> . term np_addEx exF
     (105) term -> . factor np_addTerm termF
     (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
@@ -5838,10 +5831,10 @@ state 301
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5855,7 +5848,8 @@ state 301
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    ex                             shift and go to state 327
+    logical                        shift and go to state 327
+    ex                             shift and go to state 163
     term                           shift and go to state 164
     factor                         shift and go to state 165
     factorT                        shift and go to state 166
@@ -5864,6 +5858,160 @@ state 301
     var                            shift and go to state 171
 
 state 302
+
+    (96) logicalF -> GREAT_TH np_addOp . logical
+    (92) logical -> . ex np_addLogical logicalF
+    (101) ex -> . term np_addEx exF
+    (105) term -> . factor np_addTerm termF
+    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
+    (110) factor -> . factorT
+    (111) factorT -> . PLUS factorF
+    (112) factorT -> . MINUS factorF
+    (113) factorT -> . factorF
+    (114) factorF -> . varcte empty
+    (115) varcte -> . var np_addId empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
+    (60) var -> . VAR varF
+    (61) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 157
+    PLUS            shift and go to state 167
+    MINUS           shift and go to state 169
+    CTE_INT         shift and go to state 172
+    CTE_FLOAT       shift and go to state 173
+    CTE_CHAR        shift and go to state 174
+    CTE_BOOL        shift and go to state 175
+    VAR             shift and go to state 100
+    ID              shift and go to state 156
+
+    logical                        shift and go to state 328
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    factorT                        shift and go to state 166
+    factorF                        shift and go to state 168
+    varcte                         shift and go to state 170
+    var                            shift and go to state 171
+
+state 303
+
+    (97) logicalF -> SAME np_addOp . logical
+    (92) logical -> . ex np_addLogical logicalF
+    (101) ex -> . term np_addEx exF
+    (105) term -> . factor np_addTerm termF
+    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
+    (110) factor -> . factorT
+    (111) factorT -> . PLUS factorF
+    (112) factorT -> . MINUS factorF
+    (113) factorT -> . factorF
+    (114) factorF -> . varcte empty
+    (115) varcte -> . var np_addId empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
+    (60) var -> . VAR varF
+    (61) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 157
+    PLUS            shift and go to state 167
+    MINUS           shift and go to state 169
+    CTE_INT         shift and go to state 172
+    CTE_FLOAT       shift and go to state 173
+    CTE_CHAR        shift and go to state 174
+    CTE_BOOL        shift and go to state 175
+    VAR             shift and go to state 100
+    ID              shift and go to state 156
+
+    logical                        shift and go to state 329
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    factorT                        shift and go to state 166
+    factorF                        shift and go to state 168
+    varcte                         shift and go to state 170
+    var                            shift and go to state 171
+
+state 304
+
+    (98) logicalF -> DIF np_addOp . logical
+    (92) logical -> . ex np_addLogical logicalF
+    (101) ex -> . term np_addEx exF
+    (105) term -> . factor np_addTerm termF
+    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
+    (110) factor -> . factorT
+    (111) factorT -> . PLUS factorF
+    (112) factorT -> . MINUS factorF
+    (113) factorT -> . factorF
+    (114) factorF -> . varcte empty
+    (115) varcte -> . var np_addId empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
+    (60) var -> . VAR varF
+    (61) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 157
+    PLUS            shift and go to state 167
+    MINUS           shift and go to state 169
+    CTE_INT         shift and go to state 172
+    CTE_FLOAT       shift and go to state 173
+    CTE_CHAR        shift and go to state 174
+    CTE_BOOL        shift and go to state 175
+    VAR             shift and go to state 100
+    ID              shift and go to state 156
+
+    logical                        shift and go to state 330
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    factorT                        shift and go to state 166
+    factorF                        shift and go to state 168
+    varcte                         shift and go to state 170
+    var                            shift and go to state 171
+
+state 305
+
+    (102) exF -> PLUS np_addOp . ex
+    (101) ex -> . term np_addEx exF
+    (105) term -> . factor np_addTerm termF
+    (109) factor -> . L_PAR np_addPar exp R_PAR np_popPar empty
+    (110) factor -> . factorT
+    (111) factorT -> . PLUS factorF
+    (112) factorT -> . MINUS factorF
+    (113) factorT -> . factorF
+    (114) factorF -> . varcte empty
+    (115) varcte -> . var np_addId empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
+    (60) var -> . VAR varF
+    (61) var -> . ID DOT VAR varF
+
+    L_PAR           shift and go to state 157
+    PLUS            shift and go to state 167
+    MINUS           shift and go to state 169
+    CTE_INT         shift and go to state 172
+    CTE_FLOAT       shift and go to state 173
+    CTE_CHAR        shift and go to state 174
+    CTE_BOOL        shift and go to state 175
+    VAR             shift and go to state 100
+    ID              shift and go to state 156
+
+    ex                             shift and go to state 331
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    factorT                        shift and go to state 166
+    factorF                        shift and go to state 168
+    varcte                         shift and go to state 170
+    var                            shift and go to state 171
+
+state 306
 
     (103) exF -> MINUS np_addOp . ex
     (101) ex -> . term np_addEx exF
@@ -5875,10 +6023,10 @@ state 302
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5892,7 +6040,7 @@ state 302
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    ex                             shift and go to state 328
+    ex                             shift and go to state 332
     term                           shift and go to state 164
     factor                         shift and go to state 165
     factorT                        shift and go to state 166
@@ -5900,7 +6048,7 @@ state 302
     varcte                         shift and go to state 170
     var                            shift and go to state 171
 
-state 303
+state 307
 
     (106) termF -> MULT np_addOp . term
     (105) term -> . factor np_addTerm termF
@@ -5911,10 +6059,10 @@ state 303
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5928,14 +6076,14 @@ state 303
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    term                           shift and go to state 329
+    term                           shift and go to state 333
     factor                         shift and go to state 165
     factorT                        shift and go to state 166
     factorF                        shift and go to state 168
     varcte                         shift and go to state 170
     var                            shift and go to state 171
 
-state 304
+state 308
 
     (107) termF -> DIV np_addOp . term
     (105) term -> . factor np_addTerm termF
@@ -5946,10 +6094,10 @@ state 304
     (113) factorT -> . factorF
     (114) factorF -> . varcte empty
     (115) varcte -> . var np_addId empty
-    (116) varcte -> . CTE_INT empty
-    (117) varcte -> . CTE_FLOAT empty
-    (118) varcte -> . CTE_CHAR empty
-    (119) varcte -> . CTE_BOOL empty
+    (116) varcte -> . CTE_INT np_addConstInt empty
+    (117) varcte -> . CTE_FLOAT np_addConstFloat empty
+    (118) varcte -> . CTE_CHAR np_addConstChar empty
+    (119) varcte -> . CTE_BOOL np_addConstBool empty
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
@@ -5963,14 +6111,14 @@ state 304
     VAR             shift and go to state 100
     ID              shift and go to state 156
 
-    term                           shift and go to state 330
+    term                           shift and go to state 334
     factor                         shift and go to state 165
     factorT                        shift and go to state 166
     factorF                        shift and go to state 168
     varcte                         shift and go to state 170
     var                            shift and go to state 171
 
-state 305
+state 309
 
     (59) return -> RETURN L_PAR exp R_PAR SEMICOLON empty .
 
@@ -5986,7 +6134,7 @@ state 305
     SEMICOLON       reduce using rule 59 (return -> RETURN L_PAR exp R_PAR SEMICOLON empty .)
 
 
-state 306
+state 310
 
     (65) readF -> var np_addRead COMMA readF .
 
@@ -6002,7 +6150,7 @@ state 306
     SEMICOLON       reduce using rule 65 (readF -> var np_addRead COMMA readF .)
 
 
-state 307
+state 311
 
     (66) readF -> var np_addRead R_PAR SEMICOLON . empty
     (120) empty -> .
@@ -6018,9 +6166,9 @@ state 307
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 331
+    empty                          shift and go to state 335
 
-state 308
+state 312
 
     (71) writeF -> R_PAR SEMICOLON empty .
 
@@ -6036,7 +6184,7 @@ state 308
     SEMICOLON       reduce using rule 71 (writeF -> R_PAR SEMICOLON empty .)
 
 
-state 309
+state 313
 
     (74) if -> IF L_PAR exp R_PAR THEN L_CURPAR . statement SEMICOLON R_CURPAR ifF
     (42) statement -> . assigment statementF
@@ -6071,7 +6219,7 @@ state 309
     WHILE           shift and go to state 101
     FROM            shift and go to state 102
 
-    statement                      shift and go to state 332
+    statement                      shift and go to state 336
     assigment                      shift and go to state 85
     void                           shift and go to state 86
     return                         shift and go to state 87
@@ -6083,7 +6231,7 @@ state 309
     conditional                    shift and go to state 98
     nonconditional                 shift and go to state 99
 
-state 310
+state 314
 
     (54) arrfunc -> L_BREAK exp COMMA exp R_BREAK . empty
     (120) empty -> .
@@ -6126,9 +6274,9 @@ state 310
     CTE_CHAR        reduce using rule 120 (empty -> .)
     CTE_BOOL        reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 333
+    empty                          shift and go to state 337
 
-state 311
+state 315
 
     (84) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR . statement SEMICOLON R_CURPAR empty
     (42) statement -> . assigment statementF
@@ -6163,7 +6311,7 @@ state 311
     WHILE           shift and go to state 101
     FROM            shift and go to state 102
 
-    statement                      shift and go to state 334
+    statement                      shift and go to state 338
     assigment                      shift and go to state 85
     void                           shift and go to state 86
     return                         shift and go to state 87
@@ -6175,14 +6323,14 @@ state 311
     conditional                    shift and go to state 98
     nonconditional                 shift and go to state 99
 
-state 312
+state 316
 
     (87) nonconditionalF -> exp TO exp DO . L_CURPAR statement SEMICOLON R_CURPAR empty
 
-    L_CURPAR        shift and go to state 335
+    L_CURPAR        shift and go to state 339
 
 
-state 313
+state 317
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR . empty
     (120) empty -> .
@@ -6196,9 +6344,9 @@ state 313
     VOID            reduce using rule 120 (empty -> .)
     R_CURPAR        reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 336
+    empty                          shift and go to state 340
 
-state 314
+state 318
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .
 
@@ -6212,7 +6360,7 @@ state 314
     R_CURPAR        reduce using rule 26 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
 
 
-state 315
+state 319
 
     (78) assigmentF -> EQUAL np_addOp exp np_doAssign empty .
 
@@ -6228,7 +6376,7 @@ state 315
     SEMICOLON       reduce using rule 78 (assigmentF -> EQUAL np_addOp exp np_doAssign empty .)
 
 
-state 316
+state 320
 
     (79) assigmentF -> ope np_addOp exp np_doAssign empty .
 
@@ -6244,7 +6392,7 @@ state 316
     SEMICOLON       reduce using rule 79 (assigmentF -> ope np_addOp exp np_doAssign empty .)
 
 
-state 317
+state 321
 
     (51) void -> ID DOT ID L_PAR param R_PAR SEMICOLON . empty
     (120) empty -> .
@@ -6260,9 +6408,9 @@ state 317
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 337
+    empty                          shift and go to state 341
 
-state 318
+state 322
 
     (109) factor -> L_PAR np_addPar exp R_PAR np_popPar . empty
     (120) empty -> .
@@ -6295,9 +6443,9 @@ state 318
     SEMICOLON       reduce using rule 120 (empty -> .)
     DO              reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 338
+    empty                          shift and go to state 342
 
-state 319
+state 323
 
     (89) boolF -> OR np_addOp bool .
 
@@ -6318,7 +6466,7 @@ state 319
     DO              reduce using rule 89 (boolF -> OR np_addOp bool .)
 
 
-state 320
+state 324
 
     (90) boolF -> AND np_addOp bool .
 
@@ -6339,7 +6487,7 @@ state 320
     DO              reduce using rule 90 (boolF -> AND np_addOp bool .)
 
 
-state 321
+state 325
 
     (93) logicalF -> LESS np_addOp logical .
 
@@ -6362,7 +6510,7 @@ state 321
     DO              reduce using rule 93 (logicalF -> LESS np_addOp logical .)
 
 
-state 322
+state 326
 
     (94) logicalF -> GREATER np_addOp logical .
 
@@ -6385,7 +6533,7 @@ state 322
     DO              reduce using rule 94 (logicalF -> GREATER np_addOp logical .)
 
 
-state 323
+state 327
 
     (95) logicalF -> LESS_TH np_addOp logical .
 
@@ -6408,7 +6556,7 @@ state 323
     DO              reduce using rule 95 (logicalF -> LESS_TH np_addOp logical .)
 
 
-state 324
+state 328
 
     (96) logicalF -> GREAT_TH np_addOp logical .
 
@@ -6431,7 +6579,7 @@ state 324
     DO              reduce using rule 96 (logicalF -> GREAT_TH np_addOp logical .)
 
 
-state 325
+state 329
 
     (97) logicalF -> SAME np_addOp logical .
 
@@ -6454,7 +6602,7 @@ state 325
     DO              reduce using rule 97 (logicalF -> SAME np_addOp logical .)
 
 
-state 326
+state 330
 
     (98) logicalF -> DIF np_addOp logical .
 
@@ -6477,7 +6625,7 @@ state 326
     DO              reduce using rule 98 (logicalF -> DIF np_addOp logical .)
 
 
-state 327
+state 331
 
     (102) exF -> PLUS np_addOp ex .
 
@@ -6506,7 +6654,7 @@ state 327
     DO              reduce using rule 102 (exF -> PLUS np_addOp ex .)
 
 
-state 328
+state 332
 
     (103) exF -> MINUS np_addOp ex .
 
@@ -6535,7 +6683,7 @@ state 328
     DO              reduce using rule 103 (exF -> MINUS np_addOp ex .)
 
 
-state 329
+state 333
 
     (106) termF -> MULT np_addOp term .
 
@@ -6566,7 +6714,7 @@ state 329
     DO              reduce using rule 106 (termF -> MULT np_addOp term .)
 
 
-state 330
+state 334
 
     (107) termF -> DIV np_addOp term .
 
@@ -6597,7 +6745,7 @@ state 330
     DO              reduce using rule 107 (termF -> DIV np_addOp term .)
 
 
-state 331
+state 335
 
     (66) readF -> var np_addRead R_PAR SEMICOLON empty .
 
@@ -6613,14 +6761,14 @@ state 331
     SEMICOLON       reduce using rule 66 (readF -> var np_addRead R_PAR SEMICOLON empty .)
 
 
-state 332
+state 336
 
     (74) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement . SEMICOLON R_CURPAR ifF
 
-    SEMICOLON       shift and go to state 339
+    SEMICOLON       shift and go to state 343
 
 
-state 333
+state 337
 
     (54) arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .
 
@@ -6663,14 +6811,14 @@ state 333
     CTE_BOOL        reduce using rule 54 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
 
 
-state 334
+state 338
 
     (84) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement . SEMICOLON R_CURPAR empty
 
-    SEMICOLON       shift and go to state 340
+    SEMICOLON       shift and go to state 344
 
 
-state 335
+state 339
 
     (87) nonconditionalF -> exp TO exp DO L_CURPAR . statement SEMICOLON R_CURPAR empty
     (42) statement -> . assigment statementF
@@ -6705,7 +6853,7 @@ state 335
     WHILE           shift and go to state 101
     FROM            shift and go to state 102
 
-    statement                      shift and go to state 341
+    statement                      shift and go to state 345
     assigment                      shift and go to state 85
     void                           shift and go to state 86
     return                         shift and go to state 87
@@ -6717,7 +6865,7 @@ state 335
     conditional                    shift and go to state 98
     nonconditional                 shift and go to state 99
 
-state 336
+state 340
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .
 
@@ -6731,7 +6879,7 @@ state 336
     R_CURPAR        reduce using rule 25 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty .)
 
 
-state 337
+state 341
 
     (51) void -> ID DOT ID L_PAR param R_PAR SEMICOLON empty .
 
@@ -6747,7 +6895,7 @@ state 337
     SEMICOLON       reduce using rule 51 (void -> ID DOT ID L_PAR param R_PAR SEMICOLON empty .)
 
 
-state 338
+state 342
 
     (109) factor -> L_PAR np_addPar exp R_PAR np_popPar empty .
 
@@ -6780,35 +6928,35 @@ state 338
     DO              reduce using rule 109 (factor -> L_PAR np_addPar exp R_PAR np_popPar empty .)
 
 
-state 339
+state 343
 
     (74) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON . R_CURPAR ifF
 
-    R_CURPAR        shift and go to state 342
+    R_CURPAR        shift and go to state 346
 
 
-state 340
+state 344
 
     (84) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON . R_CURPAR empty
 
-    R_CURPAR        shift and go to state 343
+    R_CURPAR        shift and go to state 347
 
 
-state 341
+state 345
 
     (87) nonconditionalF -> exp TO exp DO L_CURPAR statement . SEMICOLON R_CURPAR empty
 
-    SEMICOLON       shift and go to state 344
+    SEMICOLON       shift and go to state 348
 
 
-state 342
+state 346
 
     (74) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR . ifF
     (75) ifF -> . ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
     (76) ifF -> . empty
     (120) empty -> .
 
-    ELSE            shift and go to state 346
+    ELSE            shift and go to state 350
     ID              reduce using rule 120 (empty -> .)
     RETURN          reduce using rule 120 (empty -> .)
     READ            reduce using rule 120 (empty -> .)
@@ -6820,10 +6968,10 @@ state 342
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    ifF                            shift and go to state 345
-    empty                          shift and go to state 347
+    ifF                            shift and go to state 349
+    empty                          shift and go to state 351
 
-state 343
+state 347
 
     (84) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR . empty
     (120) empty -> .
@@ -6839,16 +6987,16 @@ state 343
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 348
+    empty                          shift and go to state 352
 
-state 344
+state 348
 
     (87) nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON . R_CURPAR empty
 
-    R_CURPAR        shift and go to state 349
+    R_CURPAR        shift and go to state 353
 
 
-state 345
+state 349
 
     (74) if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF .
 
@@ -6864,14 +7012,14 @@ state 345
     SEMICOLON       reduce using rule 74 (if -> IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF .)
 
 
-state 346
+state 350
 
     (75) ifF -> ELSE . L_CURPAR statement SEMICOLON R_CURPAR empty
 
-    L_CURPAR        shift and go to state 350
+    L_CURPAR        shift and go to state 354
 
 
-state 347
+state 351
 
     (76) ifF -> empty .
 
@@ -6887,7 +7035,7 @@ state 347
     SEMICOLON       reduce using rule 76 (ifF -> empty .)
 
 
-state 348
+state 352
 
     (84) conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty .
 
@@ -6903,7 +7051,7 @@ state 348
     SEMICOLON       reduce using rule 84 (conditional -> WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty .)
 
 
-state 349
+state 353
 
     (87) nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR . empty
     (120) empty -> .
@@ -6919,9 +7067,9 @@ state 349
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 351
+    empty                          shift and go to state 355
 
-state 350
+state 354
 
     (75) ifF -> ELSE L_CURPAR . statement SEMICOLON R_CURPAR empty
     (42) statement -> . assigment statementF
@@ -6956,7 +7104,7 @@ state 350
     WHILE           shift and go to state 101
     FROM            shift and go to state 102
 
-    statement                      shift and go to state 352
+    statement                      shift and go to state 356
     assigment                      shift and go to state 85
     void                           shift and go to state 86
     return                         shift and go to state 87
@@ -6968,7 +7116,7 @@ state 350
     conditional                    shift and go to state 98
     nonconditional                 shift and go to state 99
 
-state 351
+state 355
 
     (87) nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty .
 
@@ -6984,21 +7132,21 @@ state 351
     SEMICOLON       reduce using rule 87 (nonconditionalF -> exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty .)
 
 
-state 352
+state 356
 
     (75) ifF -> ELSE L_CURPAR statement . SEMICOLON R_CURPAR empty
 
-    SEMICOLON       shift and go to state 353
+    SEMICOLON       shift and go to state 357
 
 
-state 353
+state 357
 
     (75) ifF -> ELSE L_CURPAR statement SEMICOLON . R_CURPAR empty
 
-    R_CURPAR        shift and go to state 354
+    R_CURPAR        shift and go to state 358
 
 
-state 354
+state 358
 
     (75) ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR . empty
     (120) empty -> .
@@ -7014,9 +7162,9 @@ state 354
     R_CURPAR        reduce using rule 120 (empty -> .)
     SEMICOLON       reduce using rule 120 (empty -> .)
 
-    empty                          shift and go to state 355
+    empty                          shift and go to state 359
 
-state 355
+state 359
 
     (75) ifF -> ELSE L_CURPAR statement SEMICOLON R_CURPAR empty .
 
