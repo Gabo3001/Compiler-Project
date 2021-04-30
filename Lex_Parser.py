@@ -279,7 +279,7 @@ def t_CTE_CHAR(t):
     return t
 
 def t_CTE_STRING(t):
-    r'"[a-zA-Z0-9!@#$%^&*()]*"'
+    r'\"[\w\d\s\,. ]*\"'
     t.value = str(t.value)
     return t
 
@@ -831,11 +831,11 @@ def p_write(p):
     '''
     write  : WRITE L_PAR writeT
 
-    writeT : CTE_STRING writeF
+    writeT : CTE_STRING np_addConstString writeF
             | exp writeF
 
-    writeF : COMMA  writeT
-               | R_PAR SEMICOLON empty
+    writeF : COMMA np_addWrite  writeT
+               | R_PAR np_addWrite SEMICOLON empty
     '''
     p[0] = None
 
@@ -1196,6 +1196,20 @@ def p_np_addConstBool(p):
     pilaO.append(const_table[p[-1]]['memo'])
     ptypes.append('bool')
 
+#Neuralgic point that add constant string in operand stack
+def p_np_addConstString(p):
+    'np_addConstString : '
+    global const_tring
+    if p[-1] not in const_table:
+        aux = get_const_memo('string')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'string'
+        }
+    pilaO.append(const_table[p[-1]]['memo'])
+    ptypes.append('string')
+
+
 #Function to check type of ids
 def check_type_id(check):
     global currFunc
@@ -1263,6 +1277,13 @@ def p_np_addRead(p):
         quadruples.append(Quadruple('read', None, None, p[-1]))
     else: 
         error('Variable {} not defined'.format(p[-1]))
+
+def p_np_addWrite(p):
+    'np_addWrite : '
+    if len(pilaO) > 0:
+        ptypes.pop()
+        opdo = pilaO.pop()
+        quadruples.append(Quadruple('write', None, None, opdo))
 
 
 #Function that will generate the quadruples
