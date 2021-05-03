@@ -876,7 +876,7 @@ def p_ope(p):
 
 def p_conditional(p):
     '''
-    conditional : WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    conditional : WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement SEMICOLON R_CURPAR np_endWhile empty
     '''
     p[0] = None
 
@@ -1304,7 +1304,7 @@ def p_np_checkBool(p):
         quadruples.append(Quadruple('GOTOF', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
-        error('If mal declarado')
+        error('Type mismatch, expected value of type bool')
 
 def p_np_endIf(p):
     'np_endIf : '
@@ -1317,6 +1317,18 @@ def p_np_else(p):
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
     pjumps.append(len(quadruples) - 1)
+
+def p_np_addWhile(p):
+    'np_addWhile : '
+    pjumps.append(len(quadruples))
+
+def p_np_endWhile(p):
+    'np_endWhile : '
+    startW = pjumps.pop()
+    temp = pjumps.pop()
+    quadruples.append(Quadruple('GOTO', None, None, temp))
+    endW = len(quadruples)
+    quadruples[startW].temp = endW
 
 #Function that will generate the quadruples
 def generateQuad(check):
