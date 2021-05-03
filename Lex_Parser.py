@@ -19,6 +19,7 @@ progName = ''
 pilaO = deque()
 poper = deque()
 ptypes = deque()
+pjumps = deque()
 
 global_int = 1000
 global_float = 2000
@@ -848,10 +849,10 @@ def p_repeat(p):
 
 def p_if(p):
     '''
-    if : IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    if : IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
 
-    ifF : ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
-        | empty
+    ifF : ELSE np_else L_CURPAR statement SEMICOLON R_CURPAR np_endIf empty
+        | np_endIf empty
     '''
     p[0] = None
 
@@ -1293,6 +1294,29 @@ def p_np_addReturn(p):
         ptypes.pop()
         opdo = pilaO.pop()
         quadruples.append(Quadruple('return', None, None, opdo))
+
+#Neuralgic point to generate if quadruple
+def p_np_checkBool(p):
+    'np_checkBool : '
+    check = ptypes.pop()
+    if check == 'bool':
+        opdo = pilaO.pop()
+        quadruples.append(Quadruple('GOTOF', opdo, None, 0))
+        pjumps.append(len(quadruples) - 1)
+    else:
+        error('If mal declarado')
+
+def p_np_endIf(p):
+    'np_endIf : '
+    jump = pjumps.pop()
+    quadruples[jump].temp = len(quadruples)
+
+def p_np_else(p):
+    'np_else : '
+    quadruples.append(Quadruple('GOTO', None, None, 0))
+    jump = pjumps.pop()
+    quadruples[jump].temp = len(quadruples)
+    pjumps.append(len(quadruples) - 1)
 
 #Function that will generate the quadruples
 def generateQuad(check):
