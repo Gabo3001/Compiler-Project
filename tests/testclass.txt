@@ -18,11 +18,11 @@ class Clase2 <inherit Class1>; {
     void function Func2();
     x: float;
     {
-        a = 12.5
+        a = 12.5;
     }
 };
 vars
 a, b: int;
 main(){
-    a = 1
+    a = 1;
 }

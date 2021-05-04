@@ -762,11 +762,11 @@ def p_main(p):
 
 def p_statement(p):
     '''
-    statement : assigment statementF
-                | void statementF
-                | return statementF
-                | read statementF
-                | write statementF
+    statement : assigment SEMICOLON statementF
+                | void SEMICOLON statementF
+                | return SEMICOLON statementF
+                | read SEMICOLON statementF
+                | write SEMICOLON statementF
                 | if statementF
                 | repeat statementF
 
@@ -777,9 +777,9 @@ def p_statement(p):
 
 def p_void(p):
     '''
-    void : ID  DOT ID L_PAR param R_PAR SEMICOLON empty
-            | ID L_PAR param R_PAR SEMICOLON empty
-            | ID L_PAR R_PAR SEMICOLON empty
+    void : ID  DOT ID L_PAR param R_PAR empty
+            | ID L_PAR param R_PAR empty
+            | ID L_PAR R_PAR empty
     '''
     p[0] = None
 
@@ -801,7 +801,7 @@ def p_param(p):
 
 def p_return(p):
     '''
-    return : RETURN L_PAR exp np_addReturn R_PAR SEMICOLON empty
+    return : RETURN L_PAR exp np_addReturn R_PAR empty
     '''
     p[0] = None
 
@@ -824,7 +824,7 @@ def p_read(p):
     read : READ L_PAR readF
     
     readF : var np_addRead COMMA readF 
-          | var np_addRead R_PAR SEMICOLON empty
+          | var np_addRead R_PAR empty
     '''
     p[0] = None
 
@@ -836,7 +836,7 @@ def p_write(p):
             | exp writeF
 
     writeF : COMMA np_addWrite  writeT
-               | R_PAR np_addWrite SEMICOLON empty
+               | R_PAR np_addWrite empty
     '''
     p[0] = None
 
@@ -849,9 +849,9 @@ def p_repeat(p):
 
 def p_if(p):
     '''
-    if : IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    if : IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF
 
-    ifF : ELSE np_else L_CURPAR statement SEMICOLON R_CURPAR np_endIf empty
+    ifF : ELSE np_else L_CURPAR statement R_CURPAR np_endIf empty
         | np_endIf empty
     '''
     p[0] = None
@@ -876,7 +876,7 @@ def p_ope(p):
 
 def p_conditional(p):
     '''
-    conditional : WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement SEMICOLON R_CURPAR np_endWhile empty
+    conditional : WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
     '''
     p[0] = None
 
@@ -885,7 +885,7 @@ def p_nonconditional(p):
     nonconditional : FROM VAR arrfunc nonconditionalF
                     | FROM VAR nonconditionalF
 
-    nonconditionalF : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    nonconditionalF : exp TO exp DO L_CURPAR statement R_CURPAR empty
     '''
     p[0] = None
 

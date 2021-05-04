@@ -6,16 +6,16 @@ ave, beto: int;
 float function Func3(c:char;);
 var_test01 : char;
 {
-    f = -123.5 #f toma el valor de -123.5
+    f = -123.5; #f toma el valor de -123.5
 }
 
 void function Func2();
 x,y,z: char;
 a,b,c: int;
 {
-    a = 12.5
+    a = 12.5;
 }
 #Inicio de funcion main
 main(){
-    ave = 1
+    ave = 1;
 }
