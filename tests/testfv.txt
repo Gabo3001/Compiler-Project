@@ -5,6 +5,7 @@ ave, beto: int;
 
 float function Func3(c:char;);
 var_test01 : char;
+
 {
     f = -123.5; #f toma el valor de -123.5
 }
