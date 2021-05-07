@@ -15,6 +15,7 @@ pvarsT = deque()
 currFunc = ''
 currType = ''
 progName = ''
+currVar = ''
 
 pilaO = deque()
 poper = deque()
@@ -883,9 +884,9 @@ def p_conditional(p):
 def p_nonconditional(p):
     '''
     nonconditional : FROM VAR arrfunc nonconditionalF
-                    | FROM VAR nonconditionalF
+                    | FROM VAR np_addId nonconditionalF 
 
-    nonconditionalF : exp TO exp DO L_CURPAR statement R_CURPAR empty
+    nonconditionalF :  EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement SEMICOLON R_CURPAR empty
     '''
     p[0] = None
 
@@ -1329,6 +1330,36 @@ def p_np_endWhile(p):
     quadruples.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
+
+def p_np_assingFor(p):
+    'np_assingFor : '
+    global currVar
+    op = poper.pop()
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
+    opdo_der = pilaO.pop()
+    opdoT_der = ptypes.pop()
+    if tempT != 'int' or opdoT_der != 'int':
+        error('Expeted type int')
+    else:
+        currVar = opdo_der
+        quadruples.append(Quadruple(op, opdo_der, None, temp))
+        ptypes.append(opdo_der)
+        pilaO.append(opdoT_der)
+
+def p_np_checkExp(p):
+    'np_checkExp : '
+    global currVar
+    poper.append('>=')
+    generateQuad(['>='])
+    pjumps.append(len(quadruples) - 1)
+    check = ptypes.pop()
+    if check == 'bool':
+        opdo = pilaO.pop()
+        quadruples.append(Quadruple('GOTOV', opdo, None, 0))
+        pjumps.append(len(quadruples) - 1)
+    else:
+        error('Type mismatch, expected value of type bool')
 
 #Function that will generate the quadruples
 def generateQuad(check):
