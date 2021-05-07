@@ -135,6 +135,16 @@ t_SAME = r'\=\='        #==
 t_ignore = ' \t'
 
 #Definition of complex tokens
+def t_CTE_CHAR(t):
+    r"'[a-zA-Z0-9!@#$%^&*()]'"
+    t.value = str(t.value)
+    return t
+
+def t_CTE_STRING(t):
+    r'\"[\w\d\s\,. ]*\"'
+    t.value = str(t.value)
+    return t
+
 def t_PROGRAM(t):
     r'program'
     t.type = 'PROGRAM'
@@ -257,7 +267,7 @@ def t_VAR(t):
 
 def t_CTE_BOOL(t):
     r'(True|False)'
-    t.value = bool(t.value)
+    t.type = 'CTE_BOOL'
     return t
 
 def t_ID(t):
@@ -274,17 +284,7 @@ def t_CTE_INT(t):
     r'\d+'
     t.value = int(t.value)
     return t
-
-def t_CTE_CHAR(t):
-    r"'[a-zA-Z0-9!@#$%^&*()]'"
-    t.value = str(t.value)
-    return t
-
-def t_CTE_STRING(t):
-    r'\"[\w\d\s\,. ]*\"'
-    t.value = str(t.value)
-    return t
-
+    
 #Function to count lines
 def t_newline(t):
     r'\n+'
@@ -886,7 +886,7 @@ def p_nonconditional(p):
     nonconditional : FROM VAR arrfunc nonconditionalF
                     | FROM VAR np_addId nonconditionalF 
 
-    nonconditionalF :  EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    nonconditionalF :  EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     '''
     p[0] = None
 
@@ -1262,10 +1262,10 @@ def p_np_addBool(p):
 def p_np_doAssign(p):
     'np_doAssign : '
     op = poper.pop()
-    temp = pilaO.pop()
-    tempT = ptypes.pop()
     opdo_der = pilaO.pop()
     opdoT_der = ptypes.pop()
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
     check = semanticCube[opdoT_der][tempT][op]
     if check != 'error':
         quadruples.append(Quadruple(op, opdo_der, None, temp))
@@ -1335,23 +1335,23 @@ def p_np_assingFor(p):
     'np_assingFor : '
     global currVar
     op = poper.pop()
-    temp = pilaO.pop()
-    tempT = ptypes.pop()
     opdo_der = pilaO.pop()
     opdoT_der = ptypes.pop()
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
     if tempT != 'int' or opdoT_der != 'int':
         error('Expeted type int')
     else:
-        currVar = opdo_der
+        currVar = temp
         quadruples.append(Quadruple(op, opdo_der, None, temp))
-        ptypes.append(opdo_der)
-        pilaO.append(opdoT_der)
+        ptypes.append(tempT)
+        pilaO.append(temp)
 
 def p_np_checkExp(p):
     'np_checkExp : '
     global currVar
-    poper.append('>=')
-    generateQuad(['>='])
+    poper.append('>')
+    generateQuad(['>'])
     pjumps.append(len(quadruples) - 1)
     check = ptypes.pop()
     if check == 'bool':
@@ -1360,6 +1360,24 @@ def p_np_checkExp(p):
         pjumps.append(len(quadruples) - 1)
     else:
         error('Type mismatch, expected value of type bool')
+
+def p_np_endFor(p):
+    'np_endFor : '
+    global currVar
+    if 1 not in const_table:
+        aux = get_const_memo('int')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'int'
+        }
+    const = (const_table[1]['memo'])
+    quadruples.append(Quadruple('+=', const, None, currVar))
+    startW = pjumps.pop()
+    temp = pjumps.pop()
+    quadruples.append(Quadruple('GOTO', None, None, temp))
+    endW = len(quadruples)
+    quadruples[startW].temp = endW
+
 
 #Function that will generate the quadruples
 def generateQuad(check):
@@ -1431,6 +1449,7 @@ except EOFError:
 print(pilaO) 
 print(poper)
 print(ptypes)
+print(pjumps)
 for item in quadruples:
     print(item.get_quad())
 
