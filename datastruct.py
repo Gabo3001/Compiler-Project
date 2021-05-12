@@ -35,6 +35,7 @@ class Funcfunc:
     self.func_type = func_type
     self.vars = VarTab()
     self.params = []
+    self.memory = [0 for i in range(4)] #[Int, Float, Char, Bool]
   
   def printFunc(self):
     print("Name:{}, Type: {}".format(self.name, self.func_type))

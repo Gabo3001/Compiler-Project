@@ -1149,8 +1149,17 @@ def get_const_memo(vart):
 #Neuralgic point to process the end of a function
 def p_np_endFunc(p):
     'np_endFunc : '
+    global currFunc, local_int, local_float, local_char, local_bool
     quadruples.append(Quadruple('ENDFUNC', None, None, None))
-    #_______PENDIENTE_________
+    dic.delVar(currFunc)
+    dic.dic[currFunc].memory[0] = local_int - 5000
+    dic.dic[currFunc].memory[1] = local_float - 6000
+    dic.dic[currFunc].memory[2] = local_char - 7000
+    dic.dic[currFunc].memory[3] = local_bool - 8000
+    local_int = 5000
+    local_float = 6000
+    local_char = 7000
+    local_bool = 8000
 
 #Neuralgic point to add id in operand stack
 def p_np_addId(p):
@@ -1425,30 +1434,53 @@ def generateQuad(check):
 
 #function to generate temporal
 def generate_temporal(tempType):
-    global global_int, global_float, global_char, global_bool
+    global currFunc, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     temp = ""
-    if tempType == 'int':
-        if global_int > 1999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_int
-        global_int += 1
-    elif tempType == 'float':
-        if global_float > 2999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_float
-        global_float += 1
-    elif tempType == 'char':
-        if global_char > 3999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_char
-        global_char += 1
-    elif tempType == 'bool':
-        if global_bool > 4999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_bool
-        global_bool += 1
-    return temp
-
+    if currFunc == progName:
+        if tempType == 'int':
+            if global_int > 1999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_int
+            global_int += 1
+        elif tempType == 'float':
+            if global_float > 2999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_float
+            global_float += 1
+        elif tempType == 'char':
+            if global_char > 3999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_char
+            global_char += 1
+        elif tempType == 'bool':
+            if global_bool > 4999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_bool
+            global_bool += 1
+        return temp
+    else:
+        if tempType == 'int':
+            if local_int > 5999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_int
+            local_int += 1
+        elif tempType == 'float':
+            if local_float > 6999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_float
+            local_float += 1
+        elif tempType == 'char':
+            if local_char > 7999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_char
+            local_char += 1
+        elif tempType == 'bool':
+            if local_bool > 8999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_bool
+            local_bool += 1
+        return temp
+        
 #Function to display errors
 def error(line):
     print(line)
