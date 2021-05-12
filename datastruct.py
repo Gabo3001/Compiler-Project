@@ -56,6 +56,7 @@ class Funcfunc:
     self.name = name
     self.func_type = func_type
     self.vars = VarTab()
+    self.params = []
   
   def printFunc(self):
     print("Name:{}, Type: {}".format(self.name, self.func_type))
@@ -65,7 +66,7 @@ class DirProcess(HashTable):
   def addFunc(self, name, func_type):
     key = self.func_hash(name)  
     self.dic[key] = Funcfunc(name, func_type)
-  
+
   def funcPrint(self, name):
     key = self.func_hash(name)
     self.dic[key].printFunc()
@@ -90,3 +91,9 @@ class DirProcess(HashTable):
   def getVarType(self, key, var):
     aux = self.func_hash(key)
     return self.dic[aux].vars.get_item(var).Obj_type
+
+#Parameters
+  def addParam(self, name, type):
+    key = self.func_hash(name)  
+    self.dic[key].params.append(type)
+    

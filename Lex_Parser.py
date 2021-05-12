@@ -720,8 +720,8 @@ def p_func(p):
 
 def p_funcF(p):
     '''
-    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
-           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
+           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
     '''
 
 def p_typeFunc(p):
@@ -738,7 +738,7 @@ def p_typeFunc(p):
 
 def p_paramater(p):
     '''
-    parameter : VAR COLON typepar SEMICOLON parameterF
+    parameter : VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
     
     parameterF : parameter
                  | empty
@@ -753,7 +753,7 @@ def p_typepar(p):
           | BOOL empty
           | ID empty
     '''
-    p[0] = None
+    p[0] = p[1]
 
 def p_main(p):
     '''
@@ -1000,6 +1000,10 @@ def p_np_addFunc(p):
   else:
       dic.addFunc(currFunc, p[-3])
       dic.funcPrint(currFunc)
+      if p[-3] != 'void':
+          pvarsT.append(p[-3])
+          pvars.append(currFunc)
+          addVars(progName)
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
@@ -1016,20 +1020,22 @@ def p_np_getVarType(p):
     'np_getVarType : '
     pvarsT.append(p[-1])
 
+#Neuralgic point to add parameter in process table and process dictionary
+def p_np_addParam(p):
+    'np_addParam : '
+    global currFunc
+    dic.addParam(currFunc, p[-2])
+
 #Neuralgic point to start adding variable to process table
 def p_np_addToDic(p):
     'np_addToDic : '
     global currFunc, progName
-    if progName == currFunc:
-        while pvars:
-            addVars(currFunc)
-    else: 
-        while pvars:
-            addVars(currFunc)
+    while pvars:
+        addVars(currFunc)
 
 #Function that add variable to process table
 def addVars(key):
-    global currType, currFunc
+    global currType
     item = pvars[-1]
     if item == ";":
         currType = pvarsT.pop()
@@ -1047,7 +1053,7 @@ def addVars(key):
         if dic.varOccupied(key,v[0]):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
-            memo = getMemo()
+            memo = getMemo(key)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             dic.varPrint(key, v[0])
             pvars.pop()
@@ -1056,16 +1062,16 @@ def addVars(key):
         if dic.varOccupied(key,item):
             error('Variable "{}" has already been declared'.format(item))
         else:
-            memo = getMemo()
+            memo = getMemo(key)
             dic.addVar(key, item, currType, memo)
             dic.varPrint(key, item)
             pvars.pop()
 
 #function that returns the memory number of the function
-def getMemo():
-    global currFunc, currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
+def getMemo(key):
+    global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     memo = ""
-    if currFunc == progName:
+    if key == progName:
         if currType == 'int':
             if global_int > 1999: 
                 error('Limit of variables of type {} reached'.format(currType))
@@ -1139,6 +1145,12 @@ def get_const_memo(vart):
         memo = const_string
         const_string += 1
     return memo
+
+#Neuralgic point to process the end of a function
+def p_np_endFunc(p):
+    'np_endFunc : '
+    quadruples.append(Quadruple('ENDFUNC', None, None, None))
+    #_______PENDIENTE_________
 
 #Neuralgic point to add id in operand stack
 def p_np_addId(p):
@@ -1307,11 +1319,13 @@ def p_np_checkBool(p):
     else:
         error('Type mismatch, expected value of type bool')
 
+#Neuralgic point save the end position of the if 
 def p_np_endIf(p):
     'np_endIf : '
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
 
+#Neuralgic point to generate GOTO quadruple of else
 def p_np_else(p):
     'np_else : '
     quadruples.append(Quadruple('GOTO', None, None, 0))
@@ -1319,10 +1333,12 @@ def p_np_else(p):
     quadruples[jump].temp = len(quadruples)
     pjumps.append(len(quadruples) - 1)
 
+#Neuralgic point to save start position of while
 def p_np_addWhile(p):
     'np_addWhile : '
     pjumps.append(len(quadruples))
 
+#Neuralgic point to add GOTO quadruple of while
 def p_np_endWhile(p):
     'np_endWhile : '
     startW = pjumps.pop()
@@ -1331,6 +1347,7 @@ def p_np_endWhile(p):
     endW = len(quadruples)
     quadruples[startW].temp = endW
 
+#Neuralgic point to assign vaiable insede a for loop
 def p_np_assingFor(p):
     'np_assingFor : '
     global currVar
@@ -1347,6 +1364,7 @@ def p_np_assingFor(p):
         ptypes.append(tempT)
         pilaO.append(temp)
 
+#Neuralgic point to check resulting expresion and genetra GOTOV quadruple
 def p_np_checkExp(p):
     'np_checkExp : '
     global currVar
@@ -1361,6 +1379,7 @@ def p_np_checkExp(p):
     else:
         error('Type mismatch, expected value of type bool')
 
+#Neuralgic point to process the end of a for loop 
 def p_np_endFor(p):
     'np_endFor : '
     global currVar
