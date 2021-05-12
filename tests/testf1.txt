@@ -1,6 +1,6 @@
 program TestF2;
 class Clase1; {
-    a = 1
+    a = 1;
     ¨
     ¨
     ¨
@@ -8,5 +8,5 @@ class Clase1; {
     ¨
 };
 main(){
-    a = 1
+    a = 1;
 }

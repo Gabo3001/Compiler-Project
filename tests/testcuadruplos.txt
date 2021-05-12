@@ -6,7 +6,7 @@ e: char;
 f,g,h: char;
 i: bool;
 main(){
-    i = a * (b + c) > b | a != b 
+    i = a * (b + c) > b | a != b;
     read(a,b);
     read(a);
 }

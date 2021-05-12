@@ -7,8 +7,8 @@ bool function Func(c: bool;);
 y: int;
 x: bool;
 {
-    y = a + b
+    y = a + b;
 }
 main() { 
-    d = a * (b + c) > b | a != b 
+    d = a * (b + c) > b | a != b;
 }

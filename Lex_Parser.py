@@ -15,10 +15,12 @@ pvarsT = deque()
 currFunc = ''
 currType = ''
 progName = ''
+currVar = ''
 
 pilaO = deque()
 poper = deque()
 ptypes = deque()
+pjumps = deque()
 
 global_int = 1000
 global_float = 2000
@@ -133,6 +135,16 @@ t_SAME = r'\=\='        #==
 t_ignore = ' \t'
 
 #Definition of complex tokens
+def t_CTE_CHAR(t):
+    r"'[a-zA-Z0-9!@#$%^&*()]'"
+    t.value = str(t.value)
+    return t
+
+def t_CTE_STRING(t):
+    r'\"[\w\d\s\,. ]*\"'
+    t.value = str(t.value)
+    return t
+
 def t_PROGRAM(t):
     r'program'
     t.type = 'PROGRAM'
@@ -255,7 +267,7 @@ def t_VAR(t):
 
 def t_CTE_BOOL(t):
     r'(True|False)'
-    t.value = bool(t.value)
+    t.type = 'CTE_BOOL'
     return t
 
 def t_ID(t):
@@ -272,17 +284,7 @@ def t_CTE_INT(t):
     r'\d+'
     t.value = int(t.value)
     return t
-
-def t_CTE_CHAR(t):
-    r"'[a-zA-Z0-9!@#$%^&*()]'"
-    t.value = str(t.value)
-    return t
-
-def t_CTE_STRING(t):
-    r'\"[\w\d\s\,. ]*\"'
-    t.value = str(t.value)
-    return t
-
+    
 #Function to count lines
 def t_newline(t):
     r'\n+'
@@ -761,11 +763,11 @@ def p_main(p):
 
 def p_statement(p):
     '''
-    statement : assigment statementF
-                | void statementF
-                | return statementF
-                | read statementF
-                | write statementF
+    statement : assigment SEMICOLON statementF
+                | void SEMICOLON statementF
+                | return SEMICOLON statementF
+                | read SEMICOLON statementF
+                | write SEMICOLON statementF
                 | if statementF
                 | repeat statementF
 
@@ -776,9 +778,9 @@ def p_statement(p):
 
 def p_void(p):
     '''
-    void : ID  DOT ID L_PAR param R_PAR SEMICOLON empty
-            | ID L_PAR param R_PAR SEMICOLON empty
-            | ID L_PAR R_PAR SEMICOLON empty
+    void : ID  DOT ID L_PAR param R_PAR empty
+            | ID L_PAR param R_PAR empty
+            | ID L_PAR R_PAR empty
     '''
     p[0] = None
 
@@ -800,7 +802,7 @@ def p_param(p):
 
 def p_return(p):
     '''
-    return : RETURN L_PAR exp np_addReturn R_PAR SEMICOLON empty
+    return : RETURN L_PAR exp np_addReturn R_PAR empty
     '''
     p[0] = None
 
@@ -823,7 +825,7 @@ def p_read(p):
     read : READ L_PAR readF
     
     readF : var np_addRead COMMA readF 
-          | var np_addRead R_PAR SEMICOLON empty
+          | var np_addRead R_PAR empty
     '''
     p[0] = None
 
@@ -835,7 +837,7 @@ def p_write(p):
             | exp writeF
 
     writeF : COMMA np_addWrite  writeT
-               | R_PAR np_addWrite SEMICOLON empty
+               | R_PAR np_addWrite empty
     '''
     p[0] = None
 
@@ -848,10 +850,10 @@ def p_repeat(p):
 
 def p_if(p):
     '''
-    if : IF L_PAR exp R_PAR THEN L_CURPAR statement SEMICOLON R_CURPAR ifF
+    if : IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF
 
-    ifF : ELSE L_CURPAR statement SEMICOLON R_CURPAR empty
-        | empty
+    ifF : ELSE np_else L_CURPAR statement R_CURPAR np_endIf empty
+        | np_endIf empty
     '''
     p[0] = None
 
@@ -875,16 +877,16 @@ def p_ope(p):
 
 def p_conditional(p):
     '''
-    conditional : WHILE L_PAR exp R_PAR DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    conditional : WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
     '''
     p[0] = None
 
 def p_nonconditional(p):
     '''
     nonconditional : FROM VAR arrfunc nonconditionalF
-                    | FROM VAR nonconditionalF
+                    | FROM VAR np_addId nonconditionalF 
 
-    nonconditionalF : exp TO exp DO L_CURPAR statement SEMICOLON R_CURPAR empty
+    nonconditionalF :  EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     '''
     p[0] = None
 
@@ -1260,10 +1262,10 @@ def p_np_addBool(p):
 def p_np_doAssign(p):
     'np_doAssign : '
     op = poper.pop()
-    temp = pilaO.pop()
-    tempT = ptypes.pop()
     opdo_der = pilaO.pop()
     opdoT_der = ptypes.pop()
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
     check = semanticCube[opdoT_der][tempT][op]
     if check != 'error':
         quadruples.append(Quadruple(op, opdo_der, None, temp))
@@ -1293,6 +1295,89 @@ def p_np_addReturn(p):
         ptypes.pop()
         opdo = pilaO.pop()
         quadruples.append(Quadruple('return', None, None, opdo))
+
+#Neuralgic point to generate if quadruple
+def p_np_checkBool(p):
+    'np_checkBool : '
+    check = ptypes.pop()
+    if check == 'bool':
+        opdo = pilaO.pop()
+        quadruples.append(Quadruple('GOTOF', opdo, None, 0))
+        pjumps.append(len(quadruples) - 1)
+    else:
+        error('Type mismatch, expected value of type bool')
+
+def p_np_endIf(p):
+    'np_endIf : '
+    jump = pjumps.pop()
+    quadruples[jump].temp = len(quadruples)
+
+def p_np_else(p):
+    'np_else : '
+    quadruples.append(Quadruple('GOTO', None, None, 0))
+    jump = pjumps.pop()
+    quadruples[jump].temp = len(quadruples)
+    pjumps.append(len(quadruples) - 1)
+
+def p_np_addWhile(p):
+    'np_addWhile : '
+    pjumps.append(len(quadruples))
+
+def p_np_endWhile(p):
+    'np_endWhile : '
+    startW = pjumps.pop()
+    temp = pjumps.pop()
+    quadruples.append(Quadruple('GOTO', None, None, temp))
+    endW = len(quadruples)
+    quadruples[startW].temp = endW
+
+def p_np_assingFor(p):
+    'np_assingFor : '
+    global currVar
+    op = poper.pop()
+    opdo_der = pilaO.pop()
+    opdoT_der = ptypes.pop()
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
+    if tempT != 'int' or opdoT_der != 'int':
+        error('Expeted type int')
+    else:
+        currVar = temp
+        quadruples.append(Quadruple(op, opdo_der, None, temp))
+        ptypes.append(tempT)
+        pilaO.append(temp)
+
+def p_np_checkExp(p):
+    'np_checkExp : '
+    global currVar
+    poper.append('>')
+    generateQuad(['>'])
+    pjumps.append(len(quadruples) - 1)
+    check = ptypes.pop()
+    if check == 'bool':
+        opdo = pilaO.pop()
+        quadruples.append(Quadruple('GOTOV', opdo, None, 0))
+        pjumps.append(len(quadruples) - 1)
+    else:
+        error('Type mismatch, expected value of type bool')
+
+def p_np_endFor(p):
+    'np_endFor : '
+    global currVar
+    if 1 not in const_table:
+        aux = get_const_memo('int')
+        const_table[p[-1]] = {
+            'memo': aux,
+            'type': 'int'
+        }
+    const = (const_table[1]['memo'])
+    quadruples.append(Quadruple('+=', const, None, currVar))
+    startW = pjumps.pop()
+    temp = pjumps.pop()
+    quadruples.append(Quadruple('GOTO', None, None, temp))
+    endW = len(quadruples)
+    quadruples[startW].temp = endW
+
 
 #Function that will generate the quadruples
 def generateQuad(check):
@@ -1364,6 +1449,7 @@ except EOFError:
 print(pilaO) 
 print(poper)
 print(ptypes)
+print(pjumps)
 for item in quadruples:
     print(item.get_quad())
 
