@@ -5,10 +5,10 @@ d: float;
 e[30]: char;
 f,g,h: char;
 main(){
-    a = 1
-    b = 2 + a
+    a = 1;
+    b = 2 + a;
     read(c);
-    d = d / b
+    d = d / b;
     write(d);
     read(f,g);
     write(f,g,"Hello World");
