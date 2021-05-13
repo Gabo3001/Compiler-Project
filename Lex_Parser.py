@@ -636,7 +636,7 @@ semanticCube = {
 # Grammar definition
 def p_program(p):
     '''
-    program : PROGRAM ID np_addFunc SEMICOLON programT
+    program : PROGRAM np_startProg ID np_addFunc SEMICOLON programT
     '''
     p[0] = None
 
@@ -982,28 +982,39 @@ def p_empty(p):
 
 # ***** NEURALGIC POINTS *****
 
-#Neuralgic point to get program name when main start
+#Neuralgic point to mark the start of the program
+def p_np_startProg(p):
+    'np_startProg : '
+    quadruples.append(Quadruple("GOTO", None, None, 0))
+    pjumps.append(len(quadruples) - 1)
+
+#Neuralgic point to get program name when main start and mark where the program start
 def p_np_getMainFunc(p):
-  'np_getMainFunc : '
-  global currFunc, progName
-  currFunc = progName
+    'np_getMainFunc : '
+    global currFunc, progName
+    currFunc = progName
+    jump = pjumps.pop()
+    quadruples[jump].temp = len(quadruples)
 
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
-  'np_addFunc : '
-  global currFunc, progName
-  currFunc = p[-1]
-  if p[-2] == 'program':
-      dic.addFunc(currFunc, "program")
-      dic.funcPrint(currFunc)
-      progName = currFunc
-  else:
-      dic.addFunc(currFunc, p[-3])
-      dic.funcPrint(currFunc)
-      if p[-3] != 'void':
-          pvarsT.append(p[-3])
-          pvars.append(currFunc)
-          addVars(progName)
+    'np_addFunc : '
+    global currFunc, progName
+    currFunc = p[-1]
+    if p[-3] == 'program':
+        dic.addFunc(currFunc, "program")
+        dic.funcPrint(currFunc)
+        progName = currFunc
+    else:
+        if dic.funcOccupied(currFunc):
+            error('Variable "{}" has already been declared'.format(currFunc))
+        else:
+            dic.addFunc(currFunc, p[-3], len(quadruples))
+            dic.funcPrint(currFunc)
+            if p[-3] != 'void':
+                pvarsT.append(p[-3])
+                pvars.append(currFunc)
+                addVars(progName)
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):

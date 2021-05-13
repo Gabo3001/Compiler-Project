@@ -30,23 +30,24 @@ class VarTab(HashTable):
 
 
 class Funcfunc:
-  def __init__(self, name, func_type):
+  def __init__(self, name, func_type, start = 0):
     self.name = name
     self.func_type = func_type
+    self.start = start
     self.vars = VarTab()
     self.params = []
     self.memory = [0 for i in range(4)] #[Int, Float, Char, Bool]
   
   def printFunc(self):
-    print("Name:{}, Type: {}".format(self.name, self.func_type))
+    print("Name:{}, Type: {}, Start: {}".format(self.name, self.func_type, self.start))
 
 class DirProcess(HashTable):
 # Functions  
-  def addFunc(self, name, func_type):
-    self.dic[name] = Funcfunc(name, func_type)
+  def addFunc(self, name, func_type, start = 0):
+    self.dic[name] = Funcfunc(name, func_type, start)
 
   def funcOccupied(self, key):
-    return self.dic.is_occupied(key)
+    return self.is_occupied(key)
 
   def funcPrint(self, name):
     self.dic[name].printFunc()
