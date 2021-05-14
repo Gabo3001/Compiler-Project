@@ -278,12 +278,12 @@ def t_ID(t):
     return t
 
 def t_CTE_FLOAT(t):
-    r'\d+\.\d+'
+    r'-?\d+\.\d+'
     t.value = float(t.value)
     return t
 
 def t_CTE_INT(t):
-    r'\d+'
+    r'-?\d+'
     t.value = int(t.value)
     return t
     
@@ -943,13 +943,7 @@ def p_term(p):
 def p_factor(p):
     '''
     factor  : L_PAR np_addPar exp R_PAR np_popPar empty
-            | factorT
-
-    factorT : PLUS factorF
-            | MINUS factorF
-            | factorF
-
-    factorF : varcte empty
+            | varcte empty
     '''
     p[0] = None
 
