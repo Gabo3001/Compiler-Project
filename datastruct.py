@@ -49,6 +49,12 @@ class DirProcess(HashTable):
   def funcOccupied(self, key):
     return self.is_occupied(key)
 
+  def funcParam(self, key, i):
+    return self.dic[key].params[i-1]
+
+  def funcParamSize(self, key):
+    return len(self.dic[key].params)
+
   def funcPrint(self, name):
     self.dic[name].printFunc()
 

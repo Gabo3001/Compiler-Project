@@ -10,13 +10,15 @@ from ObjQuad import Quadruple
 
 dic = DirProcess()
 
-pvars = deque()
-pvarsT = deque()
 currFunc = ''
 currType = ''
 progName = ''
 currVar = ''
+currCall = ''
+paramK = 0
 
+pvars = deque()
+pvarsT = deque()
 pilaO = deque()
 poper = deque()
 ptypes = deque()
@@ -778,9 +780,14 @@ def p_statement(p):
 
 def p_void(p):
     '''
-    void : ID  DOT ID L_PAR param R_PAR empty
-            | ID L_PAR param R_PAR empty
-            | ID L_PAR R_PAR empty
+    void : ID DOT ID L_PAR voidT
+            | ID np_checkVoid L_PAR np_eraQuad voidT
+
+    voidT : exp np_checkParam COMMA voidT
+            | exp np_checkParam voidF
+            | voidF
+
+    voidF : R_PAR np_endVoid empty    
     '''
     p[0] = None
 
@@ -788,15 +795,6 @@ def p_arrfunc(p):
     '''
     arrfunc : L_BREAK exp COMMA exp R_BREAK empty
             | L_BREAK exp R_BREAK empty
-    '''
-    p[0] = None
-
-def p_param(p):
-    '''
-    param : exp paramF
-
-    paramF : COMMA param
-            | empty
     '''
     p[0] = None
 
@@ -1416,6 +1414,46 @@ def p_np_endFor(p):
     quadruples.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
+
+#Neuralgic point to verify if a function exist in a function call
+def p_np_checkVoid(p):
+    'np_checkVoid : '
+    global currCall
+    if dic.funcOccupied(p[-1]):
+        currCall = p[-1]
+    else:
+        error("Function {} is not declared".format(p[-1]))
+
+#Neuralgic point to create ERA cuadruple
+def p_np_eraQuad(p):
+    'np_eraQuad : '
+    global currCall, paramK
+    quadruples.append(Quadruple('ERA', currCall, None, None))
+    paramK = 0
+
+#Neuralgi point to process parameters on function calls
+def p_np_checkParam(p):
+    'np_checkParam : '
+    global currCall, paramK
+    opdo = pilaO.pop()
+    opdoT = ptypes.pop()
+    paramK += 1
+    if paramK <= dic.funcParamSize(currCall):
+        if opdoT == dic.funcParam(currCall, paramK):
+            quadruples.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
+        else: 
+            error("Expected type {} on call to function {}".format(dic.funcParam(currCall, paramK), currCall))
+
+#Neuralgic point that mark the end of a function call
+def p_np_endVoid(p):
+    'np_endVoid : '
+    global currCall, paramK
+    if paramK > dic.funcParamSize(currCall):
+        error("{} takes {} parameters but {} were given".format(currCall, dic.funcParamSize(currCall), paramK))
+    elif paramK < dic.funcParamSize(currCall):
+        error("{} mising {} parameters".format(currCall, dic.funcParamSize(currCall) - paramK))
+    else:
+        quadruples.append(Quadruple('GOSUB', currCall, None, None))
 
 
 #Function that will generate the quadruples
