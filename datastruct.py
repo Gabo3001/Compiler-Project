@@ -1,38 +1,17 @@
-import sys
-
 class HashTable:
   #Constructor de objeto hash
   def __init__(self):
-    #Maximo de valores para nuestra hash table
-    self.MAX = 503
-    self.dic = [None for i in range(self.MAX)]
-
-  #Funion hash, crea un index unico dentro de nuestro arreglo a partir de una llave
-  def func_hash(self, key):
-    h = 0
-    index = 1
-    for char in key:
-      h += (ord(char) * index)
-      index += 1
-    return h % self.MAX
+    self.dic = {}
 
   #Funcion get item, regresa el valor almacenado en la llave, en caso de haber alguno
   def get_item(self, key):
-    aux = self.func_hash(key)
-    return self.dic[aux]
-
-  #Funcion delete item, elimina el valor almacenado correspondiente a una llave
-  def delete_item(self, key):
-    aux = self.func_hash(key)
-    self.dic[aux] = None
+    return self.dic[key]
 
   #Funcion is occupied, verifica si el valor ya esta almacenado
   def is_occupied(self, key):
-    aux = self.func_hash(key)
-    if self.dic[aux] != None:
+    if key in self.dic:
       return True
     return False
-
 
 class Objeto:
   def __init__(self, name, Obj_type, memo, level1 = 1, level2 = 1):
@@ -47,46 +26,61 @@ class Objeto:
 
 class VarTab(HashTable):
   def add_var(self, name, obj_ty, memo, lev1 = 1, lev2 = 1):
-    aux = self.func_hash(name)
-    self.dic[aux] = Objeto(name,obj_ty, memo, lev1,lev2)
+    self.dic[name] = Objeto(name,obj_ty, memo, lev1,lev2)
 
 
 class Funcfunc:
-  def __init__(self, name, func_type):
+  def __init__(self, name, func_type, start = 0):
     self.name = name
     self.func_type = func_type
+    self.start = start
     self.vars = VarTab()
+    self.params = []
+    self.memory = [0 for i in range(4)] #[Int, Float, Char, Bool]
   
   def printFunc(self):
-    print("Name:{}, Type: {}".format(self.name, self.func_type))
+    print("Name:{}, Type: {}, Start: {}".format(self.name, self.func_type, self.start))
 
 class DirProcess(HashTable):
 # Functions  
-  def addFunc(self, name, func_type):
-    key = self.func_hash(name)  
-    self.dic[key] = Funcfunc(name, func_type)
-  
+  def addFunc(self, name, func_type, start = 0):
+    self.dic[name] = Funcfunc(name, func_type, start)
+
+  def funcOccupied(self, key):
+    return self.is_occupied(key)
+
+  def funcParam(self, key, i):
+    return self.dic[key].params[i-1]
+
+  def funcParamSize(self, key):
+    return len(self.dic[key].params)
+
   def funcPrint(self, name):
-    key = self.func_hash(name)
-    self.dic[key].printFunc()
+    self.dic[name].printFunc()
 
 # Vars
   def getVarMemo(self, key, var):
-      aux1 = self.func_hash(key)
-      return self.dic[aux1].vars.get_item(var).memo
+      return self.dic[key].vars.get_item(var).memo
 
   def addVar(self, key, var, obj_ty, memo, lev1 = 1, lev2 = 1):
-    aux = self.func_hash(key)
-    self.dic[aux].vars.add_var(var, obj_ty, memo, lev1,lev2)
+    self.dic[key].vars.add_var(var, obj_ty, memo, lev1,lev2)
 
   def varPrint(self, key, var):
-    aux = self.func_hash(key)
-    self.dic[aux].vars.get_item(var).printObj()
+    self.dic[key].vars.get_item(var).printObj()
 
   def varOccupied(self, key, var):
-    aux = self.func_hash(key)
-    return self.dic[aux].vars.is_occupied(var)
+    return self.dic[key].vars.is_occupied(var)
 
   def getVarType(self, key, var):
-    aux = self.func_hash(key)
-    return self.dic[aux].vars.get_item(var).Obj_type
+    return self.dic[key].vars.get_item(var).Obj_type
+    self.dic[key].vars[var].printObj()
+
+  def delVar(self, key):
+    del self.dic[key].vars
+
+#Parameters
+  def addParam(self, name, type):
+    self.dic[name].params.append(type)
+
+  
+    

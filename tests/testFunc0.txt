@@ -32,8 +32,8 @@ z: int;
 }
 
 main(){
-    gab = 8
-    pau = 17.8
+    gab = 8;
+    pau = 17.8;
     Func1(2,6);
     Func3(pau);
     write(gab, pau);

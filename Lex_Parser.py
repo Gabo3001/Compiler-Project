@@ -10,13 +10,15 @@ from ObjQuad import Quadruple
 
 dic = DirProcess()
 
-pvars = deque()
-pvarsT = deque()
 currFunc = ''
 currType = ''
 progName = ''
 currVar = ''
+currCall = ''
+paramK = 0
 
+pvars = deque()
+pvarsT = deque()
 pilaO = deque()
 poper = deque()
 ptypes = deque()
@@ -276,12 +278,12 @@ def t_ID(t):
     return t
 
 def t_CTE_FLOAT(t):
-    r'\d+\.\d+'
+    r'-?\d+\.\d+'
     t.value = float(t.value)
     return t
 
 def t_CTE_INT(t):
-    r'\d+'
+    r'-?\d+'
     t.value = int(t.value)
     return t
     
@@ -636,7 +638,7 @@ semanticCube = {
 # Grammar definition
 def p_program(p):
     '''
-    program : PROGRAM ID np_addFunc SEMICOLON programT
+    program : PROGRAM np_startProg ID np_addFunc SEMICOLON programT
     '''
     p[0] = None
 
@@ -720,8 +722,8 @@ def p_func(p):
 
 def p_funcF(p):
     '''
-    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
-           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR empty
+    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
+           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
     '''
 
 def p_typeFunc(p):
@@ -738,7 +740,7 @@ def p_typeFunc(p):
 
 def p_paramater(p):
     '''
-    parameter : VAR COLON typepar SEMICOLON parameterF
+    parameter : VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
     
     parameterF : parameter
                  | empty
@@ -753,7 +755,7 @@ def p_typepar(p):
           | BOOL empty
           | ID empty
     '''
-    p[0] = None
+    p[0] = p[1]
 
 def p_main(p):
     '''
@@ -778,9 +780,14 @@ def p_statement(p):
 
 def p_void(p):
     '''
-    void : ID  DOT ID L_PAR param R_PAR empty
-            | ID L_PAR param R_PAR empty
-            | ID L_PAR R_PAR empty
+    void : ID DOT ID L_PAR voidT
+            | ID np_checkVoid L_PAR np_eraQuad voidT
+
+    voidT : exp np_checkParam COMMA voidT
+            | exp np_checkParam voidF
+            | voidF
+
+    voidF : R_PAR np_endVoid empty    
     '''
     p[0] = None
 
@@ -788,15 +795,6 @@ def p_arrfunc(p):
     '''
     arrfunc : L_BREAK exp COMMA exp R_BREAK empty
             | L_BREAK exp R_BREAK empty
-    '''
-    p[0] = None
-
-def p_param(p):
-    '''
-    param : exp paramF
-
-    paramF : COMMA param
-            | empty
     '''
     p[0] = None
 
@@ -945,13 +943,7 @@ def p_term(p):
 def p_factor(p):
     '''
     factor  : L_PAR np_addPar exp R_PAR np_popPar empty
-            | factorT
-
-    factorT : PLUS factorF
-            | MINUS factorF
-            | factorF
-
-    factorF : varcte empty
+            | varcte empty
     '''
     p[0] = None
 
@@ -982,24 +974,39 @@ def p_empty(p):
 
 # ***** NEURALGIC POINTS *****
 
-#Neuralgic point to get program name when main start
+#Neuralgic point to mark the start of the program
+def p_np_startProg(p):
+    'np_startProg : '
+    quadruples.append(Quadruple("GOTO", None, None, 0))
+    pjumps.append(len(quadruples) - 1)
+
+#Neuralgic point to get program name when main start and mark where the program start
 def p_np_getMainFunc(p):
-  'np_getMainFunc : '
-  global currFunc, progName
-  currFunc = progName
+    'np_getMainFunc : '
+    global currFunc, progName
+    currFunc = progName
+    jump = pjumps.pop()
+    quadruples[jump].temp = len(quadruples)
 
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
-  'np_addFunc : '
-  global currFunc, progName
-  currFunc = p[-1]
-  if p[-2] == 'program':
-      dic.addFunc(currFunc, "program")
-      dic.funcPrint(currFunc)
-      progName = currFunc
-  else:
-      dic.addFunc(currFunc, p[-3])
-      dic.funcPrint(currFunc)
+    'np_addFunc : '
+    global currFunc, progName
+    currFunc = p[-1]
+    if p[-3] == 'program':
+        dic.addFunc(currFunc, "program")
+        dic.funcPrint(currFunc)
+        progName = currFunc
+    else:
+        if dic.funcOccupied(currFunc):
+            error('Variable "{}" has already been declared'.format(currFunc))
+        else:
+            dic.addFunc(currFunc, p[-3], len(quadruples))
+            dic.funcPrint(currFunc)
+            if p[-3] != 'void':
+                pvarsT.append(p[-3])
+                pvars.append(currFunc)
+                addVars(progName)
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
@@ -1016,20 +1023,22 @@ def p_np_getVarType(p):
     'np_getVarType : '
     pvarsT.append(p[-1])
 
+#Neuralgic point to add parameter in process table and process dictionary
+def p_np_addParam(p):
+    'np_addParam : '
+    global currFunc
+    dic.addParam(currFunc, p[-2])
+
 #Neuralgic point to start adding variable to process table
 def p_np_addToDic(p):
     'np_addToDic : '
     global currFunc, progName
-    if progName == currFunc:
-        while pvars:
-            addVars(currFunc)
-    else: 
-        while pvars:
-            addVars(currFunc)
+    while pvars:
+        addVars(currFunc)
 
 #Function that add variable to process table
 def addVars(key):
-    global currType, currFunc
+    global currType
     item = pvars[-1]
     if item == ";":
         currType = pvarsT.pop()
@@ -1047,7 +1056,7 @@ def addVars(key):
         if dic.varOccupied(key,v[0]):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
-            memo = getMemo()
+            memo = getMemo(key)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             dic.varPrint(key, v[0])
             pvars.pop()
@@ -1056,16 +1065,16 @@ def addVars(key):
         if dic.varOccupied(key,item):
             error('Variable "{}" has already been declared'.format(item))
         else:
-            memo = getMemo()
+            memo = getMemo(key)
             dic.addVar(key, item, currType, memo)
             dic.varPrint(key, item)
             pvars.pop()
 
 #function that returns the memory number of the function
-def getMemo():
-    global currFunc, currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
+def getMemo(key):
+    global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     memo = ""
-    if currFunc == progName:
+    if key == progName:
         if currType == 'int':
             if global_int > 1999: 
                 error('Limit of variables of type {} reached'.format(currType))
@@ -1139,6 +1148,21 @@ def get_const_memo(vart):
         memo = const_string
         const_string += 1
     return memo
+
+#Neuralgic point to process the end of a function
+def p_np_endFunc(p):
+    'np_endFunc : '
+    global currFunc, local_int, local_float, local_char, local_bool
+    quadruples.append(Quadruple('ENDFUNC', None, None, None))
+    dic.delVar(currFunc)
+    dic.dic[currFunc].memory[0] = local_int - 5000
+    dic.dic[currFunc].memory[1] = local_float - 6000
+    dic.dic[currFunc].memory[2] = local_char - 7000
+    dic.dic[currFunc].memory[3] = local_bool - 8000
+    local_int = 5000
+    local_float = 6000
+    local_char = 7000
+    local_bool = 8000
 
 #Neuralgic point to add id in operand stack
 def p_np_addId(p):
@@ -1307,11 +1331,13 @@ def p_np_checkBool(p):
     else:
         error('Type mismatch, expected value of type bool')
 
+#Neuralgic point save the end position of the if 
 def p_np_endIf(p):
     'np_endIf : '
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
 
+#Neuralgic point to generate GOTO quadruple of else
 def p_np_else(p):
     'np_else : '
     quadruples.append(Quadruple('GOTO', None, None, 0))
@@ -1319,10 +1345,12 @@ def p_np_else(p):
     quadruples[jump].temp = len(quadruples)
     pjumps.append(len(quadruples) - 1)
 
+#Neuralgic point to save start position of while
 def p_np_addWhile(p):
     'np_addWhile : '
     pjumps.append(len(quadruples))
 
+#Neuralgic point to add GOTO quadruple of while
 def p_np_endWhile(p):
     'np_endWhile : '
     startW = pjumps.pop()
@@ -1331,6 +1359,7 @@ def p_np_endWhile(p):
     endW = len(quadruples)
     quadruples[startW].temp = endW
 
+#Neuralgic point to assign vaiable insede a for loop
 def p_np_assingFor(p):
     'np_assingFor : '
     global currVar
@@ -1347,6 +1376,7 @@ def p_np_assingFor(p):
         ptypes.append(tempT)
         pilaO.append(temp)
 
+#Neuralgic point to check resulting expresion and genetra GOTOV quadruple
 def p_np_checkExp(p):
     'np_checkExp : '
     global currVar
@@ -1361,6 +1391,7 @@ def p_np_checkExp(p):
     else:
         error('Type mismatch, expected value of type bool')
 
+#Neuralgic point to process the end of a for loop 
 def p_np_endFor(p):
     'np_endFor : '
     global currVar
@@ -1377,6 +1408,46 @@ def p_np_endFor(p):
     quadruples.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
+
+#Neuralgic point to verify if a function exist in a function call
+def p_np_checkVoid(p):
+    'np_checkVoid : '
+    global currCall
+    if dic.funcOccupied(p[-1]):
+        currCall = p[-1]
+    else:
+        error("Function {} is not declared".format(p[-1]))
+
+#Neuralgic point to create ERA cuadruple
+def p_np_eraQuad(p):
+    'np_eraQuad : '
+    global currCall, paramK
+    quadruples.append(Quadruple('ERA', currCall, None, None))
+    paramK = 0
+
+#Neuralgi point to process parameters on function calls
+def p_np_checkParam(p):
+    'np_checkParam : '
+    global currCall, paramK
+    opdo = pilaO.pop()
+    opdoT = ptypes.pop()
+    paramK += 1
+    if paramK <= dic.funcParamSize(currCall):
+        if opdoT == dic.funcParam(currCall, paramK):
+            quadruples.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
+        else: 
+            error("Expected type {} on call to function {}".format(dic.funcParam(currCall, paramK), currCall))
+
+#Neuralgic point that mark the end of a function call
+def p_np_endVoid(p):
+    'np_endVoid : '
+    global currCall, paramK
+    if paramK > dic.funcParamSize(currCall):
+        error("{} takes {} parameters but {} were given".format(currCall, dic.funcParamSize(currCall), paramK))
+    elif paramK < dic.funcParamSize(currCall):
+        error("{} mising {} parameters".format(currCall, dic.funcParamSize(currCall) - paramK))
+    else:
+        quadruples.append(Quadruple('GOSUB', currCall, None, None))
 
 
 #Function that will generate the quadruples
@@ -1406,30 +1477,53 @@ def generateQuad(check):
 
 #function to generate temporal
 def generate_temporal(tempType):
-    global global_int, global_float, global_char, global_bool
+    global currFunc, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     temp = ""
-    if tempType == 'int':
-        if global_int > 1999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_int
-        global_int += 1
-    elif tempType == 'float':
-        if global_float > 2999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_float
-        global_float += 1
-    elif tempType == 'char':
-        if global_char > 3999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_char
-        global_char += 1
-    elif tempType == 'bool':
-        if global_bool > 4999: 
-            error('Limit of variables of type {} reached'.format(tempType))
-        temp = global_bool
-        global_bool += 1
-    return temp
-
+    if currFunc == progName:
+        if tempType == 'int':
+            if global_int > 1999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_int
+            global_int += 1
+        elif tempType == 'float':
+            if global_float > 2999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_float
+            global_float += 1
+        elif tempType == 'char':
+            if global_char > 3999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_char
+            global_char += 1
+        elif tempType == 'bool':
+            if global_bool > 4999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = global_bool
+            global_bool += 1
+        return temp
+    else:
+        if tempType == 'int':
+            if local_int > 5999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_int
+            local_int += 1
+        elif tempType == 'float':
+            if local_float > 6999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_float
+            local_float += 1
+        elif tempType == 'char':
+            if local_char > 7999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_char
+            local_char += 1
+        elif tempType == 'bool':
+            if local_bool > 8999: 
+                error('Limit of variables of type {} reached'.format(tempType))
+            temp = local_bool
+            local_bool += 1
+        return temp
+        
 #Function to display errors
 def error(line):
     print(line)

@@ -1,16 +1,20 @@
 program Test3;
 vars
-a, b, c: int;
-d: float;
+a, b, c, i: int;
+d, j, k: float;
 e[30]: char;
 f,g,h: char;
 main(){
-    a = 1
-    b = 2 + a
+    a = 1;
+    b = 2 + a;
     read(c);
-    d = d / b
+    d = d / b;
     write(d);
     read(f,g);
     write(f,g,"Hello World");
     write(b + c);
+    i = -12;
+    j = 1.2;
+    k = -3.2;
+    write(i*j*k);
 }
