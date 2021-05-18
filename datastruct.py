@@ -82,5 +82,18 @@ class DirProcess(HashTable):
   def addParam(self, name, type):
     self.dic[name].params.append(type)
 
+#Others
+  def printAll(self):
+    for key in self.dic:
+      self.funcPrint(key)
+      for var in self.dic[key].vars.dic:
+        self.varPrint(key, var)
   
+  def getGlobalMem(self):
+    aux = {}
+    for key in self.dic:
+      if self.dic[key].func_type == "program":
+        for var in self.dic[key].vars.dic:
+          aux[self.getVarMemo(key, var)] = None
+    return aux
     

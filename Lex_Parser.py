@@ -995,14 +995,12 @@ def p_np_addFunc(p):
     currFunc = p[-1]
     if p[-3] == 'program':
         dic.addFunc(currFunc, "program")
-        dic.funcPrint(currFunc)
         progName = currFunc
     else:
         if dic.funcOccupied(currFunc):
             error('Variable "{}" has already been declared'.format(currFunc))
         else:
             dic.addFunc(currFunc, p[-3], len(quadruples))
-            dic.funcPrint(currFunc)
             if p[-3] != 'void':
                 pvarsT.append(p[-3])
                 pvars.append(currFunc)
@@ -1058,7 +1056,6 @@ def addVars(key):
         else:
             memo = getMemo(key)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
-            dic.varPrint(key, v[0])
             pvars.pop()
 
     else:
@@ -1067,7 +1064,6 @@ def addVars(key):
         else:
             memo = getMemo(key)
             dic.addVar(key, item, currType, memo)
-            dic.varPrint(key, item)
             pvars.pop()
 
 #function that returns the memory number of the function
@@ -1531,31 +1527,35 @@ def error(line):
 
 parser = yacc.yacc()
 
-#Test Lex and Parser with txt
-#read 1 txt
-try:
-    text = input('Insert test doc (.txt): ')
-    with open(text, 'r') as file:
-        parser.parse(file.read())
-except EOFError:
-    print("Error")
+def printAll():
+    print(pilaO) 
+    print(poper)
+    print(ptypes)
+    print(pjumps)
+    for item in quadruples:
+        print(item.get_quad())
 
-print(pilaO) 
-print(poper)
-print(ptypes)
-print(pjumps)
-for item in quadruples:
-    print(item.get_quad())
-
-#insert name and read txt
-"""
-while True:
+def main():
     try:
         text = input('Insert test doc (.txt): ')
-        f = open(text, "r")
-        lexer.lineno = 1
-        for s in f:
-            parser.parse(s)
+        with open(text, 'r') as file:
+            parser.parse(file.read())
     except EOFError:
-        print('Error')
-"""
+        print("Error")
+    
+    #print(dic.printAll())
+    #printAll()
+    
+#Fucntion to help the virtual machine to get all it need to process the code
+def vmHelper():
+    main()
+    out = {
+        'dictionary': dic,
+        'const_table': const_table,
+        'quadruples': quadruples
+    }
+    return out
+
+if __name__ == "__main__":
+    main()
+
