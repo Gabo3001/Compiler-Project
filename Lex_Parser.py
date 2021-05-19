@@ -41,6 +41,7 @@ const_string = 13000
 const_table = {}
 
 quadruples = []
+quadaux = []
 
 # ***** LEXER *****
 # Tokens
@@ -649,7 +650,7 @@ def p_programT(p):
              | programF
     
     programF : func programF 
-             | main empty
+             | main np_endProg empty
     '''
     p[0] = None
 
@@ -1288,6 +1289,11 @@ def p_np_doAssign(p):
     tempT = ptypes.pop()
     check = semanticCube[opdoT_der][tempT][op]
     if check != 'error':
+        quadaux.append(Quadruple(op, opdo_der, None, temp))
+        if type(opdo_der) != int:
+            opdo_der = dic.getVarMemo(currFunc, opdo_der)
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
         quadruples.append(Quadruple(op, opdo_der, None, temp))
     else:
         error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
@@ -1296,7 +1302,11 @@ def p_np_doAssign(p):
 def p_np_addRead(p):
     'np_addRead : '
     if dic.varOccupied(currFunc, p[-1]):
-        quadruples.append(Quadruple('read', None, None, p[-1]))
+        quadaux.append(Quadruple('read', None, None, p[-1]))
+        temp = p[-1]
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
+        quadruples.append(Quadruple('read', None, None, temp))
     else: 
         error('Variable {} not defined'.format(p[-1]))
 
@@ -1306,6 +1316,9 @@ def p_np_addWrite(p):
     if len(pilaO) > 0:
         ptypes.pop()
         opdo = pilaO.pop()
+        quadaux.append(Quadruple('write', None, None, opdo))
+        if type(opdo) != int:
+            opdo = dic.getVarMemo(currFunc, opdo)
         quadruples.append(Quadruple('write', None, None, opdo))
 
 #Neuralgic point to generate return quadruple
@@ -1463,13 +1476,12 @@ def generateQuad(check):
                 temp = generate_temporal(tempType)
                 pilaO.append(temp)
                 ptypes.append(tempType)
+                quadaux.append(Quadruple(op, opdo_izq, opdo_der, temp))
+                if type(opdo_izq) != int:
+                    opdo_izq = dic.getVarMemo(currFunc, opdo_izq)
+                if type(opdo_der) != int:
+                    opdo_der = dic.getVarMemo(currFunc, opdo_der)
                 quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))
-                """ BORRARFINAL
-                if type(opdo_izq) == str:
-                    opdo_izq = dic.get_item(currFunc).vars.get_item(opdo_izq).memo
-                if type(opdo_der) == str:
-                    opdo_der = dic.get_item(currFunc).vars.get_item(opdo_der).memo
-                quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))"""
 
 #function to generate temporal
 def generate_temporal(tempType):
@@ -1520,6 +1532,12 @@ def generate_temporal(tempType):
             local_bool += 1
         return temp
         
+#Neuralgic point to mark the end of the program
+def p_np_endProg(p):
+    'np_endProg : '
+    quadaux.append(Quadruple('END', None, None, None))
+    quadruples.append(Quadruple('END', None, None, None))
+
 #Function to display errors
 def error(line):
     print(line)

@@ -8,7 +8,7 @@ Rule 2     programT -> class programT
 Rule 3     programT -> vars programF
 Rule 4     programT -> programF
 Rule 5     programF -> func programF
-Rule 6     programF -> main empty
+Rule 6     programF -> main np_endProg empty
 Rule 7     class -> CLASS ID classT
 Rule 8     classT -> LESS INHERIT ID GREATER classF
 Rule 9     classT -> classF
@@ -157,6 +157,7 @@ Rule 151   np_checkVoid -> <empty>
 Rule 152   np_eraQuad -> <empty>
 Rule 153   np_checkParam -> <empty>
 Rule 154   np_endVoid -> <empty>
+Rule 155   np_endProg -> <empty>
 
 Terminals, with rules where they appear
 
@@ -276,6 +277,7 @@ np_else              : 75
 np_endFor            : 87
 np_endFunc           : 25 26
 np_endIf             : 75 76
+np_endProg           : 6
 np_endVoid           : 56
 np_endWhile          : 84
 np_eraQuad           : 52
@@ -371,7 +373,7 @@ state 6
     (7) class -> . CLASS ID classT
     (11) vars -> . VARS dec empty
     (5) programF -> . func programF
-    (6) programF -> . main empty
+    (6) programF -> . main np_endProg empty
     (24) func -> . typeFunc FUNCTION ID np_addFunc L_PAR funcF
     (41) main -> . MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty
     (27) typeFunc -> . INT empty
@@ -424,7 +426,7 @@ state 9
     (7) class -> . CLASS ID classT
     (11) vars -> . VARS dec empty
     (5) programF -> . func programF
-    (6) programF -> . main empty
+    (6) programF -> . main np_endProg empty
     (24) func -> . typeFunc FUNCTION ID np_addFunc L_PAR funcF
     (41) main -> . MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty
     (27) typeFunc -> . INT empty
@@ -456,7 +458,7 @@ state 10
 
     (3) programT -> vars . programF
     (5) programF -> . func programF
-    (6) programF -> . main empty
+    (6) programF -> . main np_endProg empty
     (24) func -> . typeFunc FUNCTION ID np_addFunc L_PAR funcF
     (41) main -> . MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty
     (27) typeFunc -> . INT empty
@@ -507,7 +509,7 @@ state 14
 
     (5) programF -> func . programF
     (5) programF -> . func programF
-    (6) programF -> . main empty
+    (6) programF -> . main np_endProg empty
     (24) func -> . typeFunc FUNCTION ID np_addFunc L_PAR funcF
     (41) main -> . MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty
     (27) typeFunc -> . INT empty
@@ -532,12 +534,12 @@ state 14
 
 state 15
 
-    (6) programF -> main . empty
-    (116) empty -> .
+    (6) programF -> main . np_endProg empty
+    (155) np_endProg -> .
 
-    $end            reduce using rule 116 (empty -> .)
+    $end            reduce using rule 155 (np_endProg -> .)
 
-    empty                          shift and go to state 30
+    np_endProg                     shift and go to state 30
 
 state 16
 
@@ -673,23 +675,25 @@ state 29
 
 state 30
 
-    (6) programF -> main empty .
+    (6) programF -> main np_endProg . empty
+    (116) empty -> .
 
-    $end            reduce using rule 6 (programF -> main empty .)
+    $end            reduce using rule 116 (empty -> .)
 
+    empty                          shift and go to state 46
 
 state 31
 
     (24) func -> typeFunc FUNCTION . ID np_addFunc L_PAR funcF
 
-    ID              shift and go to state 46
+    ID              shift and go to state 47
 
 
 state 32
 
     (41) main -> MAIN np_getMainFunc . L_PAR R_PAR L_CURPAR statement R_CURPAR empty
 
-    L_PAR           shift and go to state 47
+    L_PAR           shift and go to state 48
 
 
 state 33
@@ -746,7 +750,7 @@ state 39
 
     (8) classT -> LESS . INHERIT ID GREATER classF
 
-    INHERIT         shift and go to state 48
+    INHERIT         shift and go to state 49
 
 
 state 40
@@ -768,7 +772,7 @@ state 41
 
     (10) classF -> SEMICOLON . L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
 
-    L_CURPAR        shift and go to state 49
+    L_CURPAR        shift and go to state 50
 
 
 state 42
@@ -792,7 +796,7 @@ state 43
     COMMA           reduce using rule 121 (np_getDecArr -> .)
     COLON           reduce using rule 121 (np_getDecArr -> .)
 
-    np_getDecArr                   shift and go to state 50
+    np_getDecArr                   shift and go to state 51
 
 state 44
 
@@ -801,62 +805,69 @@ state 44
     (15) decF -> . COLON type np_getVarType SEMICOLON np_getDec dec
     (16) decF -> . COLON type np_getVarType SEMICOLON np_getDec np_addToDic empty
 
-    COMMA           shift and go to state 52
-    COLON           shift and go to state 53
+    COMMA           shift and go to state 53
+    COLON           shift and go to state 54
 
-    decF                           shift and go to state 51
+    decF                           shift and go to state 52
 
 state 45
 
     (22) arr -> L_BREAK . CTE_INT COMMA CTE_INT R_BREAK empty
     (23) arr -> L_BREAK . CTE_INT R_BREAK empty
 
-    CTE_INT         shift and go to state 54
+    CTE_INT         shift and go to state 55
 
 
 state 46
+
+    (6) programF -> main np_endProg empty .
+
+    $end            reduce using rule 6 (programF -> main np_endProg empty .)
+
+
+state 47
 
     (24) func -> typeFunc FUNCTION ID . np_addFunc L_PAR funcF
     (119) np_addFunc -> .
 
     L_PAR           reduce using rule 119 (np_addFunc -> .)
 
-    np_addFunc                     shift and go to state 55
-
-state 47
-
-    (41) main -> MAIN np_getMainFunc L_PAR . R_PAR L_CURPAR statement R_CURPAR empty
-
-    R_PAR           shift and go to state 56
-
+    np_addFunc                     shift and go to state 56
 
 state 48
 
-    (8) classT -> LESS INHERIT . ID GREATER classF
+    (41) main -> MAIN np_getMainFunc L_PAR . R_PAR L_CURPAR statement R_CURPAR empty
 
-    ID              shift and go to state 57
+    R_PAR           shift and go to state 57
 
 
 state 49
 
-    (10) classF -> SEMICOLON L_CURPAR . ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+    (8) classT -> LESS INHERIT . ID GREATER classF
 
-    ATTRIBUTES      shift and go to state 58
+    ID              shift and go to state 58
 
 
 state 50
+
+    (10) classF -> SEMICOLON L_CURPAR . ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+
+    ATTRIBUTES      shift and go to state 59
+
+
+state 51
 
     (12) dec -> VAR arr np_getDecArr . decF
     (14) decF -> . COMMA dec
     (15) decF -> . COLON type np_getVarType SEMICOLON np_getDec dec
     (16) decF -> . COLON type np_getVarType SEMICOLON np_getDec np_addToDic empty
 
-    COMMA           shift and go to state 52
-    COLON           shift and go to state 53
+    COMMA           shift and go to state 53
+    COLON           shift and go to state 54
 
-    decF                           shift and go to state 59
+    decF                           shift and go to state 60
 
-state 51
+state 52
 
     (13) dec -> VAR np_getDec decF .
 
@@ -871,7 +882,7 @@ state 51
     L_CURPAR        reduce using rule 13 (dec -> VAR np_getDec decF .)
 
 
-state 52
+state 53
 
     (14) decF -> COMMA . dec
     (12) dec -> . VAR arr np_getDecArr decF
@@ -879,9 +890,9 @@ state 52
 
     VAR             shift and go to state 28
 
-    dec                            shift and go to state 60
+    dec                            shift and go to state 61
 
-state 53
+state 54
 
     (15) decF -> COLON . type np_getVarType SEMICOLON np_getDec dec
     (16) decF -> COLON . type np_getVarType SEMICOLON np_getDec np_addToDic empty
@@ -891,45 +902,45 @@ state 53
     (20) type -> . BOOL empty
     (21) type -> . ID empty
 
-    INT             shift and go to state 62
-    FLOAT           shift and go to state 63
-    CHAR            shift and go to state 64
-    BOOL            shift and go to state 65
-    ID              shift and go to state 66
+    INT             shift and go to state 63
+    FLOAT           shift and go to state 64
+    CHAR            shift and go to state 65
+    BOOL            shift and go to state 66
+    ID              shift and go to state 67
 
-    type                           shift and go to state 61
+    type                           shift and go to state 62
 
-state 54
+state 55
 
     (22) arr -> L_BREAK CTE_INT . COMMA CTE_INT R_BREAK empty
     (23) arr -> L_BREAK CTE_INT . R_BREAK empty
 
-    COMMA           shift and go to state 67
-    R_BREAK         shift and go to state 68
-
-
-state 55
-
-    (24) func -> typeFunc FUNCTION ID np_addFunc . L_PAR funcF
-
-    L_PAR           shift and go to state 69
+    COMMA           shift and go to state 68
+    R_BREAK         shift and go to state 69
 
 
 state 56
 
-    (41) main -> MAIN np_getMainFunc L_PAR R_PAR . L_CURPAR statement R_CURPAR empty
+    (24) func -> typeFunc FUNCTION ID np_addFunc . L_PAR funcF
 
-    L_CURPAR        shift and go to state 70
+    L_PAR           shift and go to state 70
 
 
 state 57
 
-    (8) classT -> LESS INHERIT ID . GREATER classF
+    (41) main -> MAIN np_getMainFunc L_PAR R_PAR . L_CURPAR statement R_CURPAR empty
 
-    GREATER         shift and go to state 71
+    L_CURPAR        shift and go to state 71
 
 
 state 58
+
+    (8) classT -> LESS INHERIT ID . GREATER classF
+
+    GREATER         shift and go to state 72
+
+
+state 59
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES . dec METHODS func R_CURPAR SEMICOLON empty
     (12) dec -> . VAR arr np_getDecArr decF
@@ -937,9 +948,9 @@ state 58
 
     VAR             shift and go to state 28
 
-    dec                            shift and go to state 72
+    dec                            shift and go to state 73
 
-state 59
+state 60
 
     (12) dec -> VAR arr np_getDecArr decF .
 
@@ -954,7 +965,7 @@ state 59
     L_CURPAR        reduce using rule 12 (dec -> VAR arr np_getDecArr decF .)
 
 
-state 60
+state 61
 
     (14) decF -> COMMA dec .
 
@@ -969,7 +980,7 @@ state 60
     L_CURPAR        reduce using rule 14 (decF -> COMMA dec .)
 
 
-state 61
+state 62
 
     (15) decF -> COLON type . np_getVarType SEMICOLON np_getDec dec
     (16) decF -> COLON type . np_getVarType SEMICOLON np_getDec np_addToDic empty
@@ -977,20 +988,11 @@ state 61
 
     SEMICOLON       reduce using rule 122 (np_getVarType -> .)
 
-    np_getVarType                  shift and go to state 73
-
-state 62
-
-    (17) type -> INT . empty
-    (116) empty -> .
-
-    SEMICOLON       reduce using rule 116 (empty -> .)
-
-    empty                          shift and go to state 74
+    np_getVarType                  shift and go to state 74
 
 state 63
 
-    (18) type -> FLOAT . empty
+    (17) type -> INT . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -999,7 +1001,7 @@ state 63
 
 state 64
 
-    (19) type -> CHAR . empty
+    (18) type -> FLOAT . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -1008,7 +1010,7 @@ state 64
 
 state 65
 
-    (20) type -> BOOL . empty
+    (19) type -> CHAR . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -1017,7 +1019,7 @@ state 65
 
 state 66
 
-    (21) type -> ID . empty
+    (20) type -> BOOL . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -1026,12 +1028,21 @@ state 66
 
 state 67
 
-    (22) arr -> L_BREAK CTE_INT COMMA . CTE_INT R_BREAK empty
+    (21) type -> ID . empty
+    (116) empty -> .
 
-    CTE_INT         shift and go to state 79
+    SEMICOLON       reduce using rule 116 (empty -> .)
 
+    empty                          shift and go to state 79
 
 state 68
+
+    (22) arr -> L_BREAK CTE_INT COMMA . CTE_INT R_BREAK empty
+
+    CTE_INT         shift and go to state 80
+
+
+state 69
 
     (23) arr -> L_BREAK CTE_INT R_BREAK . empty
     (116) empty -> .
@@ -1039,22 +1050,22 @@ state 68
     COMMA           reduce using rule 116 (empty -> .)
     COLON           reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 80
+    empty                          shift and go to state 81
 
-state 69
+state 70
 
     (24) func -> typeFunc FUNCTION ID np_addFunc L_PAR . funcF
     (25) funcF -> . parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
     (26) funcF -> . R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
     (33) parameter -> . VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
 
-    R_PAR           shift and go to state 83
-    VAR             shift and go to state 84
+    R_PAR           shift and go to state 84
+    VAR             shift and go to state 85
 
-    funcF                          shift and go to state 81
-    parameter                      shift and go to state 82
+    funcF                          shift and go to state 82
+    parameter                      shift and go to state 83
 
-state 70
+state 71
 
     (41) main -> MAIN np_getMainFunc L_PAR R_PAR L_CURPAR . statement R_CURPAR empty
     (42) statement -> . assigment SEMICOLON statementF
@@ -1079,94 +1090,94 @@ state 70
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 85
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    statement                      shift and go to state 86
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 71
+state 72
 
     (8) classT -> LESS INHERIT ID GREATER . classF
     (10) classF -> . SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
 
     SEMICOLON       shift and go to state 41
 
-    classF                         shift and go to state 104
+    classF                         shift and go to state 105
 
-state 72
+state 73
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec . METHODS func R_CURPAR SEMICOLON empty
 
-    METHODS         shift and go to state 105
+    METHODS         shift and go to state 106
 
 
-state 73
+state 74
 
     (15) decF -> COLON type np_getVarType . SEMICOLON np_getDec dec
     (16) decF -> COLON type np_getVarType . SEMICOLON np_getDec np_addToDic empty
 
-    SEMICOLON       shift and go to state 106
+    SEMICOLON       shift and go to state 107
 
 
-state 74
+state 75
 
     (17) type -> INT empty .
 
     SEMICOLON       reduce using rule 17 (type -> INT empty .)
 
 
-state 75
+state 76
 
     (18) type -> FLOAT empty .
 
     SEMICOLON       reduce using rule 18 (type -> FLOAT empty .)
 
 
-state 76
+state 77
 
     (19) type -> CHAR empty .
 
     SEMICOLON       reduce using rule 19 (type -> CHAR empty .)
 
 
-state 77
+state 78
 
     (20) type -> BOOL empty .
 
     SEMICOLON       reduce using rule 20 (type -> BOOL empty .)
 
 
-state 78
+state 79
 
     (21) type -> ID empty .
 
     SEMICOLON       reduce using rule 21 (type -> ID empty .)
 
 
-state 79
+state 80
 
     (22) arr -> L_BREAK CTE_INT COMMA CTE_INT . R_BREAK empty
 
-    R_BREAK         shift and go to state 107
+    R_BREAK         shift and go to state 108
 
 
-state 80
+state 81
 
     (23) arr -> L_BREAK CTE_INT R_BREAK empty .
 
@@ -1174,7 +1185,7 @@ state 80
     COLON           reduce using rule 23 (arr -> L_BREAK CTE_INT R_BREAK empty .)
 
 
-state 81
+state 82
 
     (24) func -> typeFunc FUNCTION ID np_addFunc L_PAR funcF .
 
@@ -1188,72 +1199,72 @@ state 81
     R_CURPAR        reduce using rule 24 (func -> typeFunc FUNCTION ID np_addFunc L_PAR funcF .)
 
 
-state 82
+state 83
 
     (25) funcF -> parameter . R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
 
-    R_PAR           shift and go to state 108
-
-
-state 83
-
-    (26) funcF -> R_PAR . SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
-
-    SEMICOLON       shift and go to state 109
+    R_PAR           shift and go to state 109
 
 
 state 84
+
+    (26) funcF -> R_PAR . SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
+
+    SEMICOLON       shift and go to state 110
+
+
+state 85
 
     (33) parameter -> VAR . np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
     (120) np_getDec -> .
 
     COLON           reduce using rule 120 (np_getDec -> .)
 
-    np_getDec                      shift and go to state 110
-
-state 85
-
-    (41) main -> MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement . R_CURPAR empty
-
-    R_CURPAR        shift and go to state 111
-
+    np_getDec                      shift and go to state 111
 
 state 86
 
-    (42) statement -> assigment . SEMICOLON statementF
+    (41) main -> MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement . R_CURPAR empty
 
-    SEMICOLON       shift and go to state 112
+    R_CURPAR        shift and go to state 112
 
 
 state 87
 
-    (43) statement -> void . SEMICOLON statementF
+    (42) statement -> assigment . SEMICOLON statementF
 
     SEMICOLON       shift and go to state 113
 
 
 state 88
 
-    (44) statement -> return . SEMICOLON statementF
+    (43) statement -> void . SEMICOLON statementF
 
     SEMICOLON       shift and go to state 114
 
 
 state 89
 
-    (45) statement -> read . SEMICOLON statementF
+    (44) statement -> return . SEMICOLON statementF
 
     SEMICOLON       shift and go to state 115
 
 
 state 90
 
-    (46) statement -> write . SEMICOLON statementF
+    (45) statement -> read . SEMICOLON statementF
 
     SEMICOLON       shift and go to state 116
 
 
 state 91
+
+    (46) statement -> write . SEMICOLON statementF
+
+    SEMICOLON       shift and go to state 117
+
+
+state 92
 
     (47) statement -> if . statementF
     (49) statementF -> . statement
@@ -1282,30 +1293,30 @@ state 91
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    if                             shift and go to state 91
-    statementF                     shift and go to state 117
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    if                             shift and go to state 92
+    statementF                     shift and go to state 118
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 92
+state 93
 
     (48) statement -> repeat . statementF
     (49) statementF -> . statement
@@ -1334,30 +1345,30 @@ state 92
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    repeat                         shift and go to state 92
-    statementF                     shift and go to state 120
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    repeat                         shift and go to state 93
+    statementF                     shift and go to state 121
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 93
+state 94
 
     (77) assigment -> var . np_addId assigmentF
     (126) np_addId -> .
@@ -1368,68 +1379,51 @@ state 93
     MULT_EQ         reduce using rule 126 (np_addId -> .)
     DIV_EQ          reduce using rule 126 (np_addId -> .)
 
-    np_addId                       shift and go to state 121
+    np_addId                       shift and go to state 122
 
-state 94
+state 95
 
     (51) void -> ID . DOT ID L_PAR voidT
     (52) void -> ID . np_checkVoid L_PAR np_eraQuad voidT
     (61) var -> ID . DOT VAR varF
     (151) np_checkVoid -> .
 
-    DOT             shift and go to state 122
+    DOT             shift and go to state 123
     L_PAR           reduce using rule 151 (np_checkVoid -> .)
 
-    np_checkVoid                   shift and go to state 123
-
-state 95
-
-    (59) return -> RETURN . L_PAR exp np_addReturn R_PAR empty
-
-    L_PAR           shift and go to state 124
-
+    np_checkVoid                   shift and go to state 124
 
 state 96
 
-    (64) read -> READ . L_PAR readF
+    (59) return -> RETURN . L_PAR exp np_addReturn R_PAR empty
 
     L_PAR           shift and go to state 125
 
 
 state 97
 
-    (67) write -> WRITE . L_PAR writeT
+    (64) read -> READ . L_PAR readF
 
     L_PAR           shift and go to state 126
 
 
 state 98
 
-    (74) if -> IF . L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF
+    (67) write -> WRITE . L_PAR writeT
 
     L_PAR           shift and go to state 127
 
 
 state 99
 
-    (72) repeat -> conditional . empty
-    (116) empty -> .
+    (74) if -> IF . L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF
 
-    ID              reduce using rule 116 (empty -> .)
-    RETURN          reduce using rule 116 (empty -> .)
-    READ            reduce using rule 116 (empty -> .)
-    WRITE           reduce using rule 116 (empty -> .)
-    IF              reduce using rule 116 (empty -> .)
-    VAR             reduce using rule 116 (empty -> .)
-    WHILE           reduce using rule 116 (empty -> .)
-    FROM            reduce using rule 116 (empty -> .)
-    R_CURPAR        reduce using rule 116 (empty -> .)
+    L_PAR           shift and go to state 128
 
-    empty                          shift and go to state 128
 
 state 100
 
-    (73) repeat -> nonconditional . empty
+    (72) repeat -> conditional . empty
     (116) empty -> .
 
     ID              reduce using rule 116 (empty -> .)
@@ -1446,6 +1440,23 @@ state 100
 
 state 101
 
+    (73) repeat -> nonconditional . empty
+    (116) empty -> .
+
+    ID              reduce using rule 116 (empty -> .)
+    RETURN          reduce using rule 116 (empty -> .)
+    READ            reduce using rule 116 (empty -> .)
+    WRITE           reduce using rule 116 (empty -> .)
+    IF              reduce using rule 116 (empty -> .)
+    VAR             reduce using rule 116 (empty -> .)
+    WHILE           reduce using rule 116 (empty -> .)
+    FROM            reduce using rule 116 (empty -> .)
+    R_CURPAR        reduce using rule 116 (empty -> .)
+
+    empty                          shift and go to state 130
+
+state 102
+
     (60) var -> VAR . varF
     (62) varF -> . arrfunc empty
     (63) varF -> . empty
@@ -1453,7 +1464,7 @@ state 101
     (58) arrfunc -> . L_BREAK exp R_BREAK empty
     (116) empty -> .
 
-    L_BREAK         shift and go to state 133
+    L_BREAK         shift and go to state 134
     EQUAL           reduce using rule 116 (empty -> .)
     PLUS_EQ         reduce using rule 116 (empty -> .)
     MIN_EQ          reduce using rule 116 (empty -> .)
@@ -1478,28 +1489,28 @@ state 101
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    varF                           shift and go to state 130
-    arrfunc                        shift and go to state 131
-    empty                          shift and go to state 132
+    varF                           shift and go to state 131
+    arrfunc                        shift and go to state 132
+    empty                          shift and go to state 133
 
-state 102
+state 103
 
     (84) conditional -> WHILE . np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
     (146) np_addWhile -> .
 
     L_PAR           reduce using rule 146 (np_addWhile -> .)
 
-    np_addWhile                    shift and go to state 134
+    np_addWhile                    shift and go to state 135
 
-state 103
+state 104
 
     (85) nonconditional -> FROM . VAR arrfunc nonconditionalF
     (86) nonconditional -> FROM . VAR np_addId nonconditionalF
 
-    VAR             shift and go to state 135
+    VAR             shift and go to state 136
 
 
-state 104
+state 105
 
     (8) classT -> LESS INHERIT ID GREATER classF .
 
@@ -1514,7 +1525,7 @@ state 104
     VOID            reduce using rule 8 (classT -> LESS INHERIT ID GREATER classF .)
 
 
-state 105
+state 106
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS . func R_CURPAR SEMICOLON empty
     (24) func -> . typeFunc FUNCTION ID np_addFunc L_PAR funcF
@@ -1532,10 +1543,10 @@ state 105
     ID              shift and go to state 7
     VOID            shift and go to state 22
 
-    func                           shift and go to state 136
+    func                           shift and go to state 137
     typeFunc                       shift and go to state 16
 
-state 106
+state 107
 
     (15) decF -> COLON type np_getVarType SEMICOLON . np_getDec dec
     (16) decF -> COLON type np_getVarType SEMICOLON . np_getDec np_addToDic empty
@@ -1552,9 +1563,9 @@ state 106
     METHODS         reduce using rule 120 (np_getDec -> .)
     L_CURPAR        reduce using rule 120 (np_getDec -> .)
 
-    np_getDec                      shift and go to state 137
+    np_getDec                      shift and go to state 138
 
-state 107
+state 108
 
     (22) arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK . empty
     (116) empty -> .
@@ -1562,16 +1573,16 @@ state 107
     COMMA           reduce using rule 116 (empty -> .)
     COLON           reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 138
+    empty                          shift and go to state 139
 
-state 108
+state 109
 
     (25) funcF -> parameter R_PAR . SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
 
-    SEMICOLON       shift and go to state 139
+    SEMICOLON       shift and go to state 140
 
 
-state 109
+state 110
 
     (26) funcF -> R_PAR SEMICOLON . dec L_CURPAR statement R_CURPAR np_endFunc empty
     (12) dec -> . VAR arr np_getDecArr decF
@@ -1579,25 +1590,25 @@ state 109
 
     VAR             shift and go to state 28
 
-    dec                            shift and go to state 140
+    dec                            shift and go to state 141
 
-state 110
+state 111
 
     (33) parameter -> VAR np_getDec . COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
 
-    COLON           shift and go to state 141
+    COLON           shift and go to state 142
 
 
-state 111
+state 112
 
     (41) main -> MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR . empty
     (116) empty -> .
 
     $end            reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 142
+    empty                          shift and go to state 143
 
-state 112
+state 113
 
     (42) statement -> assigment SEMICOLON . statementF
     (49) statementF -> . statement
@@ -1626,30 +1637,30 @@ state 112
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    assigment                      shift and go to state 86
-    statementF                     shift and go to state 143
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    assigment                      shift and go to state 87
+    statementF                     shift and go to state 144
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 113
+state 114
 
     (43) statement -> void SEMICOLON . statementF
     (49) statementF -> . statement
@@ -1678,30 +1689,30 @@ state 113
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    void                           shift and go to state 87
-    statementF                     shift and go to state 144
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    assigment                      shift and go to state 86
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    void                           shift and go to state 88
+    statementF                     shift and go to state 145
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    assigment                      shift and go to state 87
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 114
+state 115
 
     (44) statement -> return SEMICOLON . statementF
     (49) statementF -> . statement
@@ -1730,30 +1741,30 @@ state 114
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    return                         shift and go to state 88
-    statementF                     shift and go to state 145
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    return                         shift and go to state 89
+    statementF                     shift and go to state 146
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 115
+state 116
 
     (45) statement -> read SEMICOLON . statementF
     (49) statementF -> . statement
@@ -1782,30 +1793,30 @@ state 115
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    read                           shift and go to state 89
-    statementF                     shift and go to state 146
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    read                           shift and go to state 90
+    statementF                     shift and go to state 147
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 116
+state 117
 
     (46) statement -> write SEMICOLON . statementF
     (49) statementF -> . statement
@@ -1834,58 +1845,58 @@ state 116
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
     R_CURPAR        reduce using rule 116 (empty -> .)
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    write                          shift and go to state 90
-    statementF                     shift and go to state 147
-    statement                      shift and go to state 118
-    empty                          shift and go to state 119
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    write                          shift and go to state 91
+    statementF                     shift and go to state 148
+    statement                      shift and go to state 119
+    empty                          shift and go to state 120
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 117
+state 118
 
     (47) statement -> if statementF .
 
     R_CURPAR        reduce using rule 47 (statement -> if statementF .)
 
 
-state 118
+state 119
 
     (49) statementF -> statement .
 
     R_CURPAR        reduce using rule 49 (statementF -> statement .)
 
 
-state 119
+state 120
 
     (50) statementF -> empty .
 
     R_CURPAR        reduce using rule 50 (statementF -> empty .)
 
 
-state 120
+state 121
 
     (48) statement -> repeat statementF .
 
     R_CURPAR        reduce using rule 48 (statement -> repeat statementF .)
 
 
-state 121
+state 122
 
     (77) assigment -> var np_addId . assigmentF
     (78) assigmentF -> . EQUAL np_addOp exp np_doAssign empty
@@ -1895,32 +1906,32 @@ state 121
     (82) ope -> . MULT_EQ empty
     (83) ope -> . DIV_EQ empty
 
-    EQUAL           shift and go to state 149
-    PLUS_EQ         shift and go to state 151
-    MIN_EQ          shift and go to state 152
-    MULT_EQ         shift and go to state 153
-    DIV_EQ          shift and go to state 154
+    EQUAL           shift and go to state 150
+    PLUS_EQ         shift and go to state 152
+    MIN_EQ          shift and go to state 153
+    MULT_EQ         shift and go to state 154
+    DIV_EQ          shift and go to state 155
 
-    assigmentF                     shift and go to state 148
-    ope                            shift and go to state 150
+    assigmentF                     shift and go to state 149
+    ope                            shift and go to state 151
 
-state 122
+state 123
 
     (51) void -> ID DOT . ID L_PAR voidT
     (61) var -> ID DOT . VAR varF
 
-    ID              shift and go to state 155
-    VAR             shift and go to state 156
-
-
-state 123
-
-    (52) void -> ID np_checkVoid . L_PAR np_eraQuad voidT
-
-    L_PAR           shift and go to state 157
+    ID              shift and go to state 156
+    VAR             shift and go to state 157
 
 
 state 124
+
+    (52) void -> ID np_checkVoid . L_PAR np_eraQuad voidT
+
+    L_PAR           shift and go to state 158
+
+
+state 125
 
     (59) return -> RETURN L_PAR . exp np_addReturn R_PAR empty
     (100) exp -> . bool empty
@@ -1938,24 +1949,24 @@ state 124
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 159
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 160
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 125
+state 126
 
     (64) read -> READ L_PAR . readF
     (65) readF -> . var np_addRead COMMA readF
@@ -1963,13 +1974,13 @@ state 125
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    readF                          shift and go to state 172
-    var                            shift and go to state 173
+    readF                          shift and go to state 173
+    var                            shift and go to state 174
 
-state 126
+state 127
 
     (67) write -> WRITE L_PAR . writeT
     (68) writeT -> . CTE_STRING np_addConstString writeF
@@ -1989,26 +2000,26 @@ state 126
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    CTE_STRING      shift and go to state 175
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    CTE_STRING      shift and go to state 176
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    writeT                         shift and go to state 174
-    exp                            shift and go to state 176
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    writeT                         shift and go to state 175
+    exp                            shift and go to state 177
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 127
+state 128
 
     (74) if -> IF L_PAR . exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF
     (100) exp -> . bool empty
@@ -2026,24 +2037,24 @@ state 127
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 177
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 178
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 128
+state 129
 
     (72) repeat -> conditional empty .
 
@@ -2058,7 +2069,7 @@ state 128
     R_CURPAR        reduce using rule 72 (repeat -> conditional empty .)
 
 
-state 129
+state 130
 
     (73) repeat -> nonconditional empty .
 
@@ -2073,7 +2084,7 @@ state 129
     R_CURPAR        reduce using rule 73 (repeat -> nonconditional empty .)
 
 
-state 130
+state 131
 
     (60) var -> VAR varF .
 
@@ -2102,7 +2113,7 @@ state 130
     DO              reduce using rule 60 (var -> VAR varF .)
 
 
-state 131
+state 132
 
     (62) varF -> arrfunc . empty
     (116) empty -> .
@@ -2131,9 +2142,9 @@ state 131
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 178
+    empty                          shift and go to state 179
 
-state 132
+state 133
 
     (63) varF -> empty .
 
@@ -2162,7 +2173,7 @@ state 132
     DO              reduce using rule 63 (varF -> empty .)
 
 
-state 133
+state 134
 
     (57) arrfunc -> L_BREAK . exp COMMA exp R_BREAK empty
     (58) arrfunc -> L_BREAK . exp R_BREAK empty
@@ -2181,31 +2192,31 @@ state 133
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 179
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 180
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 134
+state 135
 
     (84) conditional -> WHILE np_addWhile . L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
 
-    L_PAR           shift and go to state 180
+    L_PAR           shift and go to state 181
 
 
-state 135
+state 136
 
     (85) nonconditional -> FROM VAR . arrfunc nonconditionalF
     (86) nonconditional -> FROM VAR . np_addId nonconditionalF
@@ -2213,20 +2224,20 @@ state 135
     (58) arrfunc -> . L_BREAK exp R_BREAK empty
     (126) np_addId -> .
 
-    L_BREAK         shift and go to state 133
+    L_BREAK         shift and go to state 134
     EQUAL           reduce using rule 126 (np_addId -> .)
 
-    arrfunc                        shift and go to state 181
-    np_addId                       shift and go to state 182
+    arrfunc                        shift and go to state 182
+    np_addId                       shift and go to state 183
 
-state 136
+state 137
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func . R_CURPAR SEMICOLON empty
 
-    R_CURPAR        shift and go to state 183
+    R_CURPAR        shift and go to state 184
 
 
-state 137
+state 138
 
     (15) decF -> COLON type np_getVarType SEMICOLON np_getDec . dec
     (16) decF -> COLON type np_getVarType SEMICOLON np_getDec . np_addToDic empty
@@ -2245,10 +2256,10 @@ state 137
     METHODS         reduce using rule 124 (np_addToDic -> .)
     L_CURPAR        reduce using rule 124 (np_addToDic -> .)
 
-    dec                            shift and go to state 184
-    np_addToDic                    shift and go to state 185
+    dec                            shift and go to state 185
+    np_addToDic                    shift and go to state 186
 
-state 138
+state 139
 
     (22) arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .
 
@@ -2256,7 +2267,7 @@ state 138
     COLON           reduce using rule 22 (arr -> L_BREAK CTE_INT COMMA CTE_INT R_BREAK empty .)
 
 
-state 139
+state 140
 
     (25) funcF -> parameter R_PAR SEMICOLON . dec L_CURPAR statement R_CURPAR np_endFunc empty
     (12) dec -> . VAR arr np_getDecArr decF
@@ -2264,16 +2275,16 @@ state 139
 
     VAR             shift and go to state 28
 
-    dec                            shift and go to state 186
+    dec                            shift and go to state 187
 
-state 140
+state 141
 
     (26) funcF -> R_PAR SEMICOLON dec . L_CURPAR statement R_CURPAR np_endFunc empty
 
-    L_CURPAR        shift and go to state 187
+    L_CURPAR        shift and go to state 188
 
 
-state 141
+state 142
 
     (33) parameter -> VAR np_getDec COLON . typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
     (36) typepar -> . INT empty
@@ -2282,81 +2293,66 @@ state 141
     (39) typepar -> . BOOL empty
     (40) typepar -> . ID empty
 
-    INT             shift and go to state 189
-    FLOAT           shift and go to state 190
-    CHAR            shift and go to state 191
-    BOOL            shift and go to state 192
-    ID              shift and go to state 193
+    INT             shift and go to state 190
+    FLOAT           shift and go to state 191
+    CHAR            shift and go to state 192
+    BOOL            shift and go to state 193
+    ID              shift and go to state 194
 
-    typepar                        shift and go to state 188
+    typepar                        shift and go to state 189
 
-state 142
+state 143
 
     (41) main -> MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty .
 
     $end            reduce using rule 41 (main -> MAIN np_getMainFunc L_PAR R_PAR L_CURPAR statement R_CURPAR empty .)
 
 
-state 143
+state 144
 
     (42) statement -> assigment SEMICOLON statementF .
 
     R_CURPAR        reduce using rule 42 (statement -> assigment SEMICOLON statementF .)
 
 
-state 144
+state 145
 
     (43) statement -> void SEMICOLON statementF .
 
     R_CURPAR        reduce using rule 43 (statement -> void SEMICOLON statementF .)
 
 
-state 145
+state 146
 
     (44) statement -> return SEMICOLON statementF .
 
     R_CURPAR        reduce using rule 44 (statement -> return SEMICOLON statementF .)
 
 
-state 146
+state 147
 
     (45) statement -> read SEMICOLON statementF .
 
     R_CURPAR        reduce using rule 45 (statement -> read SEMICOLON statementF .)
 
 
-state 147
+state 148
 
     (46) statement -> write SEMICOLON statementF .
 
     R_CURPAR        reduce using rule 46 (statement -> write SEMICOLON statementF .)
 
 
-state 148
+state 149
 
     (77) assigment -> var np_addId assigmentF .
 
     SEMICOLON       reduce using rule 77 (assigment -> var np_addId assigmentF .)
 
 
-state 149
-
-    (78) assigmentF -> EQUAL . np_addOp exp np_doAssign empty
-    (132) np_addOp -> .
-
-    L_PAR           reduce using rule 132 (np_addOp -> .)
-    CTE_INT         reduce using rule 132 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
-    VAR             reduce using rule 132 (np_addOp -> .)
-    ID              reduce using rule 132 (np_addOp -> .)
-
-    np_addOp                       shift and go to state 194
-
 state 150
 
-    (79) assigmentF -> ope . np_addOp exp np_doAssign empty
+    (78) assigmentF -> EQUAL . np_addOp exp np_doAssign empty
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -2371,22 +2367,22 @@ state 150
 
 state 151
 
-    (80) ope -> PLUS_EQ . empty
-    (116) empty -> .
+    (79) assigmentF -> ope . np_addOp exp np_doAssign empty
+    (132) np_addOp -> .
 
-    L_PAR           reduce using rule 116 (empty -> .)
-    CTE_INT         reduce using rule 116 (empty -> .)
-    CTE_FLOAT       reduce using rule 116 (empty -> .)
-    CTE_CHAR        reduce using rule 116 (empty -> .)
-    CTE_BOOL        reduce using rule 116 (empty -> .)
-    VAR             reduce using rule 116 (empty -> .)
-    ID              reduce using rule 116 (empty -> .)
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
 
-    empty                          shift and go to state 196
+    np_addOp                       shift and go to state 196
 
 state 152
 
-    (81) ope -> MIN_EQ . empty
+    (80) ope -> PLUS_EQ . empty
     (116) empty -> .
 
     L_PAR           reduce using rule 116 (empty -> .)
@@ -2401,7 +2397,7 @@ state 152
 
 state 153
 
-    (82) ope -> MULT_EQ . empty
+    (81) ope -> MIN_EQ . empty
     (116) empty -> .
 
     L_PAR           reduce using rule 116 (empty -> .)
@@ -2416,7 +2412,7 @@ state 153
 
 state 154
 
-    (83) ope -> DIV_EQ . empty
+    (82) ope -> MULT_EQ . empty
     (116) empty -> .
 
     L_PAR           reduce using rule 116 (empty -> .)
@@ -2431,12 +2427,27 @@ state 154
 
 state 155
 
-    (51) void -> ID DOT ID . L_PAR voidT
+    (83) ope -> DIV_EQ . empty
+    (116) empty -> .
 
-    L_PAR           shift and go to state 200
+    L_PAR           reduce using rule 116 (empty -> .)
+    CTE_INT         reduce using rule 116 (empty -> .)
+    CTE_FLOAT       reduce using rule 116 (empty -> .)
+    CTE_CHAR        reduce using rule 116 (empty -> .)
+    CTE_BOOL        reduce using rule 116 (empty -> .)
+    VAR             reduce using rule 116 (empty -> .)
+    ID              reduce using rule 116 (empty -> .)
 
+    empty                          shift and go to state 200
 
 state 156
+
+    (51) void -> ID DOT ID . L_PAR voidT
+
+    L_PAR           shift and go to state 201
+
+
+state 157
 
     (61) var -> ID DOT VAR . varF
     (62) varF -> . arrfunc empty
@@ -2445,7 +2456,7 @@ state 156
     (58) arrfunc -> . L_BREAK exp R_BREAK empty
     (116) empty -> .
 
-    L_BREAK         shift and go to state 133
+    L_BREAK         shift and go to state 134
     EQUAL           reduce using rule 116 (empty -> .)
     PLUS_EQ         reduce using rule 116 (empty -> .)
     MIN_EQ          reduce using rule 116 (empty -> .)
@@ -2470,11 +2481,11 @@ state 156
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    varF                           shift and go to state 201
-    arrfunc                        shift and go to state 131
-    empty                          shift and go to state 132
+    varF                           shift and go to state 202
+    arrfunc                        shift and go to state 132
+    empty                          shift and go to state 133
 
-state 157
+state 158
 
     (52) void -> ID np_checkVoid L_PAR . np_eraQuad voidT
     (152) np_eraQuad -> .
@@ -2488,9 +2499,9 @@ state 157
     VAR             reduce using rule 152 (np_eraQuad -> .)
     ID              reduce using rule 152 (np_eraQuad -> .)
 
-    np_eraQuad                     shift and go to state 202
+    np_eraQuad                     shift and go to state 203
 
-state 158
+state 159
 
     (109) factor -> L_PAR . np_addPar exp R_PAR np_popPar empty
     (133) np_addPar -> .
@@ -2503,18 +2514,18 @@ state 158
     VAR             reduce using rule 133 (np_addPar -> .)
     ID              reduce using rule 133 (np_addPar -> .)
 
-    np_addPar                      shift and go to state 203
+    np_addPar                      shift and go to state 204
 
-state 159
+state 160
 
     (59) return -> RETURN L_PAR exp . np_addReturn R_PAR empty
     (142) np_addReturn -> .
 
     R_PAR           reduce using rule 142 (np_addReturn -> .)
 
-    np_addReturn                   shift and go to state 204
+    np_addReturn                   shift and go to state 205
 
-state 160
+state 161
 
     (100) exp -> bool . empty
     (116) empty -> .
@@ -2526,9 +2537,9 @@ state 160
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 205
+    empty                          shift and go to state 206
 
-state 161
+state 162
 
     (88) bool -> logical . np_addBool boolF
     (138) np_addBool -> .
@@ -2542,9 +2553,9 @@ state 161
     TO              reduce using rule 138 (np_addBool -> .)
     DO              reduce using rule 138 (np_addBool -> .)
 
-    np_addBool                     shift and go to state 206
+    np_addBool                     shift and go to state 207
 
-state 162
+state 163
 
     (92) logical -> ex . np_addLogical logicalF
     (137) np_addLogical -> .
@@ -2564,9 +2575,9 @@ state 162
     TO              reduce using rule 137 (np_addLogical -> .)
     DO              reduce using rule 137 (np_addLogical -> .)
 
-    np_addLogical                  shift and go to state 207
+    np_addLogical                  shift and go to state 208
 
-state 163
+state 164
 
     (101) ex -> term . np_addEx exF
     (136) np_addEx -> .
@@ -2588,9 +2599,9 @@ state 163
     TO              reduce using rule 136 (np_addEx -> .)
     DO              reduce using rule 136 (np_addEx -> .)
 
-    np_addEx                       shift and go to state 208
+    np_addEx                       shift and go to state 209
 
-state 164
+state 165
 
     (105) term -> factor . np_addTerm termF
     (135) np_addTerm -> .
@@ -2614,9 +2625,9 @@ state 164
     TO              reduce using rule 135 (np_addTerm -> .)
     DO              reduce using rule 135 (np_addTerm -> .)
 
-    np_addTerm                     shift and go to state 209
+    np_addTerm                     shift and go to state 210
 
-state 165
+state 166
 
     (110) factor -> varcte . empty
     (116) empty -> .
@@ -2640,9 +2651,9 @@ state 165
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 210
+    empty                          shift and go to state 211
 
-state 166
+state 167
 
     (111) varcte -> var . np_addId empty
     (126) np_addId -> .
@@ -2666,9 +2677,9 @@ state 166
     TO              reduce using rule 126 (np_addId -> .)
     DO              reduce using rule 126 (np_addId -> .)
 
-    np_addId                       shift and go to state 211
+    np_addId                       shift and go to state 212
 
-state 167
+state 168
 
     (112) varcte -> CTE_INT . np_addConstInt empty
     (127) np_addConstInt -> .
@@ -2692,9 +2703,9 @@ state 167
     TO              reduce using rule 127 (np_addConstInt -> .)
     DO              reduce using rule 127 (np_addConstInt -> .)
 
-    np_addConstInt                 shift and go to state 212
+    np_addConstInt                 shift and go to state 213
 
-state 168
+state 169
 
     (113) varcte -> CTE_FLOAT . np_addConstFloat empty
     (128) np_addConstFloat -> .
@@ -2718,9 +2729,9 @@ state 168
     TO              reduce using rule 128 (np_addConstFloat -> .)
     DO              reduce using rule 128 (np_addConstFloat -> .)
 
-    np_addConstFloat               shift and go to state 213
+    np_addConstFloat               shift and go to state 214
 
-state 169
+state 170
 
     (114) varcte -> CTE_CHAR . np_addConstChar empty
     (129) np_addConstChar -> .
@@ -2744,9 +2755,9 @@ state 169
     TO              reduce using rule 129 (np_addConstChar -> .)
     DO              reduce using rule 129 (np_addConstChar -> .)
 
-    np_addConstChar                shift and go to state 214
+    np_addConstChar                shift and go to state 215
 
-state 170
+state 171
 
     (115) varcte -> CTE_BOOL . np_addConstBool empty
     (130) np_addConstBool -> .
@@ -2770,23 +2781,23 @@ state 170
     TO              reduce using rule 130 (np_addConstBool -> .)
     DO              reduce using rule 130 (np_addConstBool -> .)
 
-    np_addConstBool                shift and go to state 215
+    np_addConstBool                shift and go to state 216
 
-state 171
+state 172
 
     (61) var -> ID . DOT VAR varF
 
-    DOT             shift and go to state 216
+    DOT             shift and go to state 217
 
 
-state 172
+state 173
 
     (64) read -> READ L_PAR readF .
 
     SEMICOLON       reduce using rule 64 (read -> READ L_PAR readF .)
 
 
-state 173
+state 174
 
     (65) readF -> var . np_addRead COMMA readF
     (66) readF -> var . np_addRead R_PAR empty
@@ -2795,16 +2806,16 @@ state 173
     COMMA           reduce using rule 140 (np_addRead -> .)
     R_PAR           reduce using rule 140 (np_addRead -> .)
 
-    np_addRead                     shift and go to state 217
+    np_addRead                     shift and go to state 218
 
-state 174
+state 175
 
     (67) write -> WRITE L_PAR writeT .
 
     SEMICOLON       reduce using rule 67 (write -> WRITE L_PAR writeT .)
 
 
-state 175
+state 176
 
     (68) writeT -> CTE_STRING . np_addConstString writeF
     (131) np_addConstString -> .
@@ -2812,29 +2823,29 @@ state 175
     COMMA           reduce using rule 131 (np_addConstString -> .)
     R_PAR           reduce using rule 131 (np_addConstString -> .)
 
-    np_addConstString              shift and go to state 218
+    np_addConstString              shift and go to state 219
 
-state 176
+state 177
 
     (69) writeT -> exp . writeF
     (70) writeF -> . COMMA np_addWrite writeT
     (71) writeF -> . R_PAR np_addWrite empty
 
-    COMMA           shift and go to state 220
-    R_PAR           shift and go to state 221
+    COMMA           shift and go to state 221
+    R_PAR           shift and go to state 222
 
-    writeF                         shift and go to state 219
+    writeF                         shift and go to state 220
 
-state 177
+state 178
 
     (74) if -> IF L_PAR exp . np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF
     (143) np_checkBool -> .
 
     R_PAR           reduce using rule 143 (np_checkBool -> .)
 
-    np_checkBool                   shift and go to state 222
+    np_checkBool                   shift and go to state 223
 
-state 178
+state 179
 
     (62) varF -> arrfunc empty .
 
@@ -2863,16 +2874,16 @@ state 178
     DO              reduce using rule 62 (varF -> arrfunc empty .)
 
 
-state 179
+state 180
 
     (57) arrfunc -> L_BREAK exp . COMMA exp R_BREAK empty
     (58) arrfunc -> L_BREAK exp . R_BREAK empty
 
-    COMMA           shift and go to state 223
-    R_BREAK         shift and go to state 224
+    COMMA           shift and go to state 224
+    R_BREAK         shift and go to state 225
 
 
-state 180
+state 181
 
     (84) conditional -> WHILE np_addWhile L_PAR . exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
     (100) exp -> . bool empty
@@ -2890,49 +2901,49 @@ state 180
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 225
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 226
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 181
+state 182
 
     (85) nonconditional -> FROM VAR arrfunc . nonconditionalF
     (87) nonconditionalF -> . EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
 
-    EQUAL           shift and go to state 227
+    EQUAL           shift and go to state 228
 
-    nonconditionalF                shift and go to state 226
+    nonconditionalF                shift and go to state 227
 
-state 182
+state 183
 
     (86) nonconditional -> FROM VAR np_addId . nonconditionalF
     (87) nonconditionalF -> . EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
 
-    EQUAL           shift and go to state 227
+    EQUAL           shift and go to state 228
 
-    nonconditionalF                shift and go to state 228
+    nonconditionalF                shift and go to state 229
 
-state 183
+state 184
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR . SEMICOLON empty
 
-    SEMICOLON       shift and go to state 229
+    SEMICOLON       shift and go to state 230
 
 
-state 184
+state 185
 
     (15) decF -> COLON type np_getVarType SEMICOLON np_getDec dec .
 
@@ -2947,7 +2958,7 @@ state 184
     L_CURPAR        reduce using rule 15 (decF -> COLON type np_getVarType SEMICOLON np_getDec dec .)
 
 
-state 185
+state 186
 
     (16) decF -> COLON type np_getVarType SEMICOLON np_getDec np_addToDic . empty
     (116) empty -> .
@@ -2962,16 +2973,16 @@ state 185
     METHODS         reduce using rule 116 (empty -> .)
     L_CURPAR        reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 230
+    empty                          shift and go to state 231
 
-state 186
+state 187
 
     (25) funcF -> parameter R_PAR SEMICOLON dec . L_CURPAR statement R_CURPAR np_endFunc empty
 
-    L_CURPAR        shift and go to state 231
+    L_CURPAR        shift and go to state 232
 
 
-state 187
+state 188
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR . statement R_CURPAR np_endFunc empty
     (42) statement -> . assigment SEMICOLON statementF
@@ -2996,48 +3007,39 @@ state 187
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 232
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    statement                      shift and go to state 233
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 188
+state 189
 
     (33) parameter -> VAR np_getDec COLON typepar . np_getVarType np_addParam SEMICOLON np_getDec parameterF
     (122) np_getVarType -> .
 
     SEMICOLON       reduce using rule 122 (np_getVarType -> .)
 
-    np_getVarType                  shift and go to state 233
-
-state 189
-
-    (36) typepar -> INT . empty
-    (116) empty -> .
-
-    SEMICOLON       reduce using rule 116 (empty -> .)
-
-    empty                          shift and go to state 234
+    np_getVarType                  shift and go to state 234
 
 state 190
 
-    (37) typepar -> FLOAT . empty
+    (36) typepar -> INT . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -3046,7 +3048,7 @@ state 190
 
 state 191
 
-    (38) typepar -> CHAR . empty
+    (37) typepar -> FLOAT . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -3055,7 +3057,7 @@ state 191
 
 state 192
 
-    (39) typepar -> BOOL . empty
+    (38) typepar -> CHAR . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -3064,7 +3066,7 @@ state 192
 
 state 193
 
-    (40) typepar -> ID . empty
+    (39) typepar -> BOOL . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -3072,6 +3074,15 @@ state 193
     empty                          shift and go to state 238
 
 state 194
+
+    (40) typepar -> ID . empty
+    (116) empty -> .
+
+    SEMICOLON       reduce using rule 116 (empty -> .)
+
+    empty                          shift and go to state 239
+
+state 195
 
     (78) assigmentF -> EQUAL np_addOp . exp np_doAssign empty
     (100) exp -> . bool empty
@@ -3089,24 +3100,24 @@ state 194
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 239
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 240
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 195
+state 196
 
     (79) assigmentF -> ope np_addOp . exp np_doAssign empty
     (100) exp -> . bool empty
@@ -3124,24 +3135,24 @@ state 195
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 240
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 241
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 196
+state 197
 
     (80) ope -> PLUS_EQ empty .
 
@@ -3154,7 +3165,7 @@ state 196
     ID              reduce using rule 80 (ope -> PLUS_EQ empty .)
 
 
-state 197
+state 198
 
     (81) ope -> MIN_EQ empty .
 
@@ -3167,7 +3178,7 @@ state 197
     ID              reduce using rule 81 (ope -> MIN_EQ empty .)
 
 
-state 198
+state 199
 
     (82) ope -> MULT_EQ empty .
 
@@ -3180,7 +3191,7 @@ state 198
     ID              reduce using rule 82 (ope -> MULT_EQ empty .)
 
 
-state 199
+state 200
 
     (83) ope -> DIV_EQ empty .
 
@@ -3193,7 +3204,7 @@ state 199
     ID              reduce using rule 83 (ope -> DIV_EQ empty .)
 
 
-state 200
+state 201
 
     (51) void -> ID DOT ID L_PAR . voidT
     (53) voidT -> . exp np_checkParam COMMA voidT
@@ -3215,27 +3226,27 @@ state 200
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    R_PAR           shift and go to state 244
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    R_PAR           shift and go to state 245
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    voidT                          shift and go to state 241
-    exp                            shift and go to state 242
-    voidF                          shift and go to state 243
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    voidT                          shift and go to state 242
+    exp                            shift and go to state 243
+    voidF                          shift and go to state 244
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 201
+state 202
 
     (61) var -> ID DOT VAR varF .
 
@@ -3264,7 +3275,7 @@ state 201
     DO              reduce using rule 61 (var -> ID DOT VAR varF .)
 
 
-state 202
+state 203
 
     (52) void -> ID np_checkVoid L_PAR np_eraQuad . voidT
     (53) voidT -> . exp np_checkParam COMMA voidT
@@ -3286,27 +3297,27 @@ state 202
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    R_PAR           shift and go to state 244
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    R_PAR           shift and go to state 245
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    voidT                          shift and go to state 245
-    exp                            shift and go to state 242
-    voidF                          shift and go to state 243
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    voidT                          shift and go to state 246
+    exp                            shift and go to state 243
+    voidF                          shift and go to state 244
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 203
+state 204
 
     (109) factor -> L_PAR np_addPar . exp R_PAR np_popPar empty
     (100) exp -> . bool empty
@@ -3324,31 +3335,31 @@ state 203
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 246
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 247
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 204
+state 205
 
     (59) return -> RETURN L_PAR exp np_addReturn . R_PAR empty
 
-    R_PAR           shift and go to state 247
+    R_PAR           shift and go to state 248
 
 
-state 205
+state 206
 
     (100) exp -> bool empty .
 
@@ -3360,7 +3371,7 @@ state 205
     DO              reduce using rule 100 (exp -> bool empty .)
 
 
-state 206
+state 207
 
     (88) bool -> logical np_addBool . boolF
     (89) boolF -> . OR np_addOp bool
@@ -3368,8 +3379,8 @@ state 206
     (91) boolF -> . empty
     (116) empty -> .
 
-    OR              shift and go to state 249
-    AND             shift and go to state 250
+    OR              shift and go to state 250
+    AND             shift and go to state 251
     R_PAR           reduce using rule 116 (empty -> .)
     COMMA           reduce using rule 116 (empty -> .)
     R_BREAK         reduce using rule 116 (empty -> .)
@@ -3377,10 +3388,10 @@ state 206
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    boolF                          shift and go to state 248
-    empty                          shift and go to state 251
+    boolF                          shift and go to state 249
+    empty                          shift and go to state 252
 
-state 207
+state 208
 
     (92) logical -> ex np_addLogical . logicalF
     (93) logicalF -> . LESS np_addOp logical
@@ -3392,12 +3403,12 @@ state 207
     (99) logicalF -> . empty
     (116) empty -> .
 
-    LESS            shift and go to state 253
-    GREATER         shift and go to state 254
-    LESS_TH         shift and go to state 255
-    GREAT_TH        shift and go to state 256
-    SAME            shift and go to state 257
-    DIF             shift and go to state 258
+    LESS            shift and go to state 254
+    GREATER         shift and go to state 255
+    LESS_TH         shift and go to state 256
+    GREAT_TH        shift and go to state 257
+    SAME            shift and go to state 258
+    DIF             shift and go to state 259
     OR              reduce using rule 116 (empty -> .)
     AND             reduce using rule 116 (empty -> .)
     R_PAR           reduce using rule 116 (empty -> .)
@@ -3407,10 +3418,10 @@ state 207
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    logicalF                       shift and go to state 252
-    empty                          shift and go to state 259
+    logicalF                       shift and go to state 253
+    empty                          shift and go to state 260
 
-state 208
+state 209
 
     (101) ex -> term np_addEx . exF
     (102) exF -> . PLUS np_addOp ex
@@ -3418,8 +3429,8 @@ state 208
     (104) exF -> . empty
     (116) empty -> .
 
-    PLUS            shift and go to state 261
-    MINUS           shift and go to state 262
+    PLUS            shift and go to state 262
+    MINUS           shift and go to state 263
     LESS            reduce using rule 116 (empty -> .)
     GREATER         reduce using rule 116 (empty -> .)
     LESS_TH         reduce using rule 116 (empty -> .)
@@ -3435,10 +3446,10 @@ state 208
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    exF                            shift and go to state 260
-    empty                          shift and go to state 263
+    exF                            shift and go to state 261
+    empty                          shift and go to state 264
 
-state 209
+state 210
 
     (105) term -> factor np_addTerm . termF
     (106) termF -> . MULT np_addOp term
@@ -3446,8 +3457,8 @@ state 209
     (108) termF -> . empty
     (116) empty -> .
 
-    MULT            shift and go to state 265
-    DIV             shift and go to state 266
+    MULT            shift and go to state 266
+    DIV             shift and go to state 267
     PLUS            reduce using rule 116 (empty -> .)
     MINUS           reduce using rule 116 (empty -> .)
     LESS            reduce using rule 116 (empty -> .)
@@ -3465,10 +3476,10 @@ state 209
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    termF                          shift and go to state 264
-    empty                          shift and go to state 267
+    termF                          shift and go to state 265
+    empty                          shift and go to state 268
 
-state 210
+state 211
 
     (110) factor -> varcte empty .
 
@@ -3492,35 +3503,9 @@ state 210
     DO              reduce using rule 110 (factor -> varcte empty .)
 
 
-state 211
-
-    (111) varcte -> var np_addId . empty
-    (116) empty -> .
-
-    MULT            reduce using rule 116 (empty -> .)
-    DIV             reduce using rule 116 (empty -> .)
-    PLUS            reduce using rule 116 (empty -> .)
-    MINUS           reduce using rule 116 (empty -> .)
-    LESS            reduce using rule 116 (empty -> .)
-    GREATER         reduce using rule 116 (empty -> .)
-    LESS_TH         reduce using rule 116 (empty -> .)
-    GREAT_TH        reduce using rule 116 (empty -> .)
-    SAME            reduce using rule 116 (empty -> .)
-    DIF             reduce using rule 116 (empty -> .)
-    OR              reduce using rule 116 (empty -> .)
-    AND             reduce using rule 116 (empty -> .)
-    R_PAR           reduce using rule 116 (empty -> .)
-    COMMA           reduce using rule 116 (empty -> .)
-    R_BREAK         reduce using rule 116 (empty -> .)
-    SEMICOLON       reduce using rule 116 (empty -> .)
-    TO              reduce using rule 116 (empty -> .)
-    DO              reduce using rule 116 (empty -> .)
-
-    empty                          shift and go to state 268
-
 state 212
 
-    (112) varcte -> CTE_INT np_addConstInt . empty
+    (111) varcte -> var np_addId . empty
     (116) empty -> .
 
     MULT            reduce using rule 116 (empty -> .)
@@ -3546,7 +3531,7 @@ state 212
 
 state 213
 
-    (113) varcte -> CTE_FLOAT np_addConstFloat . empty
+    (112) varcte -> CTE_INT np_addConstInt . empty
     (116) empty -> .
 
     MULT            reduce using rule 116 (empty -> .)
@@ -3572,7 +3557,7 @@ state 213
 
 state 214
 
-    (114) varcte -> CTE_CHAR np_addConstChar . empty
+    (113) varcte -> CTE_FLOAT np_addConstFloat . empty
     (116) empty -> .
 
     MULT            reduce using rule 116 (empty -> .)
@@ -3598,7 +3583,7 @@ state 214
 
 state 215
 
-    (115) varcte -> CTE_BOOL np_addConstBool . empty
+    (114) varcte -> CTE_CHAR np_addConstChar . empty
     (116) empty -> .
 
     MULT            reduce using rule 116 (empty -> .)
@@ -3624,39 +3609,65 @@ state 215
 
 state 216
 
-    (61) var -> ID DOT . VAR varF
+    (115) varcte -> CTE_BOOL np_addConstBool . empty
+    (116) empty -> .
 
-    VAR             shift and go to state 156
+    MULT            reduce using rule 116 (empty -> .)
+    DIV             reduce using rule 116 (empty -> .)
+    PLUS            reduce using rule 116 (empty -> .)
+    MINUS           reduce using rule 116 (empty -> .)
+    LESS            reduce using rule 116 (empty -> .)
+    GREATER         reduce using rule 116 (empty -> .)
+    LESS_TH         reduce using rule 116 (empty -> .)
+    GREAT_TH        reduce using rule 116 (empty -> .)
+    SAME            reduce using rule 116 (empty -> .)
+    DIF             reduce using rule 116 (empty -> .)
+    OR              reduce using rule 116 (empty -> .)
+    AND             reduce using rule 116 (empty -> .)
+    R_PAR           reduce using rule 116 (empty -> .)
+    COMMA           reduce using rule 116 (empty -> .)
+    R_BREAK         reduce using rule 116 (empty -> .)
+    SEMICOLON       reduce using rule 116 (empty -> .)
+    TO              reduce using rule 116 (empty -> .)
+    DO              reduce using rule 116 (empty -> .)
 
+    empty                          shift and go to state 273
 
 state 217
+
+    (61) var -> ID DOT . VAR varF
+
+    VAR             shift and go to state 157
+
+
+state 218
 
     (65) readF -> var np_addRead . COMMA readF
     (66) readF -> var np_addRead . R_PAR empty
 
-    COMMA           shift and go to state 273
-    R_PAR           shift and go to state 274
+    COMMA           shift and go to state 274
+    R_PAR           shift and go to state 275
 
 
-state 218
+state 219
 
     (68) writeT -> CTE_STRING np_addConstString . writeF
     (70) writeF -> . COMMA np_addWrite writeT
     (71) writeF -> . R_PAR np_addWrite empty
 
-    COMMA           shift and go to state 220
-    R_PAR           shift and go to state 221
+    COMMA           shift and go to state 221
+    R_PAR           shift and go to state 222
 
-    writeF                         shift and go to state 275
+    writeF                         shift and go to state 276
 
-state 219
+state 220
 
     (69) writeT -> exp writeF .
 
     SEMICOLON       reduce using rule 69 (writeT -> exp writeF .)
 
 
-state 220
+state 221
 
     (70) writeF -> COMMA . np_addWrite writeT
     (141) np_addWrite -> .
@@ -3670,25 +3681,25 @@ state 220
     VAR             reduce using rule 141 (np_addWrite -> .)
     ID              reduce using rule 141 (np_addWrite -> .)
 
-    np_addWrite                    shift and go to state 276
+    np_addWrite                    shift and go to state 277
 
-state 221
+state 222
 
     (71) writeF -> R_PAR . np_addWrite empty
     (141) np_addWrite -> .
 
     SEMICOLON       reduce using rule 141 (np_addWrite -> .)
 
-    np_addWrite                    shift and go to state 277
+    np_addWrite                    shift and go to state 278
 
-state 222
+state 223
 
     (74) if -> IF L_PAR exp np_checkBool . R_PAR THEN L_CURPAR statement R_CURPAR ifF
 
-    R_PAR           shift and go to state 278
+    R_PAR           shift and go to state 279
 
 
-state 223
+state 224
 
     (57) arrfunc -> L_BREAK exp COMMA . exp R_BREAK empty
     (100) exp -> . bool empty
@@ -3706,24 +3717,24 @@ state 223
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 279
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 280
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 224
+state 225
 
     (58) arrfunc -> L_BREAK exp R_BREAK . empty
     (116) empty -> .
@@ -3752,16 +3763,16 @@ state 224
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 280
+    empty                          shift and go to state 281
 
-state 225
+state 226
 
     (84) conditional -> WHILE np_addWhile L_PAR exp . R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
 
-    R_PAR           shift and go to state 281
+    R_PAR           shift and go to state 282
 
 
-state 226
+state 227
 
     (85) nonconditional -> FROM VAR arrfunc nonconditionalF .
 
@@ -3776,7 +3787,7 @@ state 226
     R_CURPAR        reduce using rule 85 (nonconditional -> FROM VAR arrfunc nonconditionalF .)
 
 
-state 227
+state 228
 
     (87) nonconditionalF -> EQUAL . np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     (132) np_addOp -> .
@@ -3789,9 +3800,9 @@ state 227
     VAR             reduce using rule 132 (np_addOp -> .)
     ID              reduce using rule 132 (np_addOp -> .)
 
-    np_addOp                       shift and go to state 282
+    np_addOp                       shift and go to state 283
 
-state 228
+state 229
 
     (86) nonconditional -> FROM VAR np_addId nonconditionalF .
 
@@ -3806,7 +3817,7 @@ state 228
     R_CURPAR        reduce using rule 86 (nonconditional -> FROM VAR np_addId nonconditionalF .)
 
 
-state 229
+state 230
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON . empty
     (116) empty -> .
@@ -3821,9 +3832,9 @@ state 229
     ID              reduce using rule 116 (empty -> .)
     VOID            reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 283
+    empty                          shift and go to state 284
 
-state 230
+state 231
 
     (16) decF -> COLON type np_getVarType SEMICOLON np_getDec np_addToDic empty .
 
@@ -3838,7 +3849,7 @@ state 230
     L_CURPAR        reduce using rule 16 (decF -> COLON type np_getVarType SEMICOLON np_getDec np_addToDic empty .)
 
 
-state 231
+state 232
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR . statement R_CURPAR np_endFunc empty
     (42) statement -> . assigment SEMICOLON statementF
@@ -3863,90 +3874,81 @@ state 231
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 284
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    statement                      shift and go to state 285
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 232
+state 233
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement . R_CURPAR np_endFunc empty
 
-    R_CURPAR        shift and go to state 285
+    R_CURPAR        shift and go to state 286
 
 
-state 233
+state 234
 
     (33) parameter -> VAR np_getDec COLON typepar np_getVarType . np_addParam SEMICOLON np_getDec parameterF
     (123) np_addParam -> .
 
     SEMICOLON       reduce using rule 123 (np_addParam -> .)
 
-    np_addParam                    shift and go to state 286
+    np_addParam                    shift and go to state 287
 
-state 234
+state 235
 
     (36) typepar -> INT empty .
 
     SEMICOLON       reduce using rule 36 (typepar -> INT empty .)
 
 
-state 235
+state 236
 
     (37) typepar -> FLOAT empty .
 
     SEMICOLON       reduce using rule 37 (typepar -> FLOAT empty .)
 
 
-state 236
+state 237
 
     (38) typepar -> CHAR empty .
 
     SEMICOLON       reduce using rule 38 (typepar -> CHAR empty .)
 
 
-state 237
+state 238
 
     (39) typepar -> BOOL empty .
 
     SEMICOLON       reduce using rule 39 (typepar -> BOOL empty .)
 
 
-state 238
+state 239
 
     (40) typepar -> ID empty .
 
     SEMICOLON       reduce using rule 40 (typepar -> ID empty .)
 
 
-state 239
-
-    (78) assigmentF -> EQUAL np_addOp exp . np_doAssign empty
-    (139) np_doAssign -> .
-
-    SEMICOLON       reduce using rule 139 (np_doAssign -> .)
-
-    np_doAssign                    shift and go to state 287
-
 state 240
 
-    (79) assigmentF -> ope np_addOp exp . np_doAssign empty
+    (78) assigmentF -> EQUAL np_addOp exp . np_doAssign empty
     (139) np_doAssign -> .
 
     SEMICOLON       reduce using rule 139 (np_doAssign -> .)
@@ -3955,12 +3957,21 @@ state 240
 
 state 241
 
+    (79) assigmentF -> ope np_addOp exp . np_doAssign empty
+    (139) np_doAssign -> .
+
+    SEMICOLON       reduce using rule 139 (np_doAssign -> .)
+
+    np_doAssign                    shift and go to state 289
+
+state 242
+
     (51) void -> ID DOT ID L_PAR voidT .
 
     SEMICOLON       reduce using rule 51 (void -> ID DOT ID L_PAR voidT .)
 
 
-state 242
+state 243
 
     (53) voidT -> exp . np_checkParam COMMA voidT
     (54) voidT -> exp . np_checkParam voidF
@@ -3969,48 +3980,48 @@ state 242
     COMMA           reduce using rule 153 (np_checkParam -> .)
     R_PAR           reduce using rule 153 (np_checkParam -> .)
 
-    np_checkParam                  shift and go to state 289
+    np_checkParam                  shift and go to state 290
 
-state 243
+state 244
 
     (55) voidT -> voidF .
 
     SEMICOLON       reduce using rule 55 (voidT -> voidF .)
 
 
-state 244
+state 245
 
     (56) voidF -> R_PAR . np_endVoid empty
     (154) np_endVoid -> .
 
     SEMICOLON       reduce using rule 154 (np_endVoid -> .)
 
-    np_endVoid                     shift and go to state 290
+    np_endVoid                     shift and go to state 291
 
-state 245
+state 246
 
     (52) void -> ID np_checkVoid L_PAR np_eraQuad voidT .
 
     SEMICOLON       reduce using rule 52 (void -> ID np_checkVoid L_PAR np_eraQuad voidT .)
 
 
-state 246
+state 247
 
     (109) factor -> L_PAR np_addPar exp . R_PAR np_popPar empty
 
-    R_PAR           shift and go to state 291
+    R_PAR           shift and go to state 292
 
 
-state 247
+state 248
 
     (59) return -> RETURN L_PAR exp np_addReturn R_PAR . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 292
+    empty                          shift and go to state 293
 
-state 248
+state 249
 
     (88) bool -> logical np_addBool boolF .
 
@@ -4022,24 +4033,9 @@ state 248
     DO              reduce using rule 88 (bool -> logical np_addBool boolF .)
 
 
-state 249
-
-    (89) boolF -> OR . np_addOp bool
-    (132) np_addOp -> .
-
-    L_PAR           reduce using rule 132 (np_addOp -> .)
-    CTE_INT         reduce using rule 132 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
-    VAR             reduce using rule 132 (np_addOp -> .)
-    ID              reduce using rule 132 (np_addOp -> .)
-
-    np_addOp                       shift and go to state 293
-
 state 250
 
-    (90) boolF -> AND . np_addOp bool
+    (89) boolF -> OR . np_addOp bool
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4054,6 +4050,21 @@ state 250
 
 state 251
 
+    (90) boolF -> AND . np_addOp bool
+    (132) np_addOp -> .
+
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
+
+    np_addOp                       shift and go to state 295
+
+state 252
+
     (91) boolF -> empty .
 
     R_PAR           reduce using rule 91 (boolF -> empty .)
@@ -4064,7 +4075,7 @@ state 251
     DO              reduce using rule 91 (boolF -> empty .)
 
 
-state 252
+state 253
 
     (92) logical -> ex np_addLogical logicalF .
 
@@ -4078,24 +4089,9 @@ state 252
     DO              reduce using rule 92 (logical -> ex np_addLogical logicalF .)
 
 
-state 253
-
-    (93) logicalF -> LESS . np_addOp logical
-    (132) np_addOp -> .
-
-    L_PAR           reduce using rule 132 (np_addOp -> .)
-    CTE_INT         reduce using rule 132 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
-    VAR             reduce using rule 132 (np_addOp -> .)
-    ID              reduce using rule 132 (np_addOp -> .)
-
-    np_addOp                       shift and go to state 295
-
 state 254
 
-    (94) logicalF -> GREATER . np_addOp logical
+    (93) logicalF -> LESS . np_addOp logical
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4110,7 +4106,7 @@ state 254
 
 state 255
 
-    (95) logicalF -> LESS_TH . np_addOp logical
+    (94) logicalF -> GREATER . np_addOp logical
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4125,7 +4121,7 @@ state 255
 
 state 256
 
-    (96) logicalF -> GREAT_TH . np_addOp logical
+    (95) logicalF -> LESS_TH . np_addOp logical
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4140,7 +4136,7 @@ state 256
 
 state 257
 
-    (97) logicalF -> SAME . np_addOp logical
+    (96) logicalF -> GREAT_TH . np_addOp logical
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4155,7 +4151,7 @@ state 257
 
 state 258
 
-    (98) logicalF -> DIF . np_addOp logical
+    (97) logicalF -> SAME . np_addOp logical
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4170,6 +4166,21 @@ state 258
 
 state 259
 
+    (98) logicalF -> DIF . np_addOp logical
+    (132) np_addOp -> .
+
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
+
+    np_addOp                       shift and go to state 301
+
+state 260
+
     (99) logicalF -> empty .
 
     OR              reduce using rule 99 (logicalF -> empty .)
@@ -4182,7 +4193,7 @@ state 259
     DO              reduce using rule 99 (logicalF -> empty .)
 
 
-state 260
+state 261
 
     (101) ex -> term np_addEx exF .
 
@@ -4202,24 +4213,9 @@ state 260
     DO              reduce using rule 101 (ex -> term np_addEx exF .)
 
 
-state 261
-
-    (102) exF -> PLUS . np_addOp ex
-    (132) np_addOp -> .
-
-    L_PAR           reduce using rule 132 (np_addOp -> .)
-    CTE_INT         reduce using rule 132 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
-    VAR             reduce using rule 132 (np_addOp -> .)
-    ID              reduce using rule 132 (np_addOp -> .)
-
-    np_addOp                       shift and go to state 301
-
 state 262
 
-    (103) exF -> MINUS . np_addOp ex
+    (102) exF -> PLUS . np_addOp ex
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4233,6 +4229,21 @@ state 262
     np_addOp                       shift and go to state 302
 
 state 263
+
+    (103) exF -> MINUS . np_addOp ex
+    (132) np_addOp -> .
+
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
+
+    np_addOp                       shift and go to state 303
+
+state 264
 
     (104) exF -> empty .
 
@@ -4252,7 +4263,7 @@ state 263
     DO              reduce using rule 104 (exF -> empty .)
 
 
-state 264
+state 265
 
     (105) term -> factor np_addTerm termF .
 
@@ -4274,24 +4285,9 @@ state 264
     DO              reduce using rule 105 (term -> factor np_addTerm termF .)
 
 
-state 265
-
-    (106) termF -> MULT . np_addOp term
-    (132) np_addOp -> .
-
-    L_PAR           reduce using rule 132 (np_addOp -> .)
-    CTE_INT         reduce using rule 132 (np_addOp -> .)
-    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
-    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
-    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
-    VAR             reduce using rule 132 (np_addOp -> .)
-    ID              reduce using rule 132 (np_addOp -> .)
-
-    np_addOp                       shift and go to state 303
-
 state 266
 
-    (107) termF -> DIV . np_addOp term
+    (106) termF -> MULT . np_addOp term
     (132) np_addOp -> .
 
     L_PAR           reduce using rule 132 (np_addOp -> .)
@@ -4305,6 +4301,21 @@ state 266
     np_addOp                       shift and go to state 304
 
 state 267
+
+    (107) termF -> DIV . np_addOp term
+    (132) np_addOp -> .
+
+    L_PAR           reduce using rule 132 (np_addOp -> .)
+    CTE_INT         reduce using rule 132 (np_addOp -> .)
+    CTE_FLOAT       reduce using rule 132 (np_addOp -> .)
+    CTE_CHAR        reduce using rule 132 (np_addOp -> .)
+    CTE_BOOL        reduce using rule 132 (np_addOp -> .)
+    VAR             reduce using rule 132 (np_addOp -> .)
+    ID              reduce using rule 132 (np_addOp -> .)
+
+    np_addOp                       shift and go to state 305
+
+state 268
 
     (108) termF -> empty .
 
@@ -4326,7 +4337,7 @@ state 267
     DO              reduce using rule 108 (termF -> empty .)
 
 
-state 268
+state 269
 
     (111) varcte -> var np_addId empty .
 
@@ -4350,7 +4361,7 @@ state 268
     DO              reduce using rule 111 (varcte -> var np_addId empty .)
 
 
-state 269
+state 270
 
     (112) varcte -> CTE_INT np_addConstInt empty .
 
@@ -4374,7 +4385,7 @@ state 269
     DO              reduce using rule 112 (varcte -> CTE_INT np_addConstInt empty .)
 
 
-state 270
+state 271
 
     (113) varcte -> CTE_FLOAT np_addConstFloat empty .
 
@@ -4398,7 +4409,7 @@ state 270
     DO              reduce using rule 113 (varcte -> CTE_FLOAT np_addConstFloat empty .)
 
 
-state 271
+state 272
 
     (114) varcte -> CTE_CHAR np_addConstChar empty .
 
@@ -4422,7 +4433,7 @@ state 271
     DO              reduce using rule 114 (varcte -> CTE_CHAR np_addConstChar empty .)
 
 
-state 272
+state 273
 
     (115) varcte -> CTE_BOOL np_addConstBool empty .
 
@@ -4446,7 +4457,7 @@ state 272
     DO              reduce using rule 115 (varcte -> CTE_BOOL np_addConstBool empty .)
 
 
-state 273
+state 274
 
     (65) readF -> var np_addRead COMMA . readF
     (65) readF -> . var np_addRead COMMA readF
@@ -4454,29 +4465,29 @@ state 273
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    var                            shift and go to state 173
-    readF                          shift and go to state 305
+    var                            shift and go to state 174
+    readF                          shift and go to state 306
 
-state 274
+state 275
 
     (66) readF -> var np_addRead R_PAR . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 306
+    empty                          shift and go to state 307
 
-state 275
+state 276
 
     (68) writeT -> CTE_STRING np_addConstString writeF .
 
     SEMICOLON       reduce using rule 68 (writeT -> CTE_STRING np_addConstString writeF .)
 
 
-state 276
+state 277
 
     (70) writeF -> COMMA np_addWrite . writeT
     (68) writeT -> . CTE_STRING np_addConstString writeF
@@ -4496,49 +4507,49 @@ state 276
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    CTE_STRING      shift and go to state 175
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    CTE_STRING      shift and go to state 176
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    writeT                         shift and go to state 307
-    exp                            shift and go to state 176
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    writeT                         shift and go to state 308
+    exp                            shift and go to state 177
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 277
+state 278
 
     (71) writeF -> R_PAR np_addWrite . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 308
-
-state 278
-
-    (74) if -> IF L_PAR exp np_checkBool R_PAR . THEN L_CURPAR statement R_CURPAR ifF
-
-    THEN            shift and go to state 309
-
+    empty                          shift and go to state 309
 
 state 279
 
-    (57) arrfunc -> L_BREAK exp COMMA exp . R_BREAK empty
+    (74) if -> IF L_PAR exp np_checkBool R_PAR . THEN L_CURPAR statement R_CURPAR ifF
 
-    R_BREAK         shift and go to state 310
+    THEN            shift and go to state 310
 
 
 state 280
+
+    (57) arrfunc -> L_BREAK exp COMMA exp . R_BREAK empty
+
+    R_BREAK         shift and go to state 311
+
+
+state 281
 
     (58) arrfunc -> L_BREAK exp R_BREAK empty .
 
@@ -4567,16 +4578,16 @@ state 280
     DO              reduce using rule 58 (arrfunc -> L_BREAK exp R_BREAK empty .)
 
 
-state 281
+state 282
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR . np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty
     (143) np_checkBool -> .
 
     DO              reduce using rule 143 (np_checkBool -> .)
 
-    np_checkBool                   shift and go to state 311
+    np_checkBool                   shift and go to state 312
 
-state 282
+state 283
 
     (87) nonconditionalF -> EQUAL np_addOp . exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     (100) exp -> . bool empty
@@ -4594,24 +4605,24 @@ state 282
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 312
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 313
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 283
+state 284
 
     (10) classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .
 
@@ -4626,14 +4637,14 @@ state 283
     VOID            reduce using rule 10 (classF -> SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty .)
 
 
-state 284
+state 285
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement . R_CURPAR np_endFunc empty
 
-    R_CURPAR        shift and go to state 313
+    R_CURPAR        shift and go to state 314
 
 
-state 285
+state 286
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR . np_endFunc empty
     (125) np_endFunc -> .
@@ -4647,27 +4658,18 @@ state 285
     VOID            reduce using rule 125 (np_endFunc -> .)
     R_CURPAR        reduce using rule 125 (np_endFunc -> .)
 
-    np_endFunc                     shift and go to state 314
-
-state 286
-
-    (33) parameter -> VAR np_getDec COLON typepar np_getVarType np_addParam . SEMICOLON np_getDec parameterF
-
-    SEMICOLON       shift and go to state 315
-
+    np_endFunc                     shift and go to state 315
 
 state 287
 
-    (78) assigmentF -> EQUAL np_addOp exp np_doAssign . empty
-    (116) empty -> .
+    (33) parameter -> VAR np_getDec COLON typepar np_getVarType np_addParam . SEMICOLON np_getDec parameterF
 
-    SEMICOLON       reduce using rule 116 (empty -> .)
+    SEMICOLON       shift and go to state 316
 
-    empty                          shift and go to state 316
 
 state 288
 
-    (79) assigmentF -> ope np_addOp exp np_doAssign . empty
+    (78) assigmentF -> EQUAL np_addOp exp np_doAssign . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
@@ -4676,25 +4678,34 @@ state 288
 
 state 289
 
+    (79) assigmentF -> ope np_addOp exp np_doAssign . empty
+    (116) empty -> .
+
+    SEMICOLON       reduce using rule 116 (empty -> .)
+
+    empty                          shift and go to state 318
+
+state 290
+
     (53) voidT -> exp np_checkParam . COMMA voidT
     (54) voidT -> exp np_checkParam . voidF
     (56) voidF -> . R_PAR np_endVoid empty
 
-    COMMA           shift and go to state 318
-    R_PAR           shift and go to state 244
+    COMMA           shift and go to state 319
+    R_PAR           shift and go to state 245
 
-    voidF                          shift and go to state 319
+    voidF                          shift and go to state 320
 
-state 290
+state 291
 
     (56) voidF -> R_PAR np_endVoid . empty
     (116) empty -> .
 
     SEMICOLON       reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 320
+    empty                          shift and go to state 321
 
-state 291
+state 292
 
     (109) factor -> L_PAR np_addPar exp R_PAR . np_popPar empty
     (134) np_popPar -> .
@@ -4718,16 +4729,16 @@ state 291
     TO              reduce using rule 134 (np_popPar -> .)
     DO              reduce using rule 134 (np_popPar -> .)
 
-    np_popPar                      shift and go to state 321
+    np_popPar                      shift and go to state 322
 
-state 292
+state 293
 
     (59) return -> RETURN L_PAR exp np_addReturn R_PAR empty .
 
     SEMICOLON       reduce using rule 59 (return -> RETURN L_PAR exp np_addReturn R_PAR empty .)
 
 
-state 293
+state 294
 
     (89) boolF -> OR np_addOp . bool
     (88) bool -> . logical np_addBool boolF
@@ -4744,23 +4755,23 @@ state 293
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    bool                           shift and go to state 322
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    bool                           shift and go to state 323
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 294
+state 295
 
     (90) boolF -> AND np_addOp . bool
     (88) bool -> . logical np_addBool boolF
@@ -4777,23 +4788,23 @@ state 294
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    bool                           shift and go to state 323
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    bool                           shift and go to state 324
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 295
+state 296
 
     (93) logicalF -> LESS np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -4809,22 +4820,22 @@ state 295
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    logical                        shift and go to state 324
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    logical                        shift and go to state 325
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 296
+state 297
 
     (94) logicalF -> GREATER np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -4840,22 +4851,22 @@ state 296
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    logical                        shift and go to state 325
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    logical                        shift and go to state 326
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 297
+state 298
 
     (95) logicalF -> LESS_TH np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -4871,22 +4882,22 @@ state 297
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    logical                        shift and go to state 326
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    logical                        shift and go to state 327
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 298
+state 299
 
     (96) logicalF -> GREAT_TH np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -4902,22 +4913,22 @@ state 298
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    logical                        shift and go to state 327
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    logical                        shift and go to state 328
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 299
+state 300
 
     (97) logicalF -> SAME np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -4933,22 +4944,22 @@ state 299
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    logical                        shift and go to state 328
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    logical                        shift and go to state 329
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 300
+state 301
 
     (98) logicalF -> DIF np_addOp . logical
     (92) logical -> . ex np_addLogical logicalF
@@ -4964,22 +4975,22 @@ state 300
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    logical                        shift and go to state 329
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    logical                        shift and go to state 330
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 301
+state 302
 
     (102) exF -> PLUS np_addOp . ex
     (101) ex -> . term np_addEx exF
@@ -4994,21 +5005,21 @@ state 301
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    ex                             shift and go to state 330
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    ex                             shift and go to state 331
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 302
+state 303
 
     (103) exF -> MINUS np_addOp . ex
     (101) ex -> . term np_addEx exF
@@ -5023,21 +5034,21 @@ state 302
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    ex                             shift and go to state 331
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    ex                             shift and go to state 332
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 303
+state 304
 
     (106) termF -> MULT np_addOp . term
     (105) term -> . factor np_addTerm termF
@@ -5051,20 +5062,20 @@ state 303
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    term                           shift and go to state 332
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    term                           shift and go to state 333
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 304
+state 305
 
     (107) termF -> DIV np_addOp . term
     (105) term -> . factor np_addTerm termF
@@ -5078,55 +5089,55 @@ state 304
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    term                           shift and go to state 333
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    term                           shift and go to state 334
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 305
+state 306
 
     (65) readF -> var np_addRead COMMA readF .
 
     SEMICOLON       reduce using rule 65 (readF -> var np_addRead COMMA readF .)
 
 
-state 306
+state 307
 
     (66) readF -> var np_addRead R_PAR empty .
 
     SEMICOLON       reduce using rule 66 (readF -> var np_addRead R_PAR empty .)
 
 
-state 307
+state 308
 
     (70) writeF -> COMMA np_addWrite writeT .
 
     SEMICOLON       reduce using rule 70 (writeF -> COMMA np_addWrite writeT .)
 
 
-state 308
+state 309
 
     (71) writeF -> R_PAR np_addWrite empty .
 
     SEMICOLON       reduce using rule 71 (writeF -> R_PAR np_addWrite empty .)
 
 
-state 309
+state 310
 
     (74) if -> IF L_PAR exp np_checkBool R_PAR THEN . L_CURPAR statement R_CURPAR ifF
 
-    L_CURPAR        shift and go to state 334
+    L_CURPAR        shift and go to state 335
 
 
-state 310
+state 311
 
     (57) arrfunc -> L_BREAK exp COMMA exp R_BREAK . empty
     (116) empty -> .
@@ -5155,25 +5166,25 @@ state 310
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 335
+    empty                          shift and go to state 336
 
-state 311
+state 312
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool . DO L_CURPAR statement R_CURPAR np_endWhile empty
 
-    DO              shift and go to state 336
+    DO              shift and go to state 337
 
 
-state 312
+state 313
 
     (87) nonconditionalF -> EQUAL np_addOp exp . np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     (148) np_assingFor -> .
 
     TO              reduce using rule 148 (np_assingFor -> .)
 
-    np_assingFor                   shift and go to state 337
+    np_assingFor                   shift and go to state 338
 
-state 313
+state 314
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR . np_endFunc empty
     (125) np_endFunc -> .
@@ -5187,9 +5198,9 @@ state 313
     VOID            reduce using rule 125 (np_endFunc -> .)
     R_CURPAR        reduce using rule 125 (np_endFunc -> .)
 
-    np_endFunc                     shift and go to state 338
+    np_endFunc                     shift and go to state 339
 
-state 314
+state 315
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc . empty
     (116) empty -> .
@@ -5203,9 +5214,9 @@ state 314
     VOID            reduce using rule 116 (empty -> .)
     R_CURPAR        reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 339
+    empty                          shift and go to state 340
 
-state 315
+state 316
 
     (33) parameter -> VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON . np_getDec parameterF
     (120) np_getDec -> .
@@ -5213,23 +5224,23 @@ state 315
     VAR             reduce using rule 120 (np_getDec -> .)
     R_PAR           reduce using rule 120 (np_getDec -> .)
 
-    np_getDec                      shift and go to state 340
+    np_getDec                      shift and go to state 341
 
-state 316
+state 317
 
     (78) assigmentF -> EQUAL np_addOp exp np_doAssign empty .
 
     SEMICOLON       reduce using rule 78 (assigmentF -> EQUAL np_addOp exp np_doAssign empty .)
 
 
-state 317
+state 318
 
     (79) assigmentF -> ope np_addOp exp np_doAssign empty .
 
     SEMICOLON       reduce using rule 79 (assigmentF -> ope np_addOp exp np_doAssign empty .)
 
 
-state 318
+state 319
 
     (53) voidT -> exp np_checkParam COMMA . voidT
     (53) voidT -> . exp np_checkParam COMMA voidT
@@ -5251,41 +5262,41 @@ state 318
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    R_PAR           shift and go to state 244
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    R_PAR           shift and go to state 245
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 242
-    voidT                          shift and go to state 341
-    voidF                          shift and go to state 243
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 243
+    voidT                          shift and go to state 342
+    voidF                          shift and go to state 244
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 319
+state 320
 
     (54) voidT -> exp np_checkParam voidF .
 
     SEMICOLON       reduce using rule 54 (voidT -> exp np_checkParam voidF .)
 
 
-state 320
+state 321
 
     (56) voidF -> R_PAR np_endVoid empty .
 
     SEMICOLON       reduce using rule 56 (voidF -> R_PAR np_endVoid empty .)
 
 
-state 321
+state 322
 
     (109) factor -> L_PAR np_addPar exp R_PAR np_popPar . empty
     (116) empty -> .
@@ -5309,9 +5320,9 @@ state 321
     TO              reduce using rule 116 (empty -> .)
     DO              reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 342
+    empty                          shift and go to state 343
 
-state 322
+state 323
 
     (89) boolF -> OR np_addOp bool .
 
@@ -5323,7 +5334,7 @@ state 322
     DO              reduce using rule 89 (boolF -> OR np_addOp bool .)
 
 
-state 323
+state 324
 
     (90) boolF -> AND np_addOp bool .
 
@@ -5335,7 +5346,7 @@ state 323
     DO              reduce using rule 90 (boolF -> AND np_addOp bool .)
 
 
-state 324
+state 325
 
     (93) logicalF -> LESS np_addOp logical .
 
@@ -5349,7 +5360,7 @@ state 324
     DO              reduce using rule 93 (logicalF -> LESS np_addOp logical .)
 
 
-state 325
+state 326
 
     (94) logicalF -> GREATER np_addOp logical .
 
@@ -5363,7 +5374,7 @@ state 325
     DO              reduce using rule 94 (logicalF -> GREATER np_addOp logical .)
 
 
-state 326
+state 327
 
     (95) logicalF -> LESS_TH np_addOp logical .
 
@@ -5377,7 +5388,7 @@ state 326
     DO              reduce using rule 95 (logicalF -> LESS_TH np_addOp logical .)
 
 
-state 327
+state 328
 
     (96) logicalF -> GREAT_TH np_addOp logical .
 
@@ -5391,7 +5402,7 @@ state 327
     DO              reduce using rule 96 (logicalF -> GREAT_TH np_addOp logical .)
 
 
-state 328
+state 329
 
     (97) logicalF -> SAME np_addOp logical .
 
@@ -5405,7 +5416,7 @@ state 328
     DO              reduce using rule 97 (logicalF -> SAME np_addOp logical .)
 
 
-state 329
+state 330
 
     (98) logicalF -> DIF np_addOp logical .
 
@@ -5419,7 +5430,7 @@ state 329
     DO              reduce using rule 98 (logicalF -> DIF np_addOp logical .)
 
 
-state 330
+state 331
 
     (102) exF -> PLUS np_addOp ex .
 
@@ -5439,7 +5450,7 @@ state 330
     DO              reduce using rule 102 (exF -> PLUS np_addOp ex .)
 
 
-state 331
+state 332
 
     (103) exF -> MINUS np_addOp ex .
 
@@ -5459,7 +5470,7 @@ state 331
     DO              reduce using rule 103 (exF -> MINUS np_addOp ex .)
 
 
-state 332
+state 333
 
     (106) termF -> MULT np_addOp term .
 
@@ -5481,7 +5492,7 @@ state 332
     DO              reduce using rule 106 (termF -> MULT np_addOp term .)
 
 
-state 333
+state 334
 
     (107) termF -> DIV np_addOp term .
 
@@ -5503,7 +5514,7 @@ state 333
     DO              reduce using rule 107 (termF -> DIV np_addOp term .)
 
 
-state 334
+state 335
 
     (74) if -> IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR . statement R_CURPAR ifF
     (42) statement -> . assigment SEMICOLON statementF
@@ -5528,28 +5539,28 @@ state 334
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 343
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    statement                      shift and go to state 344
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 335
+state 336
 
     (57) arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .
 
@@ -5578,21 +5589,21 @@ state 335
     DO              reduce using rule 57 (arrfunc -> L_BREAK exp COMMA exp R_BREAK empty .)
 
 
-state 336
+state 337
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO . L_CURPAR statement R_CURPAR np_endWhile empty
 
-    L_CURPAR        shift and go to state 344
-
-
-state 337
-
-    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor . TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
-
-    TO              shift and go to state 345
+    L_CURPAR        shift and go to state 345
 
 
 state 338
+
+    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor . TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
+
+    TO              shift and go to state 346
+
+
+state 339
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc . empty
     (116) empty -> .
@@ -5606,9 +5617,9 @@ state 338
     VOID            reduce using rule 116 (empty -> .)
     R_CURPAR        reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 346
+    empty                          shift and go to state 347
 
-state 339
+state 340
 
     (26) funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty .
 
@@ -5622,7 +5633,7 @@ state 339
     R_CURPAR        reduce using rule 26 (funcF -> R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty .)
 
 
-state 340
+state 341
 
     (33) parameter -> VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec . parameterF
     (34) parameterF -> . parameter
@@ -5630,21 +5641,21 @@ state 340
     (33) parameter -> . VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
     (116) empty -> .
 
-    VAR             shift and go to state 84
+    VAR             shift and go to state 85
     R_PAR           reduce using rule 116 (empty -> .)
 
-    parameterF                     shift and go to state 347
-    parameter                      shift and go to state 348
-    empty                          shift and go to state 349
+    parameterF                     shift and go to state 348
+    parameter                      shift and go to state 349
+    empty                          shift and go to state 350
 
-state 341
+state 342
 
     (53) voidT -> exp np_checkParam COMMA voidT .
 
     SEMICOLON       reduce using rule 53 (voidT -> exp np_checkParam COMMA voidT .)
 
 
-state 342
+state 343
 
     (109) factor -> L_PAR np_addPar exp R_PAR np_popPar empty .
 
@@ -5668,14 +5679,14 @@ state 342
     DO              reduce using rule 109 (factor -> L_PAR np_addPar exp R_PAR np_popPar empty .)
 
 
-state 343
+state 344
 
     (74) if -> IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement . R_CURPAR ifF
 
-    R_CURPAR        shift and go to state 350
+    R_CURPAR        shift and go to state 351
 
 
-state 344
+state 345
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR . statement R_CURPAR np_endWhile empty
     (42) statement -> . assigment SEMICOLON statementF
@@ -5700,28 +5711,28 @@ state 344
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 351
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    statement                      shift and go to state 352
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 345
+state 346
 
     (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO . exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     (100) exp -> . bool empty
@@ -5739,24 +5750,24 @@ state 345
     (60) var -> . VAR varF
     (61) var -> . ID DOT VAR varF
 
-    L_PAR           shift and go to state 158
-    CTE_INT         shift and go to state 167
-    CTE_FLOAT       shift and go to state 168
-    CTE_CHAR        shift and go to state 169
-    CTE_BOOL        shift and go to state 170
-    VAR             shift and go to state 101
-    ID              shift and go to state 171
+    L_PAR           shift and go to state 159
+    CTE_INT         shift and go to state 168
+    CTE_FLOAT       shift and go to state 169
+    CTE_CHAR        shift and go to state 170
+    CTE_BOOL        shift and go to state 171
+    VAR             shift and go to state 102
+    ID              shift and go to state 172
 
-    exp                            shift and go to state 352
-    bool                           shift and go to state 160
-    logical                        shift and go to state 161
-    ex                             shift and go to state 162
-    term                           shift and go to state 163
-    factor                         shift and go to state 164
-    varcte                         shift and go to state 165
-    var                            shift and go to state 166
+    exp                            shift and go to state 353
+    bool                           shift and go to state 161
+    logical                        shift and go to state 162
+    ex                             shift and go to state 163
+    term                           shift and go to state 164
+    factor                         shift and go to state 165
+    varcte                         shift and go to state 166
+    var                            shift and go to state 167
 
-state 346
+state 347
 
     (25) funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty .
 
@@ -5770,35 +5781,35 @@ state 346
     R_CURPAR        reduce using rule 25 (funcF -> parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty .)
 
 
-state 347
+state 348
 
     (33) parameter -> VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF .
 
     R_PAR           reduce using rule 33 (parameter -> VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF .)
 
 
-state 348
+state 349
 
     (34) parameterF -> parameter .
 
     R_PAR           reduce using rule 34 (parameterF -> parameter .)
 
 
-state 349
+state 350
 
     (35) parameterF -> empty .
 
     R_PAR           reduce using rule 35 (parameterF -> empty .)
 
 
-state 350
+state 351
 
     (74) if -> IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR . ifF
     (75) ifF -> . ELSE np_else L_CURPAR statement R_CURPAR np_endIf empty
     (76) ifF -> . np_endIf empty
     (144) np_endIf -> .
 
-    ELSE            shift and go to state 354
+    ELSE            shift and go to state 355
     ID              reduce using rule 144 (np_endIf -> .)
     RETURN          reduce using rule 144 (np_endIf -> .)
     READ            reduce using rule 144 (np_endIf -> .)
@@ -5809,26 +5820,26 @@ state 350
     FROM            reduce using rule 144 (np_endIf -> .)
     R_CURPAR        reduce using rule 144 (np_endIf -> .)
 
-    ifF                            shift and go to state 353
-    np_endIf                       shift and go to state 355
+    ifF                            shift and go to state 354
+    np_endIf                       shift and go to state 356
 
-state 351
+state 352
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement . R_CURPAR np_endWhile empty
 
-    R_CURPAR        shift and go to state 356
+    R_CURPAR        shift and go to state 357
 
 
-state 352
+state 353
 
     (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp . np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     (149) np_checkExp -> .
 
     DO              reduce using rule 149 (np_checkExp -> .)
 
-    np_checkExp                    shift and go to state 357
+    np_checkExp                    shift and go to state 358
 
-state 353
+state 354
 
     (74) if -> IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF .
 
@@ -5843,16 +5854,16 @@ state 353
     R_CURPAR        reduce using rule 74 (if -> IF L_PAR exp np_checkBool R_PAR THEN L_CURPAR statement R_CURPAR ifF .)
 
 
-state 354
+state 355
 
     (75) ifF -> ELSE . np_else L_CURPAR statement R_CURPAR np_endIf empty
     (145) np_else -> .
 
     L_CURPAR        reduce using rule 145 (np_else -> .)
 
-    np_else                        shift and go to state 358
+    np_else                        shift and go to state 359
 
-state 355
+state 356
 
     (76) ifF -> np_endIf . empty
     (116) empty -> .
@@ -5867,9 +5878,9 @@ state 355
     FROM            reduce using rule 116 (empty -> .)
     R_CURPAR        reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 359
+    empty                          shift and go to state 360
 
-state 356
+state 357
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR . np_endWhile empty
     (147) np_endWhile -> .
@@ -5884,23 +5895,23 @@ state 356
     FROM            reduce using rule 147 (np_endWhile -> .)
     R_CURPAR        reduce using rule 147 (np_endWhile -> .)
 
-    np_endWhile                    shift and go to state 360
-
-state 357
-
-    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp . DO L_CURPAR statement R_CURPAR np_endFor empty
-
-    DO              shift and go to state 361
-
+    np_endWhile                    shift and go to state 361
 
 state 358
 
-    (75) ifF -> ELSE np_else . L_CURPAR statement R_CURPAR np_endIf empty
+    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp . DO L_CURPAR statement R_CURPAR np_endFor empty
 
-    L_CURPAR        shift and go to state 362
+    DO              shift and go to state 362
 
 
 state 359
+
+    (75) ifF -> ELSE np_else . L_CURPAR statement R_CURPAR np_endIf empty
+
+    L_CURPAR        shift and go to state 363
+
+
+state 360
 
     (76) ifF -> np_endIf empty .
 
@@ -5915,7 +5926,7 @@ state 359
     R_CURPAR        reduce using rule 76 (ifF -> np_endIf empty .)
 
 
-state 360
+state 361
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile . empty
     (116) empty -> .
@@ -5930,16 +5941,16 @@ state 360
     FROM            reduce using rule 116 (empty -> .)
     R_CURPAR        reduce using rule 116 (empty -> .)
 
-    empty                          shift and go to state 363
+    empty                          shift and go to state 364
 
-state 361
+state 362
 
     (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO . L_CURPAR statement R_CURPAR np_endFor empty
 
-    L_CURPAR        shift and go to state 364
+    L_CURPAR        shift and go to state 365
 
 
-state 362
+state 363
 
     (75) ifF -> ELSE np_else L_CURPAR . statement R_CURPAR np_endIf empty
     (42) statement -> . assigment SEMICOLON statementF
@@ -5964,28 +5975,28 @@ state 362
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 365
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
+    statement                      shift and go to state 366
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
-state 363
+state 364
 
     (84) conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty .
 
@@ -6000,7 +6011,7 @@ state 363
     R_CURPAR        reduce using rule 84 (conditional -> WHILE np_addWhile L_PAR exp R_PAR np_checkBool DO L_CURPAR statement R_CURPAR np_endWhile empty .)
 
 
-state 364
+state 365
 
     (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR . statement R_CURPAR np_endFor empty
     (42) statement -> . assigment SEMICOLON statementF
@@ -6025,42 +6036,42 @@ state 364
     (85) nonconditional -> . FROM VAR arrfunc nonconditionalF
     (86) nonconditional -> . FROM VAR np_addId nonconditionalF
 
-    ID              shift and go to state 94
-    RETURN          shift and go to state 95
-    READ            shift and go to state 96
-    WRITE           shift and go to state 97
-    IF              shift and go to state 98
-    VAR             shift and go to state 101
-    WHILE           shift and go to state 102
-    FROM            shift and go to state 103
+    ID              shift and go to state 95
+    RETURN          shift and go to state 96
+    READ            shift and go to state 97
+    WRITE           shift and go to state 98
+    IF              shift and go to state 99
+    VAR             shift and go to state 102
+    WHILE           shift and go to state 103
+    FROM            shift and go to state 104
 
-    statement                      shift and go to state 366
-    assigment                      shift and go to state 86
-    void                           shift and go to state 87
-    return                         shift and go to state 88
-    read                           shift and go to state 89
-    write                          shift and go to state 90
-    if                             shift and go to state 91
-    repeat                         shift and go to state 92
-    var                            shift and go to state 93
-    conditional                    shift and go to state 99
-    nonconditional                 shift and go to state 100
-
-state 365
-
-    (75) ifF -> ELSE np_else L_CURPAR statement . R_CURPAR np_endIf empty
-
-    R_CURPAR        shift and go to state 367
-
+    statement                      shift and go to state 367
+    assigment                      shift and go to state 87
+    void                           shift and go to state 88
+    return                         shift and go to state 89
+    read                           shift and go to state 90
+    write                          shift and go to state 91
+    if                             shift and go to state 92
+    repeat                         shift and go to state 93
+    var                            shift and go to state 94
+    conditional                    shift and go to state 100
+    nonconditional                 shift and go to state 101
 
 state 366
 
-    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement . R_CURPAR np_endFor empty
+    (75) ifF -> ELSE np_else L_CURPAR statement . R_CURPAR np_endIf empty
 
     R_CURPAR        shift and go to state 368
 
 
 state 367
+
+    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement . R_CURPAR np_endFor empty
+
+    R_CURPAR        shift and go to state 369
+
+
+state 368
 
     (75) ifF -> ELSE np_else L_CURPAR statement R_CURPAR . np_endIf empty
     (144) np_endIf -> .
@@ -6075,9 +6086,9 @@ state 367
     FROM            reduce using rule 144 (np_endIf -> .)
     R_CURPAR        reduce using rule 144 (np_endIf -> .)
 
-    np_endIf                       shift and go to state 369
+    np_endIf                       shift and go to state 370
 
-state 368
+state 369
 
     (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR . np_endFor empty
     (150) np_endFor -> .
@@ -6092,28 +6103,11 @@ state 368
     FROM            reduce using rule 150 (np_endFor -> .)
     R_CURPAR        reduce using rule 150 (np_endFor -> .)
 
-    np_endFor                      shift and go to state 370
-
-state 369
-
-    (75) ifF -> ELSE np_else L_CURPAR statement R_CURPAR np_endIf . empty
-    (116) empty -> .
-
-    ID              reduce using rule 116 (empty -> .)
-    RETURN          reduce using rule 116 (empty -> .)
-    READ            reduce using rule 116 (empty -> .)
-    WRITE           reduce using rule 116 (empty -> .)
-    IF              reduce using rule 116 (empty -> .)
-    VAR             reduce using rule 116 (empty -> .)
-    WHILE           reduce using rule 116 (empty -> .)
-    FROM            reduce using rule 116 (empty -> .)
-    R_CURPAR        reduce using rule 116 (empty -> .)
-
-    empty                          shift and go to state 371
+    np_endFor                      shift and go to state 371
 
 state 370
 
-    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor . empty
+    (75) ifF -> ELSE np_else L_CURPAR statement R_CURPAR np_endIf . empty
     (116) empty -> .
 
     ID              reduce using rule 116 (empty -> .)
@@ -6130,6 +6124,23 @@ state 370
 
 state 371
 
+    (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor . empty
+    (116) empty -> .
+
+    ID              reduce using rule 116 (empty -> .)
+    RETURN          reduce using rule 116 (empty -> .)
+    READ            reduce using rule 116 (empty -> .)
+    WRITE           reduce using rule 116 (empty -> .)
+    IF              reduce using rule 116 (empty -> .)
+    VAR             reduce using rule 116 (empty -> .)
+    WHILE           reduce using rule 116 (empty -> .)
+    FROM            reduce using rule 116 (empty -> .)
+    R_CURPAR        reduce using rule 116 (empty -> .)
+
+    empty                          shift and go to state 373
+
+state 372
+
     (75) ifF -> ELSE np_else L_CURPAR statement R_CURPAR np_endIf empty .
 
     ID              reduce using rule 75 (ifF -> ELSE np_else L_CURPAR statement R_CURPAR np_endIf empty .)
@@ -6143,7 +6154,7 @@ state 371
     R_CURPAR        reduce using rule 75 (ifF -> ELSE np_else L_CURPAR statement R_CURPAR np_endIf empty .)
 
 
-state 372
+state 373
 
     (87) nonconditionalF -> EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty .
 
