@@ -979,6 +979,7 @@ def p_empty(p):
 def p_np_startProg(p):
     'np_startProg : '
     quadruples.append(Quadruple("GOTO", None, None, 0))
+    quadaux.append(Quadruple("GOTO", None, None, 0))
     pjumps.append(len(quadruples) - 1)
 
 #Neuralgic point to get program name when main start and mark where the program start
@@ -988,6 +989,7 @@ def p_np_getMainFunc(p):
     currFunc = progName
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
+    quadaux[jump].temp = len(quadruples)
 
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
@@ -1151,6 +1153,7 @@ def p_np_endFunc(p):
     'np_endFunc : '
     global currFunc, local_int, local_float, local_char, local_bool
     quadruples.append(Quadruple('ENDFUNC', None, None, None))
+    quadaux.append(Quadruple("ENDFUNC", None, None, None))
     dic.delVar(currFunc)
     dic.dic[currFunc].memory[0] = local_int - 5000
     dic.dic[currFunc].memory[1] = local_float - 6000
@@ -1286,6 +1289,7 @@ def p_np_addBool(p):
 #Neuralgic point to generate assigment quadruple
 def p_np_doAssign(p):
     'np_doAssign : '
+    global currFunc
     op = poper.pop()
     opdo_der = pilaO.pop()
     opdoT_der = ptypes.pop()
@@ -1305,6 +1309,7 @@ def p_np_doAssign(p):
 #Neuralgic point to generate read quadruple
 def p_np_addRead(p):
     'np_addRead : '
+    global currFunc
     if dic.varOccupied(currFunc, p[-1]):
         quadaux.append(Quadruple('read', None, None, p[-1]))
         temp = p[-1]
@@ -1317,6 +1322,7 @@ def p_np_addRead(p):
 #Neuralgic point to generate write quadruple
 def p_np_addWrite(p):
     'np_addWrite : '
+    global currFunc
     if len(pilaO) > 0:
         ptypes.pop()
         opdo = pilaO.pop()
@@ -1328,17 +1334,25 @@ def p_np_addWrite(p):
 #Neuralgic point to generate return quadruple
 def p_np_addReturn(p):
     'np_addReturn : '
+    global currFunc
     if len(pilaO) > 0:
         ptypes.pop()
         opdo = pilaO.pop()
+        quadaux.append(Quadruple('return', None, None, opdo))
+        if type(opdo) != int:
+            opdo = dic.getVarMemo(currFunc, opdo)
         quadruples.append(Quadruple('return', None, None, opdo))
 
 #Neuralgic point to generate if quadruple
 def p_np_checkBool(p):
     'np_checkBool : '
+    global currFunc
     check = ptypes.pop()
     if check == 'bool':
         opdo = pilaO.pop()
+        quadaux.append(Quadruple('GOTOF', opdo, None, 0))
+        if type(opdo) != int:
+            opdo = dic.getVarMemo(currFunc, opdo)
         quadruples.append(Quadruple('GOTOF', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
@@ -1349,13 +1363,16 @@ def p_np_endIf(p):
     'np_endIf : '
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
+    quadaux[jump].temp = len(quadruples)
 
 #Neuralgic point to generate GOTO quadruple of else
 def p_np_else(p):
     'np_else : '
     quadruples.append(Quadruple('GOTO', None, None, 0))
+    quadaux.append(Quadruple("GOTO", None, None, 0))
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
+    quadaux[jump].temp = len(quadruples)
     pjumps.append(len(quadruples) - 1)
 
 #Neuralgic point to save start position of while
@@ -1369,13 +1386,15 @@ def p_np_endWhile(p):
     startW = pjumps.pop()
     temp = pjumps.pop()
     quadruples.append(Quadruple('GOTO', None, None, temp))
+    quadaux.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
+    quadaux[startW].temp = endW
 
 #Neuralgic point to assign vaiable insede a for loop
 def p_np_assingFor(p):
     'np_assingFor : '
-    global currVar
+    global currVar, currFunc
     op = poper.pop()
     opdo_der = pilaO.pop()
     opdoT_der = ptypes.pop()
@@ -1385,6 +1404,11 @@ def p_np_assingFor(p):
         error('Expeted type int')
     else:
         currVar = temp
+        quadaux.append(Quadruple(op, opdo_der, None, temp))
+        if type(opdo_der) != int:
+            opdo_der = dic.getVarMemo(currFunc, opdo_der)
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
         quadruples.append(Quadruple(op, opdo_der, None, temp))
         ptypes.append(tempT)
         pilaO.append(temp)
@@ -1392,13 +1416,16 @@ def p_np_assingFor(p):
 #Neuralgic point to check resulting expresion and genetra GOTOV quadruple
 def p_np_checkExp(p):
     'np_checkExp : '
-    global currVar
+    global currVar, currFunc
     poper.append('>')
     generateQuad(['>'])
     pjumps.append(len(quadruples) - 1)
     check = ptypes.pop()
     if check == 'bool':
         opdo = pilaO.pop()
+        quadaux.append(Quadruple('GOTOV', opdo, None, 0))
+        if type(opdo) != int:
+            opdo = dic.getVarMemo(currFunc, opdo)
         quadruples.append(Quadruple('GOTOV', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
@@ -1407,7 +1434,7 @@ def p_np_checkExp(p):
 #Neuralgic point to process the end of a for loop 
 def p_np_endFor(p):
     'np_endFor : '
-    global currVar
+    global currVar, currFunc
     if 1 not in const_table:
         aux = get_const_memo('int')
         const_table[p[-1]] = {
@@ -1415,12 +1442,17 @@ def p_np_endFor(p):
             'type': 'int'
         }
     const = (const_table[1]['memo'])
+    quadaux.append(Quadruple('+=', const, None, currVar))
+    if type(currVar) != int:
+        currVar = dic.getVarMemo(currFunc, currVar)
     quadruples.append(Quadruple('+=', const, None, currVar))
     startW = pjumps.pop()
     temp = pjumps.pop()
     quadruples.append(Quadruple('GOTO', None, None, temp))
+    quadaux.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
+    quadaux[startW].temp = endW
 
 #Neuralgic point to verify if a function exist in a function call
 def p_np_checkVoid(p):
@@ -1436,17 +1468,21 @@ def p_np_eraQuad(p):
     'np_eraQuad : '
     global currCall, paramK
     quadruples.append(Quadruple('ERA', currCall, None, None))
+    quadaux.append(Quadruple("ERA", currCall, None, None))
     paramK = 0
 
 #Neuralgi point to process parameters on function calls
 def p_np_checkParam(p):
     'np_checkParam : '
-    global currCall, paramK
+    global currCall, paramK, currFunc
     opdo = pilaO.pop()
     opdoT = ptypes.pop()
     paramK += 1
     if paramK <= dic.funcParamSize(currCall):
         if opdoT == dic.funcParam(currCall, paramK):
+            quadaux.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
+            if type(opdo) != int:
+                opdo = dic.getVarMemo(currFunc, opdo)
             quadruples.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
         else: 
             error("Expected type {} on call to function {}".format(dic.funcParam(currCall, paramK), currCall))
@@ -1461,6 +1497,7 @@ def p_np_endVoid(p):
         error("{} mising {} parameters".format(currCall, dic.funcParamSize(currCall) - paramK))
     else:
         quadruples.append(Quadruple('GOSUB', currCall, None, None))
+        quadaux.append(Quadruple("GOSUB", currCall, None, None))
 
 
 #Function that will generate the quadruples
