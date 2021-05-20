@@ -113,6 +113,34 @@ while ongoing:
         aux = getValue(quadruples[current].getOpIzq())
         setValue(aux, quadruples[current].getTemp())
         current += 1
+    #plus equal
+    elif quadruples[current].getOp() == '+=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getTemp())
+        res = aux1 + aux2
+        setValue(res, quadruples[current].getTemp())
+        current += 1
+    #Minus equal
+    elif quadruples[current].getOp() == '-=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getTemp())
+        res = aux2 - aux1
+        setValue(res, quadruples[current].getTemp())
+        current += 1
+    #Mult equal
+    elif quadruples[current].getOp() == '*=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getTemp())
+        res = aux1 * aux2
+        setValue(res, quadruples[current].getTemp())
+        current += 1
+    #Division equal
+    elif quadruples[current].getOp() == '/=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getTemp())
+        res = aux2 / aux1
+        setValue(res, quadruples[current].getTemp())
+        current += 1
     #Sum
     elif quadruples[current].getOp() == '+':
         aux1 = getValue(quadruples[current].getOpIzq())
@@ -153,6 +181,62 @@ while ongoing:
         aux = input('Enter value: ')
         checkValue(aux, quadruples[current].getTemp())
         setValue(aux, quadruples[current].getTemp())
+        current += 1
+    #Greather than
+    elif quadruples[current].getOp() == '>':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 > aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Less than
+    elif quadruples[current].getOp() == '<':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 < aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Greather or equal than
+    elif quadruples[current].getOp() == '>=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 >= aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Less or equal than
+    elif quadruples[current].getOp() == '<=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 <= aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Equal
+    elif quadruples[current].getOp() == '==':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 == aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Different
+    elif quadruples[current].getOp() == '!=':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 != aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #And
+    elif quadruples[current].getOp() == '&':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 and aux2
+        setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Or
+    elif quadruples[current].getOp() == '|':
+        aux1 = getValue(quadruples[current].getOpIzq())
+        aux2 = getValue(quadruples[current].getOpDer())
+        result = aux1 or aux2
+        setValue(result, quadruples[current].getTemp())
         current += 1
     #Endprogram
     elif quadruples[current].getOp() == 'END':
