@@ -3,6 +3,7 @@ import sys
 from datastruct import DirProcess
 from collections import deque
 from ObjQuad import Quadruple
+from re import match
 
 d = Lex_Parser.vmHelper()
 
@@ -31,6 +32,7 @@ for key in const_table:
 #Get the memory adresses from the global function
 global_memory = dic.getGlobalMem()
 
+#function to get the value of a memory address
 def getValue(mem):
     aux = None
     #Global memory
@@ -76,37 +78,63 @@ def getValue(mem):
 
     return aux
 
+#Function to set value to a memory address
 def setValue(val, mem):
     if mem >= 1000 and mem < 5000:
         global_memory[mem] = val
     # else:
     #     MEMORIA LOCAL
 
+def check_int(s):
+    if s[0] in ('-', '+'):
+        return s[1:].isdigit()
+    return s.isdigit()
+
+def checkValue(val, mem):
+    if mem >= 1000 and mem < 2000 or  mem >= 5000 and mem < 6000:
+        if not check_int(val):
+            error("Expected type Int")
+    if mem >= 2000 and mem < 3000 or  mem >= 6000 and mem < 7000:
+        if not match(r'-?\d+\.\d+', val):
+            error("Expected type Float")
+    if mem >= 3000 and mem < 4000 or  mem >= 7000 and mem < 8000:
+        if not match(r"[a-zA-Z0-9!@#$%^&*()]", val):
+            error("Expected type Char")
+    if mem >= 4000 and mem < 5000 or  mem >= 9000 and mem < 10000:
+        if not match(r'(True|False)', val):
+            error("Expected type Bool")
+
 while ongoing:
+    #GOTO
     if quadruples[current].getOp() == 'GOTO':
         current = quadruples[current].getTemp()
+    #Assigment
     elif quadruples[current].getOp() == '=':
         aux = getValue(quadruples[current].getOpIzq())
         setValue(aux, quadruples[current].getTemp())
         current += 1
+    #Sum
     elif quadruples[current].getOp() == '+':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 + aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
+    #Rest
     elif quadruples[current].getOp() == '-':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 - aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
+    #Multiplication
     elif quadruples[current].getOp() == '*':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 * aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
+    #Division
     elif quadruples[current].getOp() == '/':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
@@ -115,13 +143,17 @@ while ongoing:
         result = aux1 / aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
+    #Write
     elif quadruples[current].getOp() == 'write':
         aux = getValue(quadruples[current].getTemp())
         print(aux)
         current += 1
+    #Read
     elif quadruples[current].getOp() == 'read':
         aux = input('Enter value: ')
+        checkValue(aux, quadruples[current].getTemp())
         setValue(aux, quadruples[current].getTemp())
         current += 1
+    #Endprogram
     elif quadruples[current].getOp() == 'END':
         ongoing = False

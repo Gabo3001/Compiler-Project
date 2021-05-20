@@ -1197,13 +1197,15 @@ def p_np_addConstFloat(p):
 def p_np_addConstChar(p):
     'np_addConstChar : '
     global const_char
-    if p[-1] not in const_table:
+    char = p[-1]
+    char = char[1:-1]
+    if char not in const_table:
         aux = get_const_memo('char')
-        const_table[p[-1]] = {
+        const_table[char] = {
             'memo': aux,
             'type': 'char'
         }
-    pilaO.append(const_table[p[-1]]['memo'])
+    pilaO.append(const_table[char]['memo'])
     ptypes.append('char')
 
 #Neuralgic point that add constant bool in operand stack
@@ -1223,13 +1225,15 @@ def p_np_addConstBool(p):
 def p_np_addConstString(p):
     'np_addConstString : '
     global const_tring
-    if p[-1] not in const_table:
+    string = p[-1]
+    string = string[1:-1]
+    if string not in const_table:
         aux = get_const_memo('string')
-        const_table[p[-1]] = {
+        const_table[string] = {
             'memo': aux,
             'type': 'string'
         }
-    pilaO.append(const_table[p[-1]]['memo'])
+    pilaO.append(const_table[string]['memo'])
     ptypes.append('string')
 
 
