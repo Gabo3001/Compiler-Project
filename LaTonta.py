@@ -108,6 +108,20 @@ while ongoing:
     #GOTO
     if quadruples[current].getOp() == 'GOTO':
         current = quadruples[current].getTemp()
+    #GOTOF
+    elif quadruples[current].getOp() == 'GOTOF':
+        aux = getValue(quadruples[current].getOpIzq())
+        if aux:
+            current += 1
+        else:
+            current = quadruples[current].getTemp()
+    #GOTOV
+    elif quadruples[current].getOp() == 'GOTOV':
+        aux = getValue(quadruples[current].getOpIzq())
+        if aux:
+            current = quadruples[current].getTemp()
+        else:
+            current += 1
     #Assigment
     elif quadruples[current].getOp() == '=':
         aux = getValue(quadruples[current].getOpIzq())
