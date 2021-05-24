@@ -741,7 +741,7 @@ def p_typeFunc(p):
 
 def p_paramater(p):
     '''
-    parameter : VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
+    parameter : VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec np_addToDic parameterF
     
     parameterF : parameter
                  | empty
@@ -945,13 +945,16 @@ def p_factor(p):
     '''
     factor  : L_PAR np_addPar exp R_PAR np_popPar empty
             | varcte empty
+            | factorF
+
+    factorF : MINUS var np_addId empty
+            | var np_addId empty
     '''
     p[0] = None
 
 def p_varcte(p):
     '''
-    varcte  : var np_addId empty
-            | CTE_INT np_addConstInt empty
+    varcte  : CTE_INT np_addConstInt empty
             | CTE_FLOAT np_addConstFloat empty
             | CTE_CHAR np_addConstChar empty
             | CTE_BOOL np_addConstBool empty
@@ -1001,7 +1004,7 @@ def p_np_addFunc(p):
         progName = currFunc
     else:
         if dic.funcOccupied(currFunc):
-            error('Variable "{}" has already been declared'.format(currFunc))
+            error('Function "{}" has already been declared'.format(currFunc))
         else:
             dic.addFunc(currFunc, p[-3], len(quadruples))
             if p[-3] != 'void':
@@ -1057,7 +1060,7 @@ def addVars(key):
         if dic.varOccupied(key,v[0]):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
-            memo = getMemo(key)
+            memo = getMemo(key, lvl1*lvl2)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             pvars.pop()
 
@@ -1070,7 +1073,7 @@ def addVars(key):
             pvars.pop()
 
 #function that returns the memory number of the function
-def getMemo(key):
+def getMemo(key, memChunck = 1):
     global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     memo = ""
     if key == progName:
@@ -1078,44 +1081,44 @@ def getMemo(key):
             if global_int > 1999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_int
-            global_int += 1
+            global_int += memChunck
         elif currType == 'float':
             if global_float > 2999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_float
-            global_float += 1
+            global_float += memChunck
         elif currType == 'char':
             if global_char > 3999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_char
-            global_char += 1
+            global_char += memChunck
         elif currType == 'bool':
             if global_bool > 4999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_bool
-            global_bool += 1
+            global_bool += memChunck
         return memo
     else: 
         if currType == 'int':
             if local_int > 5999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_int
-            local_int += 1
+            local_int += memChunck
         elif currType == 'float':
             if local_float > 6999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_float
-            local_float += 1
+            local_float += memChunck
         elif currType == 'char':
             if local_char > 7999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_char
-            local_char += 1
+            local_char += memChunck
         elif currType == 'bool':
             if local_bool > 8999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_bool
-            local_bool += 1
+            local_bool += memChunck
         return memo
 
 #Function that return memory number of a constant
@@ -1154,7 +1157,6 @@ def p_np_endFunc(p):
     global currFunc, local_int, local_float, local_char, local_bool
     quadruples.append(Quadruple('ENDFUNC', None, None, None))
     quadaux.append(Quadruple("ENDFUNC", None, None, None))
-    dic.delVar(currFunc)
     dic.dic[currFunc].memory[0] = local_int - 5000
     dic.dic[currFunc].memory[1] = local_float - 6000
     dic.dic[currFunc].memory[2] = local_char - 7000
@@ -1163,6 +1165,8 @@ def p_np_endFunc(p):
     local_float = 6000
     local_char = 7000
     local_bool = 8000
+    #dic.printFunc(currFunc)
+    dic.delVar(currFunc)
 
 #Neuralgic point to add id in operand stack
 def p_np_addId(p):
@@ -1483,7 +1487,7 @@ def p_np_checkParam(p):
             quadaux.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
             if type(opdo) != int:
                 opdo = dic.getVarMemo(currFunc, opdo)
-            quadruples.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
+            quadruples.append(Quadruple('PARAMETER', opdo, None, paramK))
         else: 
             error("Expected type {} on call to function {}".format(dic.funcParam(currCall, paramK), currCall))
 
@@ -1604,7 +1608,7 @@ def main():
         print("Error")
     
     #print(dic.printAll())
-    #printAll()
+    printAll()
     
 #Fucntion to help the virtual machine to get all it need to process the code
 def vmHelper():

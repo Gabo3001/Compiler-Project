@@ -39,7 +39,7 @@ class Funcfunc:
     self.memory = [0 for i in range(4)] #[Int, Float, Char, Bool]
   
   def printFunc(self):
-    print("Name:{}, Type: {}, Start: {}".format(self.name, self.func_type, self.start))
+    print("Name:{}, Type: {}, Start: {}, Params: {}, Size: {}".format(self.name, self.func_type, self.start, self.params, self.memory))
 
 class DirProcess(HashTable):
 # Functions  
@@ -86,8 +86,14 @@ class DirProcess(HashTable):
   def printAll(self):
     for key in self.dic:
       self.funcPrint(key)
-      for var in self.dic[key].vars.dic:
-        self.varPrint(key, var)
+      if 'self.dic[key].vars' in globals():
+        for var in self.dic[key].vars.dic:
+          self.varPrint(key, var)
+
+  def printFunc(self, key):
+    self.funcPrint(key)
+    for var in self.dic[key].vars.dic:
+      self.varPrint(key, var)
   
   def getGlobalMem(self):
     aux = {}
