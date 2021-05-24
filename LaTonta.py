@@ -86,7 +86,7 @@ def setValue(val, mem):
     #     MEMORIA LOCAL
 
 def check_int(s):
-    if s[0] in ('-', '+'):
+    if s[0] in ('-'):
         return s[1:].isdigit()
     return s.isdigit()
 
@@ -98,12 +98,13 @@ def checkValue(val, mem):
         if not match(r'-?\d+\.\d+', val):
             error("Expected type Float")
     if mem >= 3000 and mem < 4000 or  mem >= 7000 and mem < 8000:
-        if not match(r"[a-zA-Z0-9!@#$%^&*()]", val):
+        if not match(r"[a-zA-Z0-9!@#$%^&*()]", val) or len(val) > 1:
             error("Expected type Char")
     if mem >= 4000 and mem < 5000 or  mem >= 9000 and mem < 10000:
         if not match(r'(True|False)', val):
             error("Expected type Bool")
 
+# ***** Execution *****
 while ongoing:
     #GOTO
     if quadruples[current].getOp() == 'GOTO':
@@ -130,7 +131,7 @@ while ongoing:
     #plus equal
     elif quadruples[current].getOp() == '+=':
         aux1 = getValue(quadruples[current].getOpIzq())
-        aux2 = getValue(quadruples[current].getTemp())
+        aux2 = getValue(quadruples[current].getTemp()) 
         res = aux1 + aux2
         setValue(res, quadruples[current].getTemp())
         current += 1
@@ -152,6 +153,8 @@ while ongoing:
     elif quadruples[current].getOp() == '/=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getTemp())
+        if aux1 == 0:
+            error("Division by zero")
         res = aux2 / aux1
         setValue(res, quadruples[current].getTemp())
         current += 1

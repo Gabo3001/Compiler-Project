@@ -1591,6 +1591,7 @@ def printAll():
     print(poper)
     print(ptypes)
     print(pjumps)
+    #To check quaruples withou memory addresses, use quadaux instead of quadruples
     for item in quadruples:
         print(item.get_quad())
 
