@@ -23,6 +23,7 @@ pilaO = deque()
 poper = deque()
 ptypes = deque()
 pjumps = deque()
+pdim = deque()
 
 global_int = 1000
 global_float = 2000
@@ -794,8 +795,8 @@ def p_void(p):
 
 def p_arrfunc(p):
     '''
-    arrfunc : L_BREAK exp COMMA exp R_BREAK empty
-            | L_BREAK exp R_BREAK empty
+    arrfunc : L_BREAK np_startArr exp np_ftwoDimArr COMMA exp np_ltwoDimArr R_BREAK np_endArr empty
+            | L_BREAK np_startArr exp np_oneDimArr R_BREAK np_endArr empty
     '''
     p[0] = None
 
@@ -807,11 +808,9 @@ def p_return(p):
 
 def p_var(p):
     '''
-    var : VAR varF  
+    var : VAR np_addId varF  
         | ID DOT VAR varF  
     '''
-    if len(p) == 3:
-        p[0] = p[1]
 
 def p_varF(p):
     '''
@@ -858,7 +857,7 @@ def p_if(p):
 
 def p_assigment(p):
     '''
-    assigment : var np_addId assigmentF
+    assigment : var assigmentF
 
     assigmentF : EQUAL np_addOp exp np_doAssign empty 
                 | ope np_addOp exp np_doAssign empty
@@ -947,8 +946,8 @@ def p_factor(p):
             | varcte empty
             | factorF
 
-    factorF : MINUS var np_addId empty
-            | var np_addId empty
+    factorF : MINUS var empty
+            | var empty
     '''
     p[0] = None
 
@@ -1310,18 +1309,129 @@ def p_np_doAssign(p):
     else:
         error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
 
+#Neuralgic point to start the process of an array
+def p_np_startArr(p):
+    'np_startArr : '
+    global currFunc
+    opdo = pilaO.pop()
+    ptypes.pop()
+    if dic.isArr(currFunc, opdo):
+        pdim.append((opdo, 1))
+        poper.append('(')
+    else:
+        error("Variable {} have no dimensions".format(opdo))
+
+#Neuralgic point that process a 1 dimensional array
+def p_np_oneDimArr(p):
+    'np_oneDimArr : '
+    global currFunc
+    aux = pdim[-1]
+    opdo = aux[0]
+    if dic.checkOneDim(currFunc, opdo):
+        temp = pilaO[-1]
+        tempT = ptypes.pop()
+        lvl = dic.getLvl1(currFunc, opdo)
+        if tempT != 'int':
+            error("Indexes can only be type int")
+        quadaux.append(Quadruple('VER', temp, 0, lvl))
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
+        quadruples.append(Quadruple('VER', temp, 0, lvl))
+    else:
+        error("Variable {} expect two indexes and recieved one".format(opdo))
+
+#Neuralgic point that process the first part of a 2 dimensional array
+def p_np_ftwoDimArr(p):
+    'np_ftwoDimArr : '
+    aux = pdim.pop()
+    opdo = aux[0]
+    if dic.checkTwoDim(currFunc, opdo):
+        temp = pilaO.pop()
+        tempT = ptypes.pop()
+        lvl = dic.getLvl1(currFunc, opdo)
+        if tempT != 'int':
+            error("Indexes can only be type int")
+        quadaux.append(Quadruple('VER', temp, 0, lvl))
+        tempaux = temp
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
+        quadruples.append(Quadruple('VER', temp, 0, lvl))
+
+        lvl2 = dic.getLvl2(currFunc, opdo)
+
+        if lvl2 not in const_table:
+            aux = get_const_memo('int')
+            const_table[lvl2] = {
+                'memo': aux,
+                'type': 'int'
+            }
+        d2 = const_table[lvl2]['memo']
+        temp2 = generate_temporal('int')
+        quadaux.append(Quadruple('*', tempaux, d2, temp2))
+        quadruples.append(Quadruple('*', temp, d2, temp2))
+        pilaO.append(temp2)
+        pdim.append((opdo,2))
+    else:
+        error("Variable {} expect one index and recieved two".format(opdo))
+
+#Neuralgic point that process the first part of a 2 dimensional array
+def p_np_ltwoDimArr(p):
+    'np_ltwoDimArr : '
+    aux = pdim[-1]
+    opdo = aux[0]
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
+    lv2 = dic.getLvl2(currFunc, opdo)
+    if tempT != 'int':
+        error("Indexes can only be type int")
+    quadaux.append(Quadruple('VER', temp, 0, lv2))
+    tempaux = temp
+    if type(temp) != int:
+        temp = dic.getVarMemo(currFunc, temp)
+    quadruples.append(Quadruple('VER', temp, 0, lv2))
+
+    temp2 = pilaO.pop()
+    temp3 = generate_temporal('int')
+    quadaux.append(Quadruple('+', tempaux, temp2, temp3))
+    quadruples.append(Quadruple('+', temp, temp2, temp3))
+    pilaO.append(temp3)
+
+#Neuralgic point to process the end of an array
+def p_np_endArr(p):
+    'np_endArr : '
+    global currFunc
+    auxdim = pdim.pop()
+    id = auxdim[0]
+    opdo = pilaO.pop()
+    idmem = dic.getVarMemo(currFunc, id)
+
+    if idmem not in const_table:
+        aux = get_const_memo('int')
+        const_table[idmem] = {
+            'memo': aux,
+            'type': 'int'
+        }
+    virAd = const_table[idmem]['memo']
+    temp = generate_temporal('int')
+    quadaux.append(Quadruple('+', opdo, virAd, temp))
+    if type(opdo) != int:
+        opdo = dic.getVarMemo(currFunc, opdo)
+    quadruples.append(Quadruple('+', opdo, virAd, temp))
+    
+    pilaO.append("(" + str(temp) +  ")")
+    ptypes.append(dic.getVarType(currFunc,id))
+    poper.pop()
+
 #Neuralgic point to generate read quadruple
 def p_np_addRead(p):
     'np_addRead : '
     global currFunc
-    if dic.varOccupied(currFunc, p[-1]):
-        quadaux.append(Quadruple('read', None, None, p[-1]))
-        temp = p[-1]
-        if type(temp) != int:
-            temp = dic.getVarMemo(currFunc, temp)
-        quadruples.append(Quadruple('read', None, None, temp))
-    else: 
-        error('Variable {} not defined'.format(p[-1]))
+    temp = pilaO.pop()
+    ptypes.pop()
+    quadaux.append(Quadruple('read', None, None, temp))
+    if type(temp) != int:
+        temp = dic.getVarMemo(currFunc, temp)
+    quadruples.append(Quadruple('read', None, None, temp))
 
 #Neuralgic point to generate write quadruple
 def p_np_addWrite(p):
@@ -1585,7 +1695,7 @@ def p_np_endProg(p):
 
 #Function to display errors
 def error(line):
-    print(line)
+    print("Line " + str(lexer.lineno) + ": " + line)
     sys.exit()
 
 parser = yacc.yacc()

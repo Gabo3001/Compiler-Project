@@ -60,7 +60,9 @@ class DirProcess(HashTable):
 
 # Vars
   def getVarMemo(self, key, var):
-      return self.dic[key].vars.get_item(var).memo
+    if type(var) == str and var[0] == '(' and var[-1] == ')':
+      return var
+    return self.dic[key].vars.get_item(var).memo
 
   def addVar(self, key, var, obj_ty, memo, lev1 = 1, lev2 = 1):
     self.dic[key].vars.add_var(var, obj_ty, memo, lev1,lev2)
@@ -73,7 +75,30 @@ class DirProcess(HashTable):
 
   def getVarType(self, key, var):
     return self.dic[key].vars.get_item(var).Obj_type
-    self.dic[key].vars[var].printObj()
+
+  def getLvl1(self, key, var):
+    return self.dic[key].vars.get_item(var).level1
+
+  def getLvl2(self, key, var):
+    return self.dic[key].vars.get_item(var).level2
+
+  def isArr(self, key, var):
+    if self.dic[key].vars.get_item(var).level1 > 1 or self.dic[key].vars.get_item(var).level2 > 1:
+      return True
+    else:
+      return False
+
+  def checkOneDim(self, key, var):
+    if self.dic[key].vars.get_item(var).level2 > 1:
+      return False
+    else:
+      return True
+
+  def checkTwoDim(self, key, var):
+    if self.dic[key].vars.get_item(var).level2 > 1:
+      return True
+    else:
+      return False
 
   def delVar(self, key):
     del self.dic[key].vars
