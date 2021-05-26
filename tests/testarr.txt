@@ -2,7 +2,7 @@ program Test3;
 vars
 a, b, i[10], j[4,5]: int;
 c: float;
-e[30]: char;
+d, e[30]: char;
 cAux: char;
 
 void function Func1(x:int; y:int; z:int;);
@@ -15,6 +15,7 @@ aux: int;
 main(){
     a = 2;
     b = a * a * a;
+    c = 4.52;
     i[a] = 3;
     i[0] = b - a;
     j[0,0] = a * j[i[a],10-i[0]];
@@ -29,8 +30,18 @@ main(){
        e[a] = cAux;   
     }
     write(e);
+
+    #fail write
     write(e[2]);
-    # fail
 
+    #fail array sin indices
+    d = e;
+    e = d;
 
+    #fail tipos
+    e[8] = a;
+    j[2,2] = c * 10 / 3;
+
+    #fail ver (ejecucion) 
+    j[8,9] = a;
 }
