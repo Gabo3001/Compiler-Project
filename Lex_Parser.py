@@ -16,6 +16,7 @@ progName = ''
 currVar = ''
 currCall = ''
 paramK = 0
+contReturns = 0
 
 pvars = deque()
 pvarsT = deque()
@@ -718,14 +719,13 @@ def p_arr(p):
 
 def p_func(p):
     '''
-    func : typeFunc FUNCTION ID np_addFunc L_PAR funcF
-    '''
-    p[0] = None
+    func : typeFunc FUNCTION ID np_addFunc L_PAR funcT
 
-def p_funcF(p):
-    '''
-    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
-           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
+    funcT : parameter R_PAR SEMICOLON funcF
+           | R_PAR SEMICOLON funcF
+
+    funcF : dec L_CURPAR statement R_CURPAR np_endFunc empty
+           | L_CURPAR statement R_CURPAR np_endFunc empty
     '''
 
 def p_typeFunc(p):
@@ -995,7 +995,7 @@ def p_np_getMainFunc(p):
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
     'np_addFunc : '
-    global currFunc, progName
+    global currFunc, progName, contReturns
     currFunc = p[-1]
     if p[-3] == 'program':
         dic.addFunc(currFunc, "program")
@@ -1009,6 +1009,7 @@ def p_np_addFunc(p):
                 pvarsT.append(p[-3])
                 pvars.append(currFunc)
                 addVars(progName)
+                contReturns = 0
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
@@ -1152,7 +1153,9 @@ def get_const_memo(vart):
 #Neuralgic point to process the end of a function
 def p_np_endFunc(p):
     'np_endFunc : '
-    global currFunc, local_int, local_float, local_char, local_bool
+    global currFunc, local_int, local_float, local_char, local_bool, contReturns
+    if dic.getFuncType(currFunc) != 'void' and dic.getFuncType(currFunc) != 'program' and contReturns < 1:
+        error("Function {} expect a return value".format(currFunc))
     quadruples.append(Quadruple('ENDFUNC', None, None, None))
     quadaux.append(Quadruple("ENDFUNC", None, None, None))
     dic.dic[currFunc].memory[0] = local_int - 5000
@@ -1461,18 +1464,24 @@ def p_np_addWrite(p):
 #Neuralgic point to generate return quadruple
 def p_np_addReturn(p):
     'np_addReturn : '
-    global currFunc
-    if len(pilaO) > 0:
-        ptypes.pop()
-        opdo = pilaO.pop()
+    global currFunc, contReturns
+    if dic.getFuncType(currFunc) != 'void' and dic.getFuncType(currFunc) != 'program':
+        if len(pilaO) > 0:
+            opdoT = ptypes.pop()
+            opdo = pilaO.pop()
 
-        if dic.chechArr(currFunc, opdo):
-            error("Can't operate array {}".format(opdo))
-
-        quadaux.append(Quadruple('return', None, None, opdo))
-        if type(opdo) != int:
-            opdo = dic.getVarMemo(currFunc, opdo)
-        quadruples.append(Quadruple('return', None, None, opdo))
+            if dic.chechArr(currFunc, opdo):
+                error("Can't operate array {}".format(opdo))
+            if opdoT ==  dic.getFuncType(currFunc):
+                contReturns += 1
+                quadaux.append(Quadruple('return', None, None, opdo))
+                if type(opdo) != int:
+                    opdo = dic.getVarMemo(currFunc, opdo)
+                quadruples.append(Quadruple('return', None, None, opdo))
+            else:
+                error("Expected return value type {}".format(dic.getFuncType(currFunc)))
+    else:
+        error("Function {} can't return any value".format(currFunc))
 
 #Neuralgic point to generate if quadruple
 def p_np_checkBool(p):
@@ -1758,7 +1767,7 @@ def main():
     except EOFError:
         print("Error")
     
-    #print(dic.printAll())
+    print(dic.printAll())
     printAll()
     
 #Fucntion to help the virtual machine to get all it need to process the code

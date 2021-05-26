@@ -46,6 +46,9 @@ class DirProcess(HashTable):
   def addFunc(self, name, func_type, start = 0):
     self.dic[name] = Funcfunc(name, func_type, start)
 
+  def getFuncType(self, key):
+    return self.dic[key].func_type
+  
   def funcOccupied(self, key):
     return self.is_occupied(key)
 
@@ -87,14 +90,6 @@ class DirProcess(HashTable):
       return self.isArr(key, mem)
     else:
       return False
-    '''if mem not in self.dic[key].vars.dic.values():
-      return False
-    else:
-      key_list = list(self.dic[key].vars.dic.keys())
-      val_list = list(self.dic[key].vars.dic.values())
-      pos = val_list.index(mem)
-      aux = key_list(pos)
-      return self.isArr(self, key, aux)'''
 
   def isArr(self, key, var):
     if self.dic[key].vars.get_item(var).level1 > 1 or self.dic[key].vars.get_item(var).level2 > 1:
@@ -125,7 +120,7 @@ class DirProcess(HashTable):
   def printAll(self):
     for key in self.dic:
       self.funcPrint(key)
-      if 'self.dic[key].vars' in globals():
+      if self.dic[key].func_type == "program":
         for var in self.dic[key].vars.dic:
           self.varPrint(key, var)
 
