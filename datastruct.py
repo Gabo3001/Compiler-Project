@@ -1,4 +1,4 @@
-class HashTable:
+class Directory:
   #Constructor de objeto hash
   def __init__(self):
     self.dic = {}
@@ -24,7 +24,7 @@ class Objeto:
   def printObj(self):
     print("Name:{}, Type: {}, Memo:{}, Lvl1:{}, Lvl2:{}".format(self.name, self.Obj_type, self.memo, self.level1, self.level2))
 
-class VarTab(HashTable):
+class VarTab(Directory):
   def add_var(self, name, obj_ty, memo, lev1 = 1, lev2 = 1):
     self.dic[name] = Objeto(name,obj_ty, memo, lev1,lev2)
 
@@ -41,7 +41,7 @@ class Funcfunc:
   def printFunc(self):
     print("Name:{}, Type: {}, Start: {}, Params: {}, Size: {}".format(self.name, self.func_type, self.start, self.params, self.memory))
 
-class DirProcess(HashTable):
+class DirProcess(Directory):
 # Functions  
   def addFunc(self, name, func_type, start = 0):
     self.dic[name] = Funcfunc(name, func_type, start)
