@@ -82,6 +82,20 @@ class DirProcess(HashTable):
   def getLvl2(self, key, var):
     return self.dic[key].vars.get_item(var).level2
 
+  def chechArr(self, key, mem):
+    if mem in self.dic[key].vars.dic.keys():
+      return self.isArr(key, mem)
+    else:
+      return False
+    '''if mem not in self.dic[key].vars.dic.values():
+      return False
+    else:
+      key_list = list(self.dic[key].vars.dic.keys())
+      val_list = list(self.dic[key].vars.dic.values())
+      pos = val_list.index(mem)
+      aux = key_list(pos)
+      return self.isArr(self, key, aux)'''
+
   def isArr(self, key, var):
     if self.dic[key].vars.get_item(var).level1 > 1 or self.dic[key].vars.get_item(var).level2 > 1:
       return True

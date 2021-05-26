@@ -881,8 +881,7 @@ def p_conditional(p):
 
 def p_nonconditional(p):
     '''
-    nonconditional : FROM VAR arrfunc nonconditionalF
-                    | FROM VAR np_addId nonconditionalF 
+    nonconditional : FROM var nonconditionalF
 
     nonconditionalF :  EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     '''
@@ -1298,6 +1297,12 @@ def p_np_doAssign(p):
     opdoT_der = ptypes.pop()
     temp = pilaO.pop()
     tempT = ptypes.pop()
+
+    if dic.chechArr(currFunc, opdo_der):
+        error("Can't operate array {}".format(opdo_der))
+    if dic.chechArr(currFunc, temp):
+        error("Can't operate array {}".format(temp))
+
     check = semanticCube[opdoT_der][tempT][op]
     if check != 'error':
         quadaux.append(Quadruple(op, opdo_der, None, temp))
@@ -1428,6 +1433,10 @@ def p_np_addRead(p):
     global currFunc
     temp = pilaO.pop()
     ptypes.pop()
+
+    if dic.chechArr(currFunc, temp):
+        error("Can't operate array {}".format(temp))
+
     quadaux.append(Quadruple('read', None, None, temp))
     if type(temp) != int:
         temp = dic.getVarMemo(currFunc, temp)
@@ -1440,6 +1449,10 @@ def p_np_addWrite(p):
     if len(pilaO) > 0:
         ptypes.pop()
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('write', None, None, opdo))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1452,6 +1465,10 @@ def p_np_addReturn(p):
     if len(pilaO) > 0:
         ptypes.pop()
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('return', None, None, opdo))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1464,6 +1481,10 @@ def p_np_checkBool(p):
     check = ptypes.pop()
     if check == 'bool':
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('GOTOF', opdo, None, 0))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1514,6 +1535,12 @@ def p_np_assingFor(p):
     opdoT_der = ptypes.pop()
     temp = pilaO.pop()
     tempT = ptypes.pop()
+
+    if dic.chechArr(currFunc, opdo_der):
+        error("Can't operate array {}".format(opdo_der))
+    if dic.chechArr(currFunc, temp):
+        error("Can't operate array {}".format(temp))
+
     if tempT != 'int' or opdoT_der != 'int':
         error('Expeted type int')
     else:
@@ -1537,6 +1564,10 @@ def p_np_checkExp(p):
     check = ptypes.pop()
     if check == 'bool':
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('GOTOV', opdo, None, 0))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1590,6 +1621,10 @@ def p_np_checkParam(p):
     'np_checkParam : '
     global currCall, paramK, currFunc
     opdo = pilaO.pop()
+
+    if dic.chechArr(currFunc, opdo):
+        error("Can't operate array {}".format(opdo))
+
     opdoT = ptypes.pop()
     paramK += 1
     if paramK <= dic.funcParamSize(currCall):
@@ -1624,6 +1659,12 @@ def generateQuad(check):
             opdoT_der = ptypes.pop()
             opdo_izq = pilaO.pop()
             opdoT_izq = ptypes.pop()
+
+            if dic.chechArr(currFunc, opdo_der):
+                error("Can't operate array {}".format(opdo_der))
+            if dic.chechArr(currFunc, opdo_izq):
+                error("Can't operate array {}".format(opdo_izq))
+
             tempType = semanticCube[opdoT_der][opdoT_izq][op]
             if tempType == 'error':
                 error('Error trying to generate quadruple')
