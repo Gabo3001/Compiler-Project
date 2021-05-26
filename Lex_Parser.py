@@ -14,7 +14,6 @@ currFunc = ''
 currType = ''
 progName = ''
 currVar = ''
-currCall = ''
 paramK = 0
 contReturns = 0
 
@@ -25,6 +24,8 @@ poper = deque()
 ptypes = deque()
 pjumps = deque()
 pdim = deque()
+pcalls = deque()
+pParams = deque()
 
 global_int = 1000
 global_float = 2000
@@ -768,7 +769,7 @@ def p_main(p):
 def p_statement(p):
     '''
     statement : assigment SEMICOLON statementF
-                | void SEMICOLON statementF
+                | void np_checkVoidState SEMICOLON statementF
                 | return SEMICOLON statementF
                 | read SEMICOLON statementF
                 | write SEMICOLON statementF
@@ -943,6 +944,7 @@ def p_factor(p):
     '''
     factor  : L_PAR np_addPar exp R_PAR np_popPar empty
             | varcte empty
+            | void np_checkVoidExp empty
             | factorF
 
     factorF : MINUS var empty
@@ -1475,9 +1477,11 @@ def p_np_addReturn(p):
             if opdoT ==  dic.getFuncType(currFunc):
                 contReturns += 1
                 quadaux.append(Quadruple('return', None, None, opdo))
+                quadaux.append(Quadruple('=', opdo, None, currFunc))
                 if type(opdo) != int:
                     opdo = dic.getVarMemo(currFunc, opdo)
                 quadruples.append(Quadruple('return', None, None, opdo))
+                quadruples.append(Quadruple('=', opdo, None, dic.getVarMemo(progName, currFunc)))
             else:
                 error("Expected return value type {}".format(dic.getFuncType(currFunc)))
     else:
@@ -1611,24 +1615,45 @@ def p_np_endFor(p):
 #Neuralgic point to verify if a function exist in a function call
 def p_np_checkVoid(p):
     'np_checkVoid : '
-    global currCall
-    if dic.funcOccupied(p[-1]):
-        currCall = p[-1]
+    global progName
+    if dic.funcOccupied(p[-1]) and p[-1] != progName:
+        pcalls.append(p[-1])
+        poper.append('(')
+
     else:
         error("Function {} is not declared".format(p[-1]))
+
+#Neuralgic point that check that the function call returns a value
+def p_np_checkVoidExp(p):
+    'np_checkVoidExp : '
+    currCall = pcalls.pop()
+    if dic.getFuncType(currCall) == 'void':
+        error("Function {} does not return any value".format(currCall))
+
+#Neuralgic point that check that the function call doen not return a value
+def p_np_checkVoidState(p):
+    'np_checkVoidState : '
+    currCall = pcalls[-1]
+    if dic.getFuncType(currCall) != 'void':
+        error("Function {} should be void".format(currCall))
+    pcalls.pop()
 
 #Neuralgic point to create ERA cuadruple
 def p_np_eraQuad(p):
     'np_eraQuad : '
-    global currCall, paramK
+    global paramK
+    currCall = pcalls[-1]
     quadruples.append(Quadruple('ERA', currCall, None, None))
     quadaux.append(Quadruple("ERA", currCall, None, None))
+    if paramK > 0:
+        pParams.append(paramK)
     paramK = 0
 
 #Neuralgi point to process parameters on function calls
 def p_np_checkParam(p):
     'np_checkParam : '
-    global currCall, paramK, currFunc
+    global paramK, currFunc
+    currCall = pcalls[-1]
     opdo = pilaO.pop()
 
     if dic.chechArr(currFunc, opdo):
@@ -1648,15 +1673,27 @@ def p_np_checkParam(p):
 #Neuralgic point that mark the end of a function call
 def p_np_endVoid(p):
     'np_endVoid : '
-    global currCall, paramK
+    global paramK, progName
+    currCall = pcalls[-1]
     if paramK > dic.funcParamSize(currCall):
         error("{} takes {} parameters but {} were given".format(currCall, dic.funcParamSize(currCall), paramK))
     elif paramK < dic.funcParamSize(currCall):
         error("{} mising {} parameters".format(currCall, dic.funcParamSize(currCall) - paramK))
     else:
+        poper.pop()
         quadruples.append(Quadruple('GOSUB', currCall, None, None))
         quadaux.append(Quadruple("GOSUB", currCall, None, None))
-
+        if dic.getFuncType(currCall) != 'void' and dic.getFuncType(currCall) != 'program':
+            tempType = dic.getFuncType(currCall)
+            temp = generate_temporal(tempType)
+            quadaux.append(Quadruple('=', currCall, None, temp))
+            quadruples.append(Quadruple("=", dic.getVarMemo(progName, currCall), None, temp))
+            pilaO.append(temp)
+            ptypes.append(tempType)
+        if pParams:
+            paramK = pParams.pop()
+        else:
+            paramK = 0
 
 #Function that will generate the quadruples
 def generateQuad(check):
@@ -1756,7 +1793,7 @@ def printAll():
     print(ptypes)
     print(pjumps)
     #To check quaruples withou memory addresses, use quadaux instead of quadruples
-    for item in quadruples:
+    for item in quadaux:
         print(item.get_quad())
 
 def main():
