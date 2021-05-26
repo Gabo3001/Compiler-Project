@@ -29,14 +29,14 @@ main(){
        read(c);
        e[a] = cAux;   
     }
-    write(e);
-
-    #fail write
     write(e[2]);
 
+    #fail write
+    #write(e);
+
     #fail array sin indices
-    d = e;
-    e = d;
+    #d = e;
+    #e = d;
 
     #fail tipos
     e[8] = a;

@@ -1797,15 +1797,17 @@ def printAll():
         print(item.get_quad())
 
 def main():
-    try:
-        text = input('Insert test doc (.txt): ')
-        with open(text, 'r') as file:
-            parser.parse(file.read())
-    except EOFError:
-        print("Error")
-    
-    print(dic.printAll())
-    printAll()
+    text = input('Insert your program file (.patrol): ')
+    if ".patrol" in text : 
+        try:
+            with open(text, 'r') as file:
+                parser.parse(file.read())
+        except EOFError:
+            print("Error: File doesn't exist")
+        #print(dic.printAll())
+        printAll()
+    else:
+        print("Error: File isn't a Pau Patrol++ program")
     
 #Fucntion to help the virtual machine to get all it need to process the code
 def vmHelper():
