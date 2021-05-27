@@ -14,8 +14,8 @@ currFunc = ''
 currType = ''
 progName = ''
 currVar = ''
-currCall = ''
 paramK = 0
+contReturns = 0
 
 pvars = deque()
 pvarsT = deque()
@@ -23,6 +23,9 @@ pilaO = deque()
 poper = deque()
 ptypes = deque()
 pjumps = deque()
+pdim = deque()
+pcalls = deque()
+pParams = deque()
 
 global_int = 1000
 global_float = 2000
@@ -717,14 +720,13 @@ def p_arr(p):
 
 def p_func(p):
     '''
-    func : typeFunc FUNCTION ID np_addFunc L_PAR funcF
-    '''
-    p[0] = None
+    func : typeFunc FUNCTION ID np_addFunc L_PAR funcT
 
-def p_funcF(p):
-    '''
-    funcF : parameter R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
-           | R_PAR SEMICOLON dec L_CURPAR statement R_CURPAR np_endFunc empty
+    funcT : parameter R_PAR SEMICOLON funcF
+           | R_PAR SEMICOLON funcF
+
+    funcF : dec L_CURPAR statement R_CURPAR np_endFunc empty
+           | L_CURPAR statement R_CURPAR np_endFunc empty
     '''
 
 def p_typeFunc(p):
@@ -741,7 +743,7 @@ def p_typeFunc(p):
 
 def p_paramater(p):
     '''
-    parameter : VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec parameterF
+    parameter : VAR np_getDec COLON typepar np_getVarType np_addParam SEMICOLON np_getDec np_addToDic parameterF
     
     parameterF : parameter
                  | empty
@@ -767,7 +769,7 @@ def p_main(p):
 def p_statement(p):
     '''
     statement : assigment SEMICOLON statementF
-                | void SEMICOLON statementF
+                | void np_checkVoidState SEMICOLON statementF
                 | return SEMICOLON statementF
                 | read SEMICOLON statementF
                 | write SEMICOLON statementF
@@ -794,8 +796,8 @@ def p_void(p):
 
 def p_arrfunc(p):
     '''
-    arrfunc : L_BREAK exp COMMA exp R_BREAK empty
-            | L_BREAK exp R_BREAK empty
+    arrfunc : L_BREAK np_startArr exp np_ftwoDimArr COMMA exp np_ltwoDimArr R_BREAK np_endArr empty
+            | L_BREAK np_startArr exp np_oneDimArr R_BREAK np_endArr empty
     '''
     p[0] = None
 
@@ -807,11 +809,9 @@ def p_return(p):
 
 def p_var(p):
     '''
-    var : VAR varF  
+    var : VAR np_addId varF  
         | ID DOT VAR varF  
     '''
-    if len(p) == 3:
-        p[0] = p[1]
 
 def p_varF(p):
     '''
@@ -858,7 +858,7 @@ def p_if(p):
 
 def p_assigment(p):
     '''
-    assigment : var np_addId assigmentF
+    assigment : var assigmentF
 
     assigmentF : EQUAL np_addOp exp np_doAssign empty 
                 | ope np_addOp exp np_doAssign empty
@@ -882,8 +882,7 @@ def p_conditional(p):
 
 def p_nonconditional(p):
     '''
-    nonconditional : FROM VAR arrfunc nonconditionalF
-                    | FROM VAR np_addId nonconditionalF 
+    nonconditional : FROM var nonconditionalF
 
     nonconditionalF :  EQUAL np_addOp exp np_assingFor TO exp np_checkExp DO L_CURPAR statement R_CURPAR np_endFor empty
     '''
@@ -945,13 +944,17 @@ def p_factor(p):
     '''
     factor  : L_PAR np_addPar exp R_PAR np_popPar empty
             | varcte empty
+            | void np_checkVoidExp empty
+            | factorF
+
+    factorF : MINUS var empty
+            | var empty
     '''
     p[0] = None
 
 def p_varcte(p):
     '''
-    varcte  : var np_addId empty
-            | CTE_INT np_addConstInt empty
+    varcte  : CTE_INT np_addConstInt empty
             | CTE_FLOAT np_addConstFloat empty
             | CTE_CHAR np_addConstChar empty
             | CTE_BOOL np_addConstBool empty
@@ -994,20 +997,21 @@ def p_np_getMainFunc(p):
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
     'np_addFunc : '
-    global currFunc, progName
+    global currFunc, progName, contReturns
     currFunc = p[-1]
     if p[-3] == 'program':
         dic.addFunc(currFunc, "program")
         progName = currFunc
     else:
         if dic.funcOccupied(currFunc):
-            error('Variable "{}" has already been declared'.format(currFunc))
+            error('Function "{}" has already been declared'.format(currFunc))
         else:
             dic.addFunc(currFunc, p[-3], len(quadruples))
             if p[-3] != 'void':
                 pvarsT.append(p[-3])
                 pvars.append(currFunc)
                 addVars(progName)
+                contReturns = 0
 
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
@@ -1057,7 +1061,7 @@ def addVars(key):
         if dic.varOccupied(key,v[0]):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
-            memo = getMemo(key)
+            memo = getMemo(key, lvl1*lvl2)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             pvars.pop()
 
@@ -1070,7 +1074,7 @@ def addVars(key):
             pvars.pop()
 
 #function that returns the memory number of the function
-def getMemo(key):
+def getMemo(key, memChunck = 1):
     global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     memo = ""
     if key == progName:
@@ -1078,44 +1082,44 @@ def getMemo(key):
             if global_int > 1999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_int
-            global_int += 1
+            global_int += memChunck
         elif currType == 'float':
             if global_float > 2999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_float
-            global_float += 1
+            global_float += memChunck
         elif currType == 'char':
             if global_char > 3999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_char
-            global_char += 1
+            global_char += memChunck
         elif currType == 'bool':
             if global_bool > 4999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_bool
-            global_bool += 1
+            global_bool += memChunck
         return memo
     else: 
         if currType == 'int':
             if local_int > 5999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_int
-            local_int += 1
+            local_int += memChunck
         elif currType == 'float':
             if local_float > 6999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_float
-            local_float += 1
+            local_float += memChunck
         elif currType == 'char':
             if local_char > 7999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_char
-            local_char += 1
+            local_char += memChunck
         elif currType == 'bool':
             if local_bool > 8999: 
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_bool
-            local_bool += 1
+            local_bool += memChunck
         return memo
 
 #Function that return memory number of a constant
@@ -1151,10 +1155,11 @@ def get_const_memo(vart):
 #Neuralgic point to process the end of a function
 def p_np_endFunc(p):
     'np_endFunc : '
-    global currFunc, local_int, local_float, local_char, local_bool
+    global currFunc, local_int, local_float, local_char, local_bool, contReturns
+    if dic.getFuncType(currFunc) != 'void' and dic.getFuncType(currFunc) != 'program' and contReturns < 1:
+        error("Function {} expect a return value".format(currFunc))
     quadruples.append(Quadruple('ENDFUNC', None, None, None))
     quadaux.append(Quadruple("ENDFUNC", None, None, None))
-    dic.delVar(currFunc)
     dic.dic[currFunc].memory[0] = local_int - 5000
     dic.dic[currFunc].memory[1] = local_float - 6000
     dic.dic[currFunc].memory[2] = local_char - 7000
@@ -1163,6 +1168,8 @@ def p_np_endFunc(p):
     local_float = 6000
     local_char = 7000
     local_bool = 8000
+    #dic.printFunc(currFunc)
+    dic.delVar(currFunc)
 
 #Neuralgic point to add id in operand stack
 def p_np_addId(p):
@@ -1295,6 +1302,12 @@ def p_np_doAssign(p):
     opdoT_der = ptypes.pop()
     temp = pilaO.pop()
     tempT = ptypes.pop()
+
+    if dic.chechArr(currFunc, opdo_der):
+        error("Can't operate array {}".format(opdo_der))
+    if dic.chechArr(currFunc, temp):
+        error("Can't operate array {}".format(temp))
+
     check = semanticCube[opdoT_der][tempT][op]
     if check != 'error':
         quadaux.append(Quadruple(op, opdo_der, None, temp))
@@ -1306,18 +1319,133 @@ def p_np_doAssign(p):
     else:
         error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
 
+#Neuralgic point to start the process of an array
+def p_np_startArr(p):
+    'np_startArr : '
+    global currFunc
+    opdo = pilaO.pop()
+    ptypes.pop()
+    if dic.isArr(currFunc, opdo):
+        pdim.append((opdo, 1))
+        poper.append('(')
+    else:
+        error("Variable {} have no dimensions".format(opdo))
+
+#Neuralgic point that process a 1 dimensional array
+def p_np_oneDimArr(p):
+    'np_oneDimArr : '
+    global currFunc
+    aux = pdim[-1]
+    opdo = aux[0]
+    if dic.checkOneDim(currFunc, opdo):
+        temp = pilaO[-1]
+        tempT = ptypes.pop()
+        lvl = dic.getLvl1(currFunc, opdo)
+        if tempT != 'int':
+            error("Indexes can only be type int")
+        quadaux.append(Quadruple('VER', temp, 0, lvl))
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
+        quadruples.append(Quadruple('VER', temp, 0, lvl))
+    else:
+        error("Variable {} expect two indexes and recieved one".format(opdo))
+
+#Neuralgic point that process the first part of a 2 dimensional array
+def p_np_ftwoDimArr(p):
+    'np_ftwoDimArr : '
+    aux = pdim.pop()
+    opdo = aux[0]
+    if dic.checkTwoDim(currFunc, opdo):
+        temp = pilaO.pop()
+        tempT = ptypes.pop()
+        lvl = dic.getLvl1(currFunc, opdo)
+        if tempT != 'int':
+            error("Indexes can only be type int")
+        quadaux.append(Quadruple('VER', temp, 0, lvl))
+        tempaux = temp
+        if type(temp) != int:
+            temp = dic.getVarMemo(currFunc, temp)
+        quadruples.append(Quadruple('VER', temp, 0, lvl))
+
+        lvl2 = dic.getLvl2(currFunc, opdo)
+
+        if lvl2 not in const_table:
+            aux = get_const_memo('int')
+            const_table[lvl2] = {
+                'memo': aux,
+                'type': 'int'
+            }
+        d2 = const_table[lvl2]['memo']
+        temp2 = generate_temporal('int')
+        quadaux.append(Quadruple('*', tempaux, d2, temp2))
+        quadruples.append(Quadruple('*', temp, d2, temp2))
+        pilaO.append(temp2)
+        pdim.append((opdo,2))
+    else:
+        error("Variable {} expect one index and recieved two".format(opdo))
+
+#Neuralgic point that process the first part of a 2 dimensional array
+def p_np_ltwoDimArr(p):
+    'np_ltwoDimArr : '
+    aux = pdim[-1]
+    opdo = aux[0]
+    temp = pilaO.pop()
+    tempT = ptypes.pop()
+    lv2 = dic.getLvl2(currFunc, opdo)
+    if tempT != 'int':
+        error("Indexes can only be type int")
+    quadaux.append(Quadruple('VER', temp, 0, lv2))
+    tempaux = temp
+    if type(temp) != int:
+        temp = dic.getVarMemo(currFunc, temp)
+    quadruples.append(Quadruple('VER', temp, 0, lv2))
+
+    temp2 = pilaO.pop()
+    temp3 = generate_temporal('int')
+    quadaux.append(Quadruple('+', tempaux, temp2, temp3))
+    quadruples.append(Quadruple('+', temp, temp2, temp3))
+    pilaO.append(temp3)
+
+#Neuralgic point to process the end of an array
+def p_np_endArr(p):
+    'np_endArr : '
+    global currFunc
+    auxdim = pdim.pop()
+    id = auxdim[0]
+    opdo = pilaO.pop()
+    idmem = dic.getVarMemo(currFunc, id)
+
+    if idmem not in const_table:
+        aux = get_const_memo('int')
+        const_table[idmem] = {
+            'memo': aux,
+            'type': 'int'
+        }
+    virAd = const_table[idmem]['memo']
+    temp = generate_temporal('int')
+    quadaux.append(Quadruple('+', opdo, virAd, temp))
+    if type(opdo) != int:
+        opdo = dic.getVarMemo(currFunc, opdo)
+    quadruples.append(Quadruple('+', opdo, virAd, temp))
+    
+    pilaO.append("(" + str(temp) +  ")")
+    ptypes.append(dic.getVarType(currFunc,id))
+    poper.pop()
+
 #Neuralgic point to generate read quadruple
 def p_np_addRead(p):
     'np_addRead : '
     global currFunc
-    if dic.varOccupied(currFunc, p[-1]):
-        quadaux.append(Quadruple('read', None, None, p[-1]))
-        temp = p[-1]
-        if type(temp) != int:
-            temp = dic.getVarMemo(currFunc, temp)
-        quadruples.append(Quadruple('read', None, None, temp))
-    else: 
-        error('Variable {} not defined'.format(p[-1]))
+    temp = pilaO.pop()
+    ptypes.pop()
+
+    if dic.chechArr(currFunc, temp):
+        error("Can't operate array {}".format(temp))
+
+    quadaux.append(Quadruple('read', None, None, temp))
+    if type(temp) != int:
+        temp = dic.getVarMemo(currFunc, temp)
+    quadruples.append(Quadruple('read', None, None, temp))
 
 #Neuralgic point to generate write quadruple
 def p_np_addWrite(p):
@@ -1326,6 +1454,10 @@ def p_np_addWrite(p):
     if len(pilaO) > 0:
         ptypes.pop()
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('write', None, None, opdo))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1334,14 +1466,26 @@ def p_np_addWrite(p):
 #Neuralgic point to generate return quadruple
 def p_np_addReturn(p):
     'np_addReturn : '
-    global currFunc
-    if len(pilaO) > 0:
-        ptypes.pop()
-        opdo = pilaO.pop()
-        quadaux.append(Quadruple('return', None, None, opdo))
-        if type(opdo) != int:
-            opdo = dic.getVarMemo(currFunc, opdo)
-        quadruples.append(Quadruple('return', None, None, opdo))
+    global currFunc, contReturns
+    if dic.getFuncType(currFunc) != 'void' and dic.getFuncType(currFunc) != 'program':
+        if len(pilaO) > 0:
+            opdoT = ptypes.pop()
+            opdo = pilaO.pop()
+
+            if dic.chechArr(currFunc, opdo):
+                error("Can't operate array {}".format(opdo))
+            if opdoT ==  dic.getFuncType(currFunc):
+                contReturns += 1
+                quadaux.append(Quadruple('return', None, None, opdo))
+                quadaux.append(Quadruple('=', opdo, None, currFunc))
+                if type(opdo) != int:
+                    opdo = dic.getVarMemo(currFunc, opdo)
+                quadruples.append(Quadruple('return', None, None, opdo))
+                quadruples.append(Quadruple('=', opdo, None, dic.getVarMemo(progName, currFunc)))
+            else:
+                error("Expected return value type {}".format(dic.getFuncType(currFunc)))
+    else:
+        error("Function {} can't return any value".format(currFunc))
 
 #Neuralgic point to generate if quadruple
 def p_np_checkBool(p):
@@ -1350,6 +1494,10 @@ def p_np_checkBool(p):
     check = ptypes.pop()
     if check == 'bool':
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('GOTOF', opdo, None, 0))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1400,6 +1548,12 @@ def p_np_assingFor(p):
     opdoT_der = ptypes.pop()
     temp = pilaO.pop()
     tempT = ptypes.pop()
+
+    if dic.chechArr(currFunc, opdo_der):
+        error("Can't operate array {}".format(opdo_der))
+    if dic.chechArr(currFunc, temp):
+        error("Can't operate array {}".format(temp))
+
     if tempT != 'int' or opdoT_der != 'int':
         error('Expeted type int')
     else:
@@ -1423,6 +1577,10 @@ def p_np_checkExp(p):
     check = ptypes.pop()
     if check == 'bool':
         opdo = pilaO.pop()
+
+        if dic.chechArr(currFunc, opdo):
+            error("Can't operate array {}".format(opdo))
+
         quadaux.append(Quadruple('GOTOV', opdo, None, 0))
         if type(opdo) != int:
             opdo = dic.getVarMemo(currFunc, opdo)
@@ -1457,25 +1615,50 @@ def p_np_endFor(p):
 #Neuralgic point to verify if a function exist in a function call
 def p_np_checkVoid(p):
     'np_checkVoid : '
-    global currCall
-    if dic.funcOccupied(p[-1]):
-        currCall = p[-1]
+    global progName
+    if dic.funcOccupied(p[-1]) and p[-1] != progName:
+        pcalls.append(p[-1])
+        poper.append('(')
+
     else:
         error("Function {} is not declared".format(p[-1]))
+
+#Neuralgic point that check that the function call returns a value
+def p_np_checkVoidExp(p):
+    'np_checkVoidExp : '
+    currCall = pcalls.pop()
+    if dic.getFuncType(currCall) == 'void':
+        error("Function {} does not return any value".format(currCall))
+
+#Neuralgic point that check that the function call doen not return a value
+def p_np_checkVoidState(p):
+    'np_checkVoidState : '
+    currCall = pcalls[-1]
+    if dic.getFuncType(currCall) != 'void':
+        error("Function {} should be void".format(currCall))
+    pcalls.pop()
 
 #Neuralgic point to create ERA cuadruple
 def p_np_eraQuad(p):
     'np_eraQuad : '
-    global currCall, paramK
+    global paramK
+    currCall = pcalls[-1]
     quadruples.append(Quadruple('ERA', currCall, None, None))
     quadaux.append(Quadruple("ERA", currCall, None, None))
+    if paramK > 0:
+        pParams.append(paramK)
     paramK = 0
 
 #Neuralgi point to process parameters on function calls
 def p_np_checkParam(p):
     'np_checkParam : '
-    global currCall, paramK, currFunc
+    global paramK, currFunc
+    currCall = pcalls[-1]
     opdo = pilaO.pop()
+
+    if dic.chechArr(currFunc, opdo):
+        error("Can't operate array {}".format(opdo))
+
     opdoT = ptypes.pop()
     paramK += 1
     if paramK <= dic.funcParamSize(currCall):
@@ -1483,22 +1666,34 @@ def p_np_checkParam(p):
             quadaux.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
             if type(opdo) != int:
                 opdo = dic.getVarMemo(currFunc, opdo)
-            quadruples.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
+            quadruples.append(Quadruple('PARAMETER', opdo, None, paramK))
         else: 
             error("Expected type {} on call to function {}".format(dic.funcParam(currCall, paramK), currCall))
 
 #Neuralgic point that mark the end of a function call
 def p_np_endVoid(p):
     'np_endVoid : '
-    global currCall, paramK
+    global paramK, progName
+    currCall = pcalls[-1]
     if paramK > dic.funcParamSize(currCall):
         error("{} takes {} parameters but {} were given".format(currCall, dic.funcParamSize(currCall), paramK))
     elif paramK < dic.funcParamSize(currCall):
         error("{} mising {} parameters".format(currCall, dic.funcParamSize(currCall) - paramK))
     else:
+        poper.pop()
         quadruples.append(Quadruple('GOSUB', currCall, None, None))
         quadaux.append(Quadruple("GOSUB", currCall, None, None))
-
+        if dic.getFuncType(currCall) != 'void' and dic.getFuncType(currCall) != 'program':
+            tempType = dic.getFuncType(currCall)
+            temp = generate_temporal(tempType)
+            quadaux.append(Quadruple('=', currCall, None, temp))
+            quadruples.append(Quadruple("=", dic.getVarMemo(progName, currCall), None, temp))
+            pilaO.append(temp)
+            ptypes.append(tempType)
+        if pParams:
+            paramK = pParams.pop()
+        else:
+            paramK = 0
 
 #Function that will generate the quadruples
 def generateQuad(check):
@@ -1510,6 +1705,12 @@ def generateQuad(check):
             opdoT_der = ptypes.pop()
             opdo_izq = pilaO.pop()
             opdoT_izq = ptypes.pop()
+
+            if dic.chechArr(currFunc, opdo_der):
+                error("Can't operate array {}".format(opdo_der))
+            if dic.chechArr(currFunc, opdo_izq):
+                error("Can't operate array {}".format(opdo_izq))
+
             tempType = semanticCube[opdoT_der][opdoT_izq][op]
             if tempType == 'error':
                 error('Error trying to generate quadruple')
@@ -1581,7 +1782,7 @@ def p_np_endProg(p):
 
 #Function to display errors
 def error(line):
-    print(line)
+    print("Line " + str(lexer.lineno) + ": " + line)
     sys.exit()
 
 parser = yacc.yacc()
@@ -1592,19 +1793,21 @@ def printAll():
     print(ptypes)
     print(pjumps)
     #To check quaruples withou memory addresses, use quadaux instead of quadruples
-    for item in quadruples:
+    for item in quadaux:
         print(item.get_quad())
 
 def main():
-    try:
-        text = input('Insert test doc (.txt): ')
-        with open(text, 'r') as file:
-            parser.parse(file.read())
-    except EOFError:
-        print("Error")
-    
-    #print(dic.printAll())
-    #printAll()
+    text = input('Insert your program file (.patrol): ')
+    if ".patrol" in text : 
+        try:
+            with open(text, 'r') as file:
+                parser.parse(file.read())
+        except EOFError:
+            print("Error: File doesn't exist")
+        #print(dic.printAll())
+        printAll()
+    else:
+        sys.exit("Error: File isn't a Pau Patrol++ program")
     
 #Fucntion to help the virtual machine to get all it need to process the code
 def vmHelper():

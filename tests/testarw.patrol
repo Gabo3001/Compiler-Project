@@ -1,14 +1,14 @@
 program Test3;
 vars
-a, b, c, i: int;
-d, j, k: float;
+a, b, i: int;
+c, d, j, k: float;
 e[30]: char;
 f,g,h: char;
 main(){
     a = 1;
     b = 2 + a;
     read(c);
-    d = d / b;
+    d = c / b;
     write(d);
     read(f,g);
     write(f,g,"Hello World");

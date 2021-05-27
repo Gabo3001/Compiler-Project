@@ -1,0 +1,47 @@
+program Test3;
+vars
+a, b, i[10], j[4,5]: int;
+c: float;
+d, e[30]: char;
+cAux: char;
+
+void function Func1(x:int; y:int; z:int;);
+aux: int;
+{
+    z = 3 * x / (y + 2) ;
+}
+
+
+main(){
+    a = 2;
+    b = a * a * a;
+    c = 4.52;
+    i[a] = 3;
+    i[0] = b - a;
+    j[0,0] = a * j[i[a],10-i[0]];
+    write(j[0,0]);
+    j[a,a+1] = 13;
+    write(j[0,0]);
+    Func1(a, b, i[1]);
+    write(i[1]);
+    from a = 0 to 5 do
+    {
+       read(c);
+       e[a] = cAux;   
+    }
+    write(e[2]);
+
+    #fail write
+    #write(e);
+
+    #fail array sin indices
+    #d = e;
+    #e = d;
+
+    #fail tipos
+    e[8] = a;
+    j[2,2] = c * 10 / 3;
+
+    #fail ver (ejecucion) 
+    j[8,9] = a;
+}
