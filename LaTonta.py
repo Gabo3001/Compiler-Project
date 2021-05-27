@@ -15,10 +15,16 @@ fconst_table = {}
 global_memory = {}
 ongoing = True
 current = 0
+memory = {}
+func = ''
+contPInt = 0
+contPFloat = 0
+contPChar = 0
+contPBool = 0
 
-#BORRAR_____________________________________________________________
-# for item in quadruples:     
-#     print(item.get_quad())
+pFuncs = deque()
+pMemory = deque()
+pJumps = deque()
 
 #Fucntion to handle errors
 def error(l):
@@ -32,31 +38,61 @@ for key in const_table:
 #Get the memory adresses from the global function
 global_memory = dic.getGlobalMem()
 
+#Function that validates that a memory addres exist on a dictionary and noy have none
+def exist(dic, mem, check = "no"):
+    if mem not in dic:
+        error("Stackoverflow")
+    if dic[mem] == None and check != "no":
+        error("Variable without value")
+
+#Function that check if the function is a 
+def checkMem(mem):
+    if type(mem) == str:
+        return getValue(int(mem[1:-1]))
+    else:
+        return mem
+
 #function to get the value of a memory address
 def getValue(mem):
     aux = None
+    mem = checkMem(mem)
     #Global memory
     if mem >= 1000 and mem < 2000:
+        exist(global_memory, mem, "yes")
         aux = int(global_memory[mem])
     elif mem >= 2000 and mem < 3000:
+        exist(global_memory, mem, "yes")
         aux = float(global_memory[mem])
     elif mem >= 3000 and mem < 4000:
+        exist(global_memory, mem, "yes")
         aux = global_memory[mem]
     elif mem >= 4000 and mem < 5000:
+        exist(global_memory, mem, "yes")
         if global_memory[mem] == 'True' or global_memory[mem] == True:
             aux = True
         elif global_memory[mem] != None:
             aux = False
 
     #Local memory
-    # elif mem >= 5000 and mem < 6000:
-    #     aux = 
-    # elif mem >= 6000 and mem < 7000:
-    #     aux = 
-    # elif mem >= 7000 and mem < 8000:
-    #     aux = 
-    # elif mem >= 8000 and mem < 9000:
-    #     aux = 
+    elif mem >= 5000 and mem < 6000:
+        memAux = pMemory[-1]
+        exist(memAux, mem, "yes")
+        aux = int(memAux[mem])
+    elif mem >= 6000 and mem < 7000:
+        memAux = pMemory[-1]
+        exist(memAux, mem, "yes")
+        aux = float(memAux[mem])
+    elif mem >= 7000 and mem < 8000:
+        memAux = pMemory[-1]
+        exist(memAux, mem, "yes")
+        aux = memAux[mem]
+    elif mem >= 8000 and mem < 9000:
+        memAux = pMemory[-1]
+        exist(memAux, mem, "yes")
+        if memAux[mem] == 'True' or memAux[mem] == True:
+            aux = True
+        elif memAux[mem] != None:
+            aux = False
 
     #constant variables
     elif mem >= 9000 and mem < 10000:
@@ -80,16 +116,23 @@ def getValue(mem):
 
 #Function to set value to a memory address
 def setValue(val, mem):
+    mem = checkMem(mem)
     if mem >= 1000 and mem < 5000:
+        exist(global_memory, mem)
         global_memory[mem] = val
-    # else:
-    #     MEMORIA LOCAL
+    elif mem >= 5000 and mem < 9000:
+        memAux = pMemory[-1]
+        exist(memAux, mem)
+        memAux[mem] = val
 
+
+#Function that checks that the recive value is an int
 def check_int(s):
     if s[0] in ('-'):
         return s[1:].isdigit()
     return s.isdigit()
 
+#Function that check that the recieved value correspond with the corresponding var type
 def checkValue(val, mem):
     if mem >= 1000 and mem < 2000 or  mem >= 5000 and mem < 6000:
         if not check_int(val):
@@ -103,6 +146,27 @@ def checkValue(val, mem):
     if mem >= 4000 and mem < 5000 or  mem >= 9000 and mem < 10000:
         if not match(r'(True|False)', val):
             error("Expected type Bool")
+
+#Function that set a value for a parameter
+def setParam(val, pos):
+    global func, memory, contPBool, contPChar, contPFloat, contPInt
+    paramT = dic.getParam(func, pos)
+    if paramT == 'int':
+        exist(memory, 5000+contPInt)
+        memory[5000+contPInt] = val
+        contPInt += 1
+    if paramT == 'float':
+        exist(memory, 6000+contPFloat)
+        memory[6000+contPFloat] = val
+        contPFloat += 1
+    if paramT == 'char':
+        exist(memory, 7000+contPChar)
+        memory[7000+contPChar] = val
+        contPChar += 1
+    if paramT == 'bool':
+        exist(memory, 8000+contPBool)
+        memory[8000+contPBool] = val
+        contPBool += 1
 
 # ***** Execution *****
 while ongoing:
@@ -254,6 +318,44 @@ while ongoing:
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 or aux2
         setValue(result, quadruples[current].getTemp())
+        current += 1
+    #Verify
+    elif quadruples[current].getOp() == 'VER':
+        aux = getValue(quadruples[current].getOpIzq())
+        lim1 = quadruples[current].getOpDer()
+        lim2 = quadruples[current].getTemp()
+        if aux < lim1 or aux > lim2:
+            error("Index out of range")
+        current += 1
+    #ERA
+    elif quadruples[current].getOp() == 'ERA':
+        func = quadruples[current].getOpIzq()
+        memory = dic.getLocalMem(func)
+        current += 1
+    #Parameter
+    elif quadruples[current].getOp() == 'PARAMETER':
+        aux = getValue(quadruples[current].getOpIzq())
+        setParam(aux, quadruples[current].getTemp())
+        current += 1
+    #GOSUB
+    elif quadruples[current].getOp() == 'GOSUB':
+        pMemory.append(memory)
+        pJumps.append(current+1)
+        contPBool = 0
+        contPChar = 0
+        contPFloat = 0
+        contPInt = 0
+        current = dic.getStar(func)
+        pFuncs.append(func)
+    #ENDFUNC
+    elif quadruples[current].getOp() == 'ENDFUNC':
+        pMemory.pop()
+        pFuncs.pop()
+        current = pJumps.pop()
+    #return
+    elif quadruples[current].getOp() == 'return':
+        aux = getValue(quadruples[current].getTemp())
+        setValue(aux, dic.getMemAd(pFuncs[-1]))
         current += 1
     #Endprogram
     elif quadruples[current].getOp() == 'END':

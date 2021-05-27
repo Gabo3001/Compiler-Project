@@ -35,11 +35,12 @@ class Funcfunc:
     self.func_type = func_type
     self.start = start
     self.vars = VarTab()
+    self.memAd = 0
     self.params = []
     self.memory = [0 for i in range(4)] #[Int, Float, Char, Bool]
   
   def printFunc(self):
-    print("Name:{}, Type: {}, Start: {}, Params: {}, Size: {}".format(self.name, self.func_type, self.start, self.params, self.memory))
+    print("Name:{}, Type: {}, Start: {}, Params: {}, Size: {}, {}".format(self.name, self.func_type, self.start, self.params, self.memory, self.memAd))
 
 class DirProcess(Directory):
 # Functions  
@@ -48,6 +49,12 @@ class DirProcess(Directory):
 
   def getFuncType(self, key):
     return self.dic[key].func_type
+
+  def setMemAd(self, key, val):
+    self.dic[key].memAd = val
+
+  def getMemAd(self, key):
+    return self.dic[key].memAd
   
   def funcOccupied(self, key):
     return self.is_occupied(key)
@@ -57,6 +64,12 @@ class DirProcess(Directory):
 
   def funcParamSize(self, key):
     return len(self.dic[key].params)
+
+  def getParam(self, key, pos):
+    return self.dic[key].params[pos-1]
+
+  def getStar(self, key):
+    return self.dic[key].start
 
   def funcPrint(self, name):
     self.dic[name].printFunc()
@@ -120,9 +133,6 @@ class DirProcess(Directory):
   def printAll(self):
     for key in self.dic:
       self.funcPrint(key)
-      if self.dic[key].func_type == "program":
-        for var in self.dic[key].vars.dic:
-          self.varPrint(key, var)
 
   def printFunc(self, key):
     self.funcPrint(key)
@@ -133,7 +143,35 @@ class DirProcess(Directory):
     aux = {}
     for key in self.dic:
       if self.dic[key].func_type == "program":
-        for var in self.dic[key].vars.dic:
-          aux[self.getVarMemo(key, var)] = None
+        #int
+        for i in range(self.dic[key].memory[0]):
+          aux[1000+i] = None
+        #float
+        for i in range(self.dic[key].memory[1]):
+          aux[2000+i] = None
+        #char
+        for i in range(self.dic[key].memory[2]):
+          aux[3000+i] = None
+        #bool
+        for i in range(self.dic[key].memory[3]):
+          aux[4000+i] = None
+    return aux
+
+  def getLocalMem(self, func):
+    aux = {}
+    for key in self.dic:
+      if key == func:
+        #int
+        for i in range(self.dic[key].memory[0]):
+          aux[5000+i] = None
+        #float
+        for i in range(self.dic[key].memory[1]):
+          aux[6000+i] = None
+        #char
+        for i in range(self.dic[key].memory[2]):
+          aux[7000+i] = None
+        #bool
+        for i in range(self.dic[key].memory[3]):
+          aux[8000+i] = None
     return aux
     

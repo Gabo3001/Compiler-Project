@@ -997,7 +997,7 @@ def p_np_getMainFunc(p):
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
     'np_addFunc : '
-    global currFunc, progName, contReturns
+    global currFunc, progName, contReturns, currType
     currFunc = p[-1]
     if p[-3] == 'program':
         dic.addFunc(currFunc, "program")
@@ -1008,9 +1008,10 @@ def p_np_addFunc(p):
         else:
             dic.addFunc(currFunc, p[-3], len(quadruples))
             if p[-3] != 'void':
-                pvarsT.append(p[-3])
+                currType = p[-3]
                 pvars.append(currFunc)
                 addVars(progName)
+                dic.setMemAd(currFunc, dic.getVarMemo(progName, currFunc))
                 contReturns = 0
 
 #Neuralgic point to add variable to vars stack
@@ -1477,11 +1478,9 @@ def p_np_addReturn(p):
             if opdoT ==  dic.getFuncType(currFunc):
                 contReturns += 1
                 quadaux.append(Quadruple('return', None, None, opdo))
-                quadaux.append(Quadruple('=', opdo, None, currFunc))
                 if type(opdo) != int:
                     opdo = dic.getVarMemo(currFunc, opdo)
                 quadruples.append(Quadruple('return', None, None, opdo))
-                quadruples.append(Quadruple('=', opdo, None, dic.getVarMemo(progName, currFunc)))
             else:
                 error("Expected return value type {}".format(dic.getFuncType(currFunc)))
     else:
@@ -1777,6 +1776,12 @@ def generate_temporal(tempType):
 #Neuralgic point to mark the end of the program
 def p_np_endProg(p):
     'np_endProg : '
+    global progName, global_int, global_float, global_char, global_bool
+    dic.dic[progName].memory[0] = global_int - 1000
+    dic.dic[progName].memory[1] = global_float - 2000
+    dic.dic[progName].memory[2] = global_char - 3000
+    dic.dic[progName].memory[3] = global_bool - 4000
+    dic.delVar(progName)
     quadaux.append(Quadruple('END', None, None, None))
     quadruples.append(Quadruple('END', None, None, None))
 
@@ -1793,7 +1798,7 @@ def printAll():
     print(ptypes)
     print(pjumps)
     #To check quaruples withou memory addresses, use quadaux instead of quadruples
-    for item in quadaux:
+    for item in quadruples:
         print(item.get_quad())
 
 def main():
@@ -1803,9 +1808,9 @@ def main():
             with open(text, 'r') as file:
                 parser.parse(file.read())
         except EOFError:
-            print("Error: File doesn't exist")
+            sys.exit("Error: File doesn't exist")
         #print(dic.printAll())
-        printAll()
+        #printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
     
