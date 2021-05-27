@@ -1807,7 +1807,7 @@ def main():
         #print(dic.printAll())
         printAll()
     else:
-        print("Error: File isn't a Pau Patrol++ program")
+        sys.exit("Error: File isn't a Pau Patrol++ program")
     
 #Fucntion to help the virtual machine to get all it need to process the code
 def vmHelper():
