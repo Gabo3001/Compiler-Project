@@ -39,8 +39,8 @@ main(){
     #e = d;
 
     #fail tipos
-    e[8] = a;
-    j[2,2] = c * 10 / 3;
+    #e[8] = a;
+    #j[2,2] = c * 10 / 3;
 
     #fail ver (ejecucion) 
     j[8,9] = a;
