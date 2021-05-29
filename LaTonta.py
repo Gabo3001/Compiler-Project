@@ -356,7 +356,9 @@ while ongoing:
     elif quadruples[current].getOp() == 'return':
         aux = getValue(quadruples[current].getTemp())
         setValue(aux, dic.getMemAd(pFuncs[-1]))
-        current += 1
+        pMemory.pop()
+        pFuncs.pop()
+        current = pJumps.pop()
     #Endprogram
     elif quadruples[current].getOp() == 'END':
         ongoing = False
