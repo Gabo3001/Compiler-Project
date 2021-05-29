@@ -281,7 +281,7 @@ def t_ID(t):
     return t
 
 def t_CTE_FLOAT(t):
-    r'-?\d+\.\d+'
+    r'\d+\.\d+'
     t.value = float(t.value)
     return t
 
@@ -659,12 +659,7 @@ def p_programT(p):
 def p_class(p):
     '''
     class : CLASS ID classT
-    '''
-    # print(p[2])
-    p[0] = None
-
-def p_classT(p):
-    '''
+    
     classT : LESS INHERIT ID GREATER classF
             | classF
     
@@ -942,12 +937,9 @@ def p_term(p):
 def p_factor(p):
     '''
     factor  : L_PAR np_addPar exp R_PAR np_popPar empty
-            | varcte empty
             | void np_checkVoidExp empty
-            | factorF
-
-    factorF : MINUS var empty
-            | var empty
+            | MINUS np_doNegative varcte empty
+            | varcte empty
     '''
     p[0] = None
 
@@ -957,6 +949,7 @@ def p_varcte(p):
             | CTE_FLOAT np_addConstFloat empty
             | CTE_CHAR np_addConstChar empty
             | CTE_BOOL np_addConstBool empty
+            | var empty
     '''
     p[0] = None
 
@@ -1292,6 +1285,19 @@ def p_np_addLogical(p):
 def p_np_addBool(p):
     'np_addBool : '
     generateQuad(['|','&'])
+
+#Neuralgic point that makes the next variable negative
+def p_np_doNegative(p):
+    'np_doNegative : '
+    if -1 not in const_table:
+        aux = get_const_memo('int')
+        const_table[-1] = {
+            'memo': aux,
+            'type': 'int'
+        }
+    pilaO.append(const_table[-1]['memo'])
+    ptypes.append('int')
+    poper.append('*')
 
 #Neuralgic point to generate assigment quadruple
 def p_np_doAssign(p):
@@ -1712,7 +1718,7 @@ def generateQuad(check):
 
             tempType = semanticCube[opdoT_der][opdoT_izq][op]
             if tempType == 'error':
-                error('Error trying to generate quadruple')
+                error('Invalid operation')
             else:
                 temp = generate_temporal(tempType)
                 pilaO.append(temp)
@@ -1810,7 +1816,7 @@ def main():
         except EOFError:
             sys.exit("Error: File doesn't exist")
         #print(dic.printAll())
-        printAll()
+        #printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
     
