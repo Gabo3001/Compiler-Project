@@ -13,7 +13,6 @@ dic = DirProcess()
 currFunc = ''
 currType = ''
 progName = ''
-currVar = ''
 paramK = 0
 contReturns = 0
 
@@ -287,7 +286,7 @@ def t_CTE_FLOAT(t):
     return t
 
 def t_CTE_INT(t):
-    r'-?\d+'
+    r'\d+'
     t.value = int(t.value)
     return t
     
@@ -1541,7 +1540,7 @@ def p_np_endWhile(p):
 #Neuralgic point to assign vaiable insede a for loop
 def p_np_assingFor(p):
     'np_assingFor : '
-    global currVar, currFunc
+    global currFunc
     op = poper.pop()
     opdo_der = pilaO.pop()
     opdoT_der = ptypes.pop()
@@ -1556,7 +1555,6 @@ def p_np_assingFor(p):
     if tempT != 'int' or opdoT_der != 'int':
         error('Expeted type int')
     else:
-        currVar = temp
         quadaux.append(Quadruple(op, opdo_der, None, temp))
         if type(opdo_der) != int:
             opdo_der = dic.getVarMemo(currFunc, opdo_der)
@@ -1565,11 +1563,12 @@ def p_np_assingFor(p):
         quadruples.append(Quadruple(op, opdo_der, None, temp))
         ptypes.append(tempT)
         pilaO.append(temp)
+        pilaO.append(temp)
 
 #Neuralgic point to check resulting expresion and genetra GOTOV quadruple
 def p_np_checkExp(p):
     'np_checkExp : '
-    global currVar, currFunc
+    global currFunc
     poper.append('>')
     generateQuad(['>'])
     pjumps.append(len(quadruples) - 1)
@@ -1591,7 +1590,8 @@ def p_np_checkExp(p):
 #Neuralgic point to process the end of a for loop 
 def p_np_endFor(p):
     'np_endFor : '
-    global currVar, currFunc
+    global currFunc
+    currVar = pilaO.pop()
     if 1 not in const_table:
         aux = get_const_memo('int')
         const_table[p[-1]] = {
@@ -1798,7 +1798,7 @@ def printAll():
     print(ptypes)
     print(pjumps)
     #To check quaruples withou memory addresses, use quadaux instead of quadruples
-    for item in quadruples:
+    for item in quadaux:
         print(item.get_quad())
 
 def main():
@@ -1810,7 +1810,7 @@ def main():
         except EOFError:
             sys.exit("Error: File doesn't exist")
         #print(dic.printAll())
-        #printAll()
+        printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
     
