@@ -1,6 +1,6 @@
 program Test4;
 vars
-gab: int;
+gab, pat: int;
 pau: float;
 
 int function Func1(a:int; b:int;);
@@ -34,9 +34,9 @@ z: int;
 main(){
     gab = 8;
     pau = 17.8;
-    Func1(2,6);
-    Func3(pau);
-    write(gab, pau);
+    pat = Func1(2,6);
+    pau = Func3(pau);
+    write(gab, pau, pat);
     Func2();
     Func4(gab, 2);
 }
