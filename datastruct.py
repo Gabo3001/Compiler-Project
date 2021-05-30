@@ -174,4 +174,7 @@ class DirProcess(Directory):
         for i in range(self.dic[key].memory[3]):
           aux[8000+i] = None
     return aux
+
+  def clearDic(self):
+    self.dic = {}
     

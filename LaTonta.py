@@ -261,7 +261,7 @@ while ongoing:
     #Read
     elif quadruples[current].getOp() == 'read':
         if write:
-            print(write)
+            print(write.replace(r'\n', '\n'))
             write = ''
         aux = input('Enter value: ')
         mem = checkMem(quadruples[current].getTemp())
@@ -369,5 +369,5 @@ while ongoing:
     elif quadruples[current].getOp() == 'END':
         ongoing = False
         if write:
-            print(write)
+            print(write.replace(r'\n', '\n'))
             write = ''
