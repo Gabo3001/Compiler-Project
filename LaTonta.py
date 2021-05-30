@@ -17,6 +17,7 @@ ongoing = True
 current = 0
 memory = {}
 func = ''
+write = ''
 contPInt = 0
 contPFloat = 0
 contPChar = 0
@@ -141,7 +142,7 @@ def checkValue(val, mem):
         if not match(r'-?\d+\.\d+', val):
             error("Expected type Float")
     if mem >= 3000 and mem < 4000 or  mem >= 7000 and mem < 8000:
-        if not match(r"[a-zA-Z0-9!@#$%^&*()]", val) or len(val) > 1:
+        if not match(r".", val) or len(val) > 1:
             error("Expected type Char")
     if mem >= 4000 and mem < 5000 or  mem >= 9000 and mem < 10000:
         if not match(r'(True|False)', val):
@@ -255,13 +256,18 @@ while ongoing:
     #Write
     elif quadruples[current].getOp() == 'write':
         aux = getValue(quadruples[current].getTemp())
-        print(aux)
+        write = write + str(aux)
         current += 1
     #Read
     elif quadruples[current].getOp() == 'read':
+        if write:
+            print(write)
+            write = ''
         aux = input('Enter value: ')
-        checkValue(aux, quadruples[current].getTemp())
-        setValue(aux, quadruples[current].getTemp())
+        mem = checkMem(quadruples[current].getTemp())
+        #print(mem)
+        checkValue(aux, mem)
+        setValue(aux, mem)
         current += 1
     #Greather than
     elif quadruples[current].getOp() == '>':
@@ -324,7 +330,7 @@ while ongoing:
         aux = getValue(quadruples[current].getOpIzq())
         lim1 = quadruples[current].getOpDer()
         lim2 = quadruples[current].getTemp()
-        if aux < lim1 or aux > lim2:
+        if aux < lim1 or aux >= lim2:
             error("Index out of range")
         current += 1
     #ERA
@@ -362,3 +368,6 @@ while ongoing:
     #Endprogram
     elif quadruples[current].getOp() == 'END':
         ongoing = False
+        if write:
+            print(write)
+            write = ''

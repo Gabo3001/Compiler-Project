@@ -141,12 +141,12 @@ t_ignore = ' \t'
 
 #Definition of complex tokens
 def t_CTE_CHAR(t):
-    r"'[a-zA-Z0-9!@#$%^&*()]'"
+    r"'.'"
     t.value = str(t.value)
     return t
 
 def t_CTE_STRING(t):
-    r'\"[\w\d\s\,. ]*\"'
+    r'\".+\"'
     t.value = str(t.value)
     return t
 
@@ -1600,7 +1600,7 @@ def p_np_endFor(p):
     currVar = pilaO.pop()
     if 1 not in const_table:
         aux = get_const_memo('int')
-        const_table[p[-1]] = {
+        const_table[1] = {
             'memo': aux,
             'type': 'int'
         }
