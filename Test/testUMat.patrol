@@ -1,0 +1,78 @@
+program TMatrices;
+vars
+i, j, k, lim, mat1[10,10], mat2[10,10], res[10,10] : int;
+
+
+#imprimir matriz 
+# 1 , 2 , 3
+# 1 , 2 , 3
+# 1 , 2 , 3
+
+void function CrearM(m[10,10]:int; l:int;);
+x, y : int;
+{
+    from x = 0 to l do{
+        from y = 0 to l do{
+            read(m[x,y]);
+        }
+    }  
+}
+
+void function PrintM(m[10,10]:int; l:int);
+x, y : int;
+{
+    write("\n[");
+    from x = 0 to l do{
+        from y = 0 to l do{
+            write(m[x,y], " ");
+        }
+        if(x == l) then{
+            write("]");
+        }
+        write(" \n");
+    }  
+}
+
+main(){
+    write("Multiplicacion de Matrices");
+    write("Ingresa el limite de columnas y filas (menor a 10)");
+    read(lim);
+
+    # Definir matriz x
+    CrearM(mat1; lim);
+    PrintM(mat1);
+
+    # Definir matriz y
+    CrearM(mat2; lim);
+    PrintM(mat2);
+
+
+    write("Suma de Matriz = ");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            res[i,j] = x[i,j] + y[i,j];
+        }
+    }
+    PrintM(res);
+
+    write("Resta de Matriz = ");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            res[i,j] = x[i,j] - y[i,j];
+        }
+    }
+    PrintM(res);
+
+    write("Multiplicacion de Matriz = ");
+    # Multiplicacion Matrices
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            from k = 0 to lim do{
+                res[i,j] += x[i,k] * y[k,j];
+            }
+        }
+    }
+    PrintM(res);
+
+    write("FIN :)");
+}
