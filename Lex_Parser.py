@@ -666,7 +666,7 @@ def p_programT(p):
 
 def p_class(p):
     '''
-    class : CLASS ID np_addFunc LESS INHERIT ID GREATER classT
+    class : CLASS ID np_addFunc LESS INHERIT ID np_inherit GREATER classT
             | CLASS ID np_addFunc classT
     
     classT : SEMICOLON L_CURPAR ATTRIBUTES dec classTT
@@ -1027,6 +1027,21 @@ def p_np_addFunc(p):
                 dic.setMemAd(currFunc, dic.getVarMemo(progName, currFunc))
                 contReturns = 0
 
+#Neuralgic point to inherit a class
+def p_np_inherit(p):
+    'np_inherit : '
+    global arrClases, dic, global_int, global_float, global_char, global_bool
+    father = p[-1]
+    son = p[-5]
+    checkClassExist(father)
+    for i in arrClases:
+        if father == i[0]:
+            dic.getCopy(i[1], son, father)
+    global_int = dic.dic[son].memory[0] + global_int
+    global_float = dic.dic[son].memory[1] + global_float 
+    global_char = dic.dic[son].memory[2] + global_char
+    global_bool = dic.dic[son].memory[3] + global_bool
+    
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
     'np_getDec : '
@@ -1310,7 +1325,8 @@ def check_type_id(check):
         ptypes.append(t)
     elif dic.varOccupied(progName,check):
         ptypes.append(dic.getVarType(progName, check))
-    else: 
+    else:
+        #dic.printAll()
         error('Variable "{}" not defined'.format(check))
 
 #Neuralgic point to add operator in opertator stack
@@ -1947,6 +1963,15 @@ def checkClass(c):
         if c == i[0]:
             error("Class {} has already been declared".format(c))
 
+#Fucntion that checks if a class exist
+def checkClassExist(c):
+    cont = 0
+    for i in arrClases:
+        if c == i[0]:
+            cont += 1
+    if cont == 0:        
+        error("Class {} does not exist".format(c))
+
 #Function to display errors
 def error(line):
     print("Line " + str(lexer.lineno) + ": " + line)
@@ -1971,10 +1996,10 @@ def main():
                 parser.parse(file.read())
         except EOFError:
             sys.exit("Error: File doesn't exist")
-        dic.printAll()
-        for i  in arrClases:
-            i[1].printAll()
-        printAll()
+        # dic.printAll()
+        # for i  in arrClases:
+        #     i[1].printAll()
+        #printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
     

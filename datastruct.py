@@ -1,3 +1,5 @@
+from copy import copy
+
 class Directory:
   #Constructor de objeto hash
   def __init__(self):
@@ -191,6 +193,15 @@ class DirProcess(Directory):
             if i[1] == j[0]:
               dictionary[i[0]] = j[1].getGlobalMem()
     return dictionary
+
+  def getCopy(self, auxDic, son, father):
+    self.dic[son].vars = copy(auxDic.dic[father].vars)
+    for i in range(4):
+      self.dic[son].memory[i] = copy(auxDic.dic[father].memory[i])
+    for key in auxDic.dic:
+      if key != father:
+        self.dic[key] = auxDic.dic[key]
+  
 
   def clearDic(self):
     self.dic = {}
