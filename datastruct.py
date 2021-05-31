@@ -37,7 +37,7 @@ class Funcfunc:
     self.vars = VarTab()
     self.memAd = 0
     self.params = []
-    self.memory = [0 for i in range(4)] #[Int, Float, Char, Bool]
+    self.memory = [0 for i in range(5)] #[Int, Float, Char, Bool, Objects]
   
   def printFunc(self):
     print("Name:{}, Type: {}, Start: {}, Params: {}, Size: {}, {}".format(self.name, self.func_type, self.start, self.params, self.memory, self.memAd))
@@ -125,6 +125,11 @@ class DirProcess(Directory):
   def delVar(self, key):
     del self.dic[key].vars
 
+  def getTypeFromMemo(self, key, mem):
+    for var in self.dic[key].vars.dic:
+      if self.getVarMemo(key, var) == mem:
+        return self.getVarType(key, var)
+
 #Parameters
   def addParam(self, name, type):
     self.dic[name].params.append(type)
@@ -142,7 +147,7 @@ class DirProcess(Directory):
   def getGlobalMem(self):
     aux = {}
     for key in self.dic:
-      if self.dic[key].func_type == "program":
+      if self.dic[key].func_type == "program" or self.dic[key].func_type == "class":
         #int
         for i in range(self.dic[key].memory[0]):
           aux[1000+i] = None
@@ -155,6 +160,9 @@ class DirProcess(Directory):
         #bool
         for i in range(self.dic[key].memory[3]):
           aux[4000+i] = None
+        if type(self.dic[key].memory[4]) != int:
+          for i in self.dic[key].memory[4]:
+            aux[i[0]] = None
     return aux
 
   def getLocalMem(self, func):
@@ -174,6 +182,15 @@ class DirProcess(Directory):
         for i in range(self.dic[key].memory[3]):
           aux[8000+i] = None
     return aux
+
+  def createClassMemo(self, dictionary, arr):
+    for key in self.dic:
+      if self.dic[key].func_type == "program" or self.dic[key].func_type == "class":
+        for i in self.dic[key].memory[4]:
+          for j in arr:
+            if i[1] == j[0]:
+              dictionary[i[0]] = j[1].getGlobalMem()
+    return dictionary
 
   def clearDic(self):
     self.dic = {}
