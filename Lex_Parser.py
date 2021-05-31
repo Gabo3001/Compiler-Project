@@ -17,6 +17,7 @@ auxiliarDic = DirProcess()
 currFunc = ''
 currType = ''
 progName = ''
+arrFunc = ''
 paramK = 0
 contReturns = 0
 
@@ -1317,14 +1318,16 @@ def p_np_addConstString(p):
 
 #Function to check type of ids
 def check_type_id(check):
-    global currFunc
+    global currFunc, arrFunc, progName
     if dic.varOccupied(currFunc,check):
         t = dic.getVarType(currFunc, check)
         if match(r'[A-Z][a-zA-Z0-9]*', t):
             error("Can't opperate Object {}".format(check))
         ptypes.append(t)
+        arrFunc = copy(currFunc)
     elif dic.varOccupied(progName,check):
         ptypes.append(dic.getVarType(progName, check))
+        arrFunc = copy(progName)
     else:
         #dic.printAll()
         error('Variable "{}" not defined'.format(check))
@@ -1407,10 +1410,10 @@ def p_np_doAssign(p):
 #Neuralgic point to start the process of an array
 def p_np_startArr(p):
     'np_startArr : '
-    global currFunc
+    global arrFunc
     opdo = pilaO.pop()
     ptypes.pop()
-    if dic.isArr(currFunc, opdo):
+    if dic.isArr(arrFunc, opdo):
         pdim.append((opdo, 1))
         poper.append('(')
     else:
@@ -1419,13 +1422,13 @@ def p_np_startArr(p):
 #Neuralgic point that process a 1 dimensional array
 def p_np_oneDimArr(p):
     'np_oneDimArr : '
-    global currFunc
+    global arrFunc
     aux = pdim[-1]
     opdo = aux[0]
-    if dic.checkOneDim(currFunc, opdo):
+    if dic.checkOneDim(arrFunc, opdo):
         temp = pilaO[-1]
         tempT = ptypes.pop()
-        lvl = dic.getLvl1(currFunc, opdo)
+        lvl = dic.getLvl1(arrFunc, opdo)
         if tempT != 'int':
             error("Indexes can only be type int")
         quadaux.append(Quadruple('VER', temp, 0, lvl))
@@ -1437,12 +1440,13 @@ def p_np_oneDimArr(p):
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ftwoDimArr(p):
     'np_ftwoDimArr : '
+    global arrFunc
     aux = pdim.pop()
     opdo = aux[0]
-    if dic.checkTwoDim(currFunc, opdo):
+    if dic.checkTwoDim(arrFunc, opdo):
         temp = pilaO.pop()
         tempT = ptypes.pop()
-        lvl = dic.getLvl1(currFunc, opdo)
+        lvl = dic.getLvl1(arrFunc, opdo)
         if tempT != 'int':
             error("Indexes can only be type int")
         quadaux.append(Quadruple('VER', temp, 0, lvl))
@@ -1450,7 +1454,7 @@ def p_np_ftwoDimArr(p):
         temp = changeToMem(temp)
         quadruples.append(Quadruple('VER', temp, 0, lvl))
 
-        lvl2 = dic.getLvl2(currFunc, opdo)
+        lvl2 = dic.getLvl2(arrFunc, opdo)
 
         if lvl2 not in const_table:
             aux = get_const_memo('int')
@@ -1470,11 +1474,12 @@ def p_np_ftwoDimArr(p):
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ltwoDimArr(p):
     'np_ltwoDimArr : '
+    global arrFunc
     aux = pdim[-1]
     opdo = aux[0]
     temp = pilaO.pop()
     tempT = ptypes.pop()
-    lv2 = dic.getLvl2(currFunc, opdo)
+    lv2 = dic.getLvl2(arrFunc, opdo)
     if tempT != 'int':
         error("Indexes can only be type int")
     quadaux.append(Quadruple('VER', temp, 0, lv2))
@@ -1491,11 +1496,11 @@ def p_np_ltwoDimArr(p):
 #Neuralgic point to process the end of an array
 def p_np_endArr(p):
     'np_endArr : '
-    global currFunc
+    global arrFunc
     auxdim = pdim.pop()
     id = auxdim[0]
     opdo = pilaO.pop()
-    idmem = dic.getVarMemo(currFunc, id)
+    idmem = dic.getVarMemo(arrFunc, id)
 
     if idmem not in const_table:
         aux = get_const_memo('int')
@@ -1510,7 +1515,7 @@ def p_np_endArr(p):
     quadruples.append(Quadruple('+', opdo, virAd, temp))
     
     pilaO.append("(" + str(temp) +  ")")
-    ptypes.append(dic.getVarType(currFunc,id))
+    ptypes.append(dic.getVarType(arrFunc,id))
     poper.pop()
 
 #Neuralgic point to generate read quadruple

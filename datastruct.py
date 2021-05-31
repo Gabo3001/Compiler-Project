@@ -195,7 +195,8 @@ class DirProcess(Directory):
     return dictionary
 
   def getCopy(self, auxDic, son, father):
-    self.dic[son].vars = copy(auxDic.dic[father].vars)
+    for v in auxDic.dic[father].vars.dic:
+      self.dic[son].vars.dic[v] = auxDic.dic[father].vars.dic[v]
     for i in range(4):
       self.dic[son].memory[i] = copy(auxDic.dic[father].memory[i])
     for key in auxDic.dic:
