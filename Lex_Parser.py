@@ -7,14 +7,21 @@ import sys
 from datastruct import DirProcess
 from collections import deque
 from ObjQuad import Quadruple
+from copy import copy
+from re import match
+
 
 dic = DirProcess()
+auxiliarDic = DirProcess()
 
 currFunc = ''
 currType = ''
 progName = ''
+arrFunc = ''
 paramK = 0
 contReturns = 0
+
+const_table = {}
 
 pvars = deque()
 pvarsT = deque()
@@ -25,7 +32,14 @@ pjumps = deque()
 pdim = deque()
 pcalls = deque()
 pParams = deque()
+pClassCalls = deque()
 
+arrClases = []
+quadruples = []
+quadaux = []
+
+global_class = 0
+local_class = 500
 global_int = 1000
 global_float = 2000
 global_char = 3000
@@ -39,11 +53,6 @@ const_float = 10000
 const_char = 11000
 const_bool = 12000
 const_string = 13000
-
-const_table = {}
-
-quadruples = []
-quadaux = []
 
 # ***** LEXER *****
 # Tokens
@@ -146,122 +155,122 @@ def t_CTE_CHAR(t):
     return t
 
 def t_CTE_STRING(t):
-    r'\".+\"'
+    r'\"(.*?)\"'
     t.value = str(t.value)
     return t
 
 def t_PROGRAM(t):
-    r'program'
+    r'program\b'
     t.type = 'PROGRAM'
     return t
 
 def t_CLASS(t):
-    r'class'
+    r'class\b'
     t.type = 'CLASS'
     return t 
 
 def t_INHERIT(t):
-    r'inherit'
+    r'inherit\b'
     t.type = 'INHERIT'
     return t 
 
 def t_ATTRIBUTES(t):
-    r'attributes'
+    r'attributes\b'
     t.type = 'ATTRIBUTES'
     return t 
 
 def t_METHODS(t):
-    r'methods'
+    r'methods\b'
     t.type = 'METHODS'
     return t 
 
 def t_VARS(t):
-    r'vars'
+    r'vars\b'
     t.type = 'VARS'
     return t 
 
 def t_FUNCTION(t):
-    r'function'
+    r'function\b'
     t.type = 'FUNCTION'
     return t
 
 def t_MAIN(t):
-    r'main'
+    r'main\b'
     t.type = 'MAIN'
     return t
 
 def t_INT(t):
-    r'int'
+    r'int\b'
     t.type = 'INT'
     return t
 
 def t_FLOAT(t):
-    r'float'
+    r'float\b'
     t.type = 'FLOAT'
     return t
 
 def t_CHAR(t):
-    r'char'
+    r'char\b'
     t.type = 'CHAR'
     return t
 
 def t_BOOL(t):
-    r'bool'
+    r'bool\b'
     t.type = 'BOOL'
     return t
 
 def t_READ(t):
-    r'read'
+    r'read\b'
     t.type = 'READ'
     return t 
 
 def t_WRITE(t):
-    r'write'
+    r'write\b'
     t.type = 'WRITE'
     return t 
 
 def t_RETURN(t):
-    r'return'
+    r'return\b'
     t.type = 'RETURN'
     return t 
 
 def t_VOID(t):
-    r'void'
+    r'void\b'
     t.type = 'VOID'
     return t 
 
 def t_WHILE(t):
-    r'while'
+    r'while\b'
     t.type = 'WHILE'
     return t 
 
 def t_DO(t):
-    r'do'
+    r'do\b'
     t.type = 'DO'
     return t 
 
 def t_FROM(t):
-    r'from'
+    r'from\b'
     t.type = 'FROM'
     return t
 
 def t_TO(t):
-    r'to'
+    r'to\b'
     t.type = 'TO'
     return t
 
 def t_IF(t):
-    r'if'
+    r'if\b'
     t.type = 'IF'
     return t
 
 def t_THEN(t):
-    r'then'
+    r'then\b'
     t.type = 'THEN'
     return t
 
 def t_ELSE(t):
-    r'else'
+    r'else\b'
     t.type = 'ELSE'
     return t 
 
@@ -658,12 +667,19 @@ def p_programT(p):
 
 def p_class(p):
     '''
-    class : CLASS ID classT
+    class : CLASS ID np_addFunc LESS INHERIT ID np_inherit GREATER classT
+            | CLASS ID np_addFunc classT
     
-    classT : LESS INHERIT ID GREATER classF
+    classT : SEMICOLON L_CURPAR ATTRIBUTES dec classTT
+            | SEMICOLON L_CURPAR classTT
+
+    classTT : METHODS func classTTT
             | classF
-    
-    classF : SEMICOLON L_CURPAR ATTRIBUTES dec METHODS func R_CURPAR SEMICOLON empty
+
+    classTTT : func classTTT
+            | classF
+        
+    classF : R_CURPAR SEMICOLON np_endClass empty
     '''
     p[0] = None
 
@@ -729,7 +745,6 @@ def p_typeFunc(p):
               | FLOAT empty
               | CHAR empty
               | BOOL empty
-              | ID empty
               | VOID empty
     '''
     p[0] = p[1]
@@ -750,7 +765,6 @@ def p_typepar(p):
           | FLOAT empty
           | CHAR empty
           | BOOL empty
-          | ID empty
     '''
     p[0] = p[1]
 
@@ -777,7 +791,7 @@ def p_statement(p):
 
 def p_void(p):
     '''
-    void : ID DOT ID L_PAR voidT
+    void : VAR DOT ID np_checkVoidClass L_PAR np_eraQuad voidT
             | ID np_checkVoid L_PAR np_eraQuad voidT
 
     voidT : exp np_checkParam COMMA voidT
@@ -804,7 +818,7 @@ def p_return(p):
 def p_var(p):
     '''
     var : VAR np_addId varF  
-        | ID DOT VAR varF  
+        | VAR DOT VAR np_addClassId varF  
     '''
 
 def p_varF(p):
@@ -989,10 +1003,18 @@ def p_np_getMainFunc(p):
 #Neuralgic point to add function to process dictionary
 def p_np_addFunc(p):
     'np_addFunc : '
-    global currFunc, progName, contReturns, currType
+    global currFunc, progName, contReturns, currType, auxiliarDic, dic
     currFunc = p[-1]
     if p[-3] == 'program':
         dic.addFunc(currFunc, "program")
+        progName = currFunc
+    elif p[-2] == 'class':
+        checkClass(currFunc)
+        auxiliarDic = copy(dic)
+        dic.clearDic()
+        dic.addFunc(currFunc, "class")
+        aux = progName
+        pcalls.append(aux)
         progName = currFunc
     else:
         if dic.funcOccupied(currFunc):
@@ -1006,6 +1028,21 @@ def p_np_addFunc(p):
                 dic.setMemAd(currFunc, dic.getVarMemo(progName, currFunc))
                 contReturns = 0
 
+#Neuralgic point to inherit a class
+def p_np_inherit(p):
+    'np_inherit : '
+    global arrClases, dic, global_int, global_float, global_char, global_bool
+    father = p[-1]
+    son = p[-5]
+    checkClassExist(father)
+    for i in arrClases:
+        if father == i[0]:
+            dic.getCopy(i[1], son, father)
+    global_int = dic.dic[son].memory[0] + global_int
+    global_float = dic.dic[son].memory[1] + global_float 
+    global_char = dic.dic[son].memory[2] + global_char
+    global_bool = dic.dic[son].memory[3] + global_bool
+    
 #Neuralgic point to add variable to vars stack
 def p_np_getDec(p):
     'np_getDec : '
@@ -1019,6 +1056,11 @@ def p_np_getDecArr(p):
 #Neuralgic point to add variable type to vars type stack
 def p_np_getVarType(p):
     'np_getVarType : '
+    global currFunc, progName
+    if match(r'[A-Z][a-zA-Z0-9]*', p[-1]):
+        if currFunc != progName:
+            error("Can't operate objects inside functions")
+        getDic(p[-1])
     pvarsT.append(p[-1])
 
 #Neuralgic point to add parameter in process table and process dictionary
@@ -1054,6 +1096,8 @@ def addVars(key):
         if dic.varOccupied(key,v[0]):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
+            if match(r'[A-Z][a-zA-Z0-9]*', currType):
+                error("Can't hanble lists of objects")
             memo = getMemo(key, lvl1*lvl2)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             pvars.pop()
@@ -1068,7 +1112,7 @@ def addVars(key):
 
 #function that returns the memory number of the function
 def getMemo(key, memChunck = 1):
-    global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
+    global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool, global_class, local_class
     memo = ""
     if key == progName:
         if currType == 'int':
@@ -1091,7 +1135,11 @@ def getMemo(key, memChunck = 1):
                 error('Limit of variables of type {} reached'.format(currType))
             memo = global_bool
             global_bool += memChunck
-        return memo
+        elif match(r'[A-Z][a-zA-Z0-9]*', currType):
+            if global_class > 499: 
+                error('Limit of classes reached'.format(currType))
+            memo = global_class
+            global_class += memChunck
     else: 
         if currType == 'int':
             if local_int > 5999: 
@@ -1113,7 +1161,12 @@ def getMemo(key, memChunck = 1):
                 error('Limit of variables of type {} reached'.format(currType))
             memo = local_bool
             local_bool += memChunck
-        return memo
+        elif match(r'[A-Z][a-zA-Z0-9]*', currType):
+            if local_class > 999: 
+                error('Limit of classes reached'.format(currType))
+            memo = local_class
+            local_class += memChunck
+    return memo
 
 #Function that return memory number of a constant
 def get_const_memo(vart):
@@ -1148,8 +1201,8 @@ def get_const_memo(vart):
 #Neuralgic point to process the end of a function
 def p_np_endFunc(p):
     'np_endFunc : '
-    global currFunc, local_int, local_float, local_char, local_bool, contReturns
-    if dic.getFuncType(currFunc) != 'void' and dic.getFuncType(currFunc) != 'program' and contReturns < 1:
+    global currFunc, local_int, local_float, local_char, local_bool, contReturns, local_class
+    if dic.getFuncType(currFunc) != 'void' and  dic.getFuncType(currFunc) != 'program' and contReturns < 1:
         error("Function {} expect a return value".format(currFunc))
     quadruples.append(Quadruple('ENDFUNC', None, None, None))
     quadaux.append(Quadruple("ENDFUNC", None, None, None))
@@ -1157,10 +1210,16 @@ def p_np_endFunc(p):
     dic.dic[currFunc].memory[1] = local_float - 6000
     dic.dic[currFunc].memory[2] = local_char - 7000
     dic.dic[currFunc].memory[3] = local_bool - 8000
+    if local_class > 500:
+        arraux = []
+        for i in range(local_class-500):
+            arraux.append((i, dic.getTypeFromMemo(currFunc, i)))
+        dic.dic[currFunc].memory[4] = arraux
     local_int = 5000
     local_float = 6000
     local_char = 7000
     local_bool = 8000
+    local_class = 500
     #dic.printFunc(currFunc)
     dic.delVar(currFunc)
 
@@ -1169,6 +1228,23 @@ def p_np_addId(p):
     'np_addId : '
     check_type_id(p[-1])
     pilaO.append(p[-1])
+
+#Neuralgic point to add a class id in operand stack
+def p_np_addClassId(p):
+    'np_addClassId : '
+    global currFunc
+    varCall = p[-3]
+    var = p[-1]
+    cName = dic.getVarType(currFunc, varCall)
+    auxDic = getDic(cName, varCall)
+    if auxDic.varOccupied(cName,var):
+        ptypes.append(auxDic.getVarType(cName, var))
+    else: 
+        error('Variable "{}" not defined on Class {}'.format(var, cName))
+
+    memaux = auxDic.getVarMemo(cName, var)
+    pilaO.append(str(dic.getVarMemo(currFunc, varCall)) + '.' + str(memaux))
+
 
 #Neuralgic point that add constant int in operand stack
 def p_np_addConstInt(p):
@@ -1242,10 +1318,18 @@ def p_np_addConstString(p):
 
 #Function to check type of ids
 def check_type_id(check):
-    global currFunc
+    global currFunc, arrFunc, progName
     if dic.varOccupied(currFunc,check):
-        ptypes.append(dic.getVarType(currFunc, check))
-    else: 
+        t = dic.getVarType(currFunc, check)
+        if match(r'[A-Z][a-zA-Z0-9]*', t):
+            error("Can't opperate Object {}".format(check))
+        ptypes.append(t)
+        arrFunc = copy(currFunc)
+    elif dic.varOccupied(progName,check):
+        ptypes.append(dic.getVarType(progName, check))
+        arrFunc = copy(progName)
+    else:
+        #dic.printAll()
         error('Variable "{}" not defined'.format(check))
 
 #Neuralgic point to add operator in opertator stack
@@ -1317,10 +1401,8 @@ def p_np_doAssign(p):
     check = semanticCube[opdoT_der][tempT][op]
     if check != 'error':
         quadaux.append(Quadruple(op, opdo_der, None, temp))
-        if type(opdo_der) != int:
-            opdo_der = dic.getVarMemo(currFunc, opdo_der)
-        if type(temp) != int:
-            temp = dic.getVarMemo(currFunc, temp)
+        opdo_der = changeToMem(opdo_der)
+        temp = changeToMem(temp)
         quadruples.append(Quadruple(op, opdo_der, None, temp))
     else:
         error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
@@ -1328,10 +1410,10 @@ def p_np_doAssign(p):
 #Neuralgic point to start the process of an array
 def p_np_startArr(p):
     'np_startArr : '
-    global currFunc
+    global arrFunc
     opdo = pilaO.pop()
     ptypes.pop()
-    if dic.isArr(currFunc, opdo):
+    if dic.isArr(arrFunc, opdo):
         pdim.append((opdo, 1))
         poper.append('(')
     else:
@@ -1340,18 +1422,17 @@ def p_np_startArr(p):
 #Neuralgic point that process a 1 dimensional array
 def p_np_oneDimArr(p):
     'np_oneDimArr : '
-    global currFunc
+    global arrFunc
     aux = pdim[-1]
     opdo = aux[0]
-    if dic.checkOneDim(currFunc, opdo):
+    if dic.checkOneDim(arrFunc, opdo):
         temp = pilaO[-1]
         tempT = ptypes.pop()
-        lvl = dic.getLvl1(currFunc, opdo)
+        lvl = dic.getLvl1(arrFunc, opdo)
         if tempT != 'int':
             error("Indexes can only be type int")
         quadaux.append(Quadruple('VER', temp, 0, lvl))
-        if type(temp) != int:
-            temp = dic.getVarMemo(currFunc, temp)
+        temp = changeToMem(temp)
         quadruples.append(Quadruple('VER', temp, 0, lvl))
     else:
         error("Variable {} expect two indexes and recieved one".format(opdo))
@@ -1359,21 +1440,21 @@ def p_np_oneDimArr(p):
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ftwoDimArr(p):
     'np_ftwoDimArr : '
+    global arrFunc
     aux = pdim.pop()
     opdo = aux[0]
-    if dic.checkTwoDim(currFunc, opdo):
+    if dic.checkTwoDim(arrFunc, opdo):
         temp = pilaO.pop()
         tempT = ptypes.pop()
-        lvl = dic.getLvl1(currFunc, opdo)
+        lvl = dic.getLvl1(arrFunc, opdo)
         if tempT != 'int':
             error("Indexes can only be type int")
         quadaux.append(Quadruple('VER', temp, 0, lvl))
         tempaux = temp
-        if type(temp) != int:
-            temp = dic.getVarMemo(currFunc, temp)
+        temp = changeToMem(temp)
         quadruples.append(Quadruple('VER', temp, 0, lvl))
 
-        lvl2 = dic.getLvl2(currFunc, opdo)
+        lvl2 = dic.getLvl2(arrFunc, opdo)
 
         if lvl2 not in const_table:
             aux = get_const_memo('int')
@@ -1393,17 +1474,17 @@ def p_np_ftwoDimArr(p):
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ltwoDimArr(p):
     'np_ltwoDimArr : '
+    global arrFunc
     aux = pdim[-1]
     opdo = aux[0]
     temp = pilaO.pop()
     tempT = ptypes.pop()
-    lv2 = dic.getLvl2(currFunc, opdo)
+    lv2 = dic.getLvl2(arrFunc, opdo)
     if tempT != 'int':
         error("Indexes can only be type int")
     quadaux.append(Quadruple('VER', temp, 0, lv2))
     tempaux = temp
-    if type(temp) != int:
-        temp = dic.getVarMemo(currFunc, temp)
+    temp = changeToMem(temp)
     quadruples.append(Quadruple('VER', temp, 0, lv2))
 
     temp2 = pilaO.pop()
@@ -1415,11 +1496,11 @@ def p_np_ltwoDimArr(p):
 #Neuralgic point to process the end of an array
 def p_np_endArr(p):
     'np_endArr : '
-    global currFunc
+    global arrFunc
     auxdim = pdim.pop()
     id = auxdim[0]
     opdo = pilaO.pop()
-    idmem = dic.getVarMemo(currFunc, id)
+    idmem = dic.getVarMemo(arrFunc, id)
 
     if idmem not in const_table:
         aux = get_const_memo('int')
@@ -1430,12 +1511,11 @@ def p_np_endArr(p):
     virAd = const_table[idmem]['memo']
     temp = generate_temporal('int')
     quadaux.append(Quadruple('+', opdo, virAd, temp))
-    if type(opdo) != int:
-        opdo = dic.getVarMemo(currFunc, opdo)
+    opdo = changeToMem(opdo)
     quadruples.append(Quadruple('+', opdo, virAd, temp))
     
     pilaO.append("(" + str(temp) +  ")")
-    ptypes.append(dic.getVarType(currFunc,id))
+    ptypes.append(dic.getVarType(arrFunc,id))
     poper.pop()
 
 #Neuralgic point to generate read quadruple
@@ -1449,8 +1529,7 @@ def p_np_addRead(p):
         error("Can't operate array {}".format(temp))
 
     quadaux.append(Quadruple('read', None, None, temp))
-    if type(temp) != int:
-        temp = dic.getVarMemo(currFunc, temp)
+    temp = changeToMem(temp)
     quadruples.append(Quadruple('read', None, None, temp))
 
 #Neuralgic point to generate write quadruple
@@ -1465,8 +1544,7 @@ def p_np_addWrite(p):
             error("Can't operate array {}".format(opdo))
 
         quadaux.append(Quadruple('write', None, None, opdo))
-        if type(opdo) != int:
-            opdo = dic.getVarMemo(currFunc, opdo)
+        opdo = changeToMem(opdo)
         quadruples.append(Quadruple('write', None, None, opdo))
 
 #Neuralgic point to generate return quadruple
@@ -1483,8 +1561,7 @@ def p_np_addReturn(p):
             if opdoT ==  dic.getFuncType(currFunc):
                 contReturns += 1
                 quadaux.append(Quadruple('return', None, None, opdo))
-                if type(opdo) != int:
-                    opdo = dic.getVarMemo(currFunc, opdo)
+                opdo = changeToMem(opdo)
                 quadruples.append(Quadruple('return', None, None, opdo))
             else:
                 error("Expected return value type {}".format(dic.getFuncType(currFunc)))
@@ -1503,8 +1580,7 @@ def p_np_checkBool(p):
             error("Can't operate array {}".format(opdo))
 
         quadaux.append(Quadruple('GOTOF', opdo, None, 0))
-        if type(opdo) != int:
-            opdo = dic.getVarMemo(currFunc, opdo)
+        opdo = changeToMem(opdo)
         quadruples.append(Quadruple('GOTOF', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
@@ -1562,10 +1638,8 @@ def p_np_assingFor(p):
         error('Expeted type int')
     else:
         quadaux.append(Quadruple(op, opdo_der, None, temp))
-        if type(opdo_der) != int:
-            opdo_der = dic.getVarMemo(currFunc, opdo_der)
-        if type(temp) != int:
-            temp = dic.getVarMemo(currFunc, temp)
+        opdo_der = changeToMem(opdo_der)
+        temp = changeToMem(temp)
         quadruples.append(Quadruple(op, opdo_der, None, temp))
         ptypes.append(tempT)
         pilaO.append(temp)
@@ -1586,8 +1660,7 @@ def p_np_checkExp(p):
             error("Can't operate array {}".format(opdo))
 
         quadaux.append(Quadruple('GOTOV', opdo, None, 0))
-        if type(opdo) != int:
-            opdo = dic.getVarMemo(currFunc, opdo)
+        opdo = changeToMem(opdo)
         quadruples.append(Quadruple('GOTOV', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
@@ -1606,8 +1679,7 @@ def p_np_endFor(p):
         }
     const = (const_table[1]['memo'])
     quadaux.append(Quadruple('+=', const, None, currVar))
-    if type(currVar) != int:
-        currVar = dic.getVarMemo(currFunc, currVar)
+    currVar = changeToMem(currVar)
     quadruples.append(Quadruple('+=', const, None, currVar))
     startW = pjumps.pop()
     temp = pjumps.pop()
@@ -1628,20 +1700,56 @@ def p_np_checkVoid(p):
     else:
         error("Function {} is not declared".format(p[-1]))
 
+#Neuralgic point to verify if a function exist in a function call on a class
+def p_np_checkVoidClass(p):
+    'np_checkVoidClass : '
+    global currFunc
+    vcall = p[-3]
+    cName = dic.getVarType(currFunc, vcall)
+    memaux = dic.getVarMemo(currFunc, vcall)
+    fName = p[-1]
+    auxDic = getDic(cName, vcall)
+    if auxDic.funcOccupied(fName) and fName != cName:
+        pcalls.append(str(memaux) + '.' + str(cName) + '.' + str(fName))
+        poper.append('(')
+        pClassCalls.append(cName)
+    else:
+        error("Function {} is not declared on Class {}".format(fName, cName))
+
+
 #Neuralgic point that check that the function call returns a value
 def p_np_checkVoidExp(p):
     'np_checkVoidExp : '
     currCall = pcalls.pop()
-    if dic.getFuncType(currCall) == 'void':
-        error("Function {} does not return any value".format(currCall))
+    if pClassCalls:
+        curCallaux = currCall.split('.')
+        auxDic = getDic(pClassCalls[-1])
+        pClassCalls.pop()
+        if auxDic.getFuncType(curCallaux[2]) == 'void':
+            error("Function {} does not return any value".format(curCallaux[2]))
+    else:
+        auxDic = copy(dic)
+        if auxDic.getFuncType(currCall) == 'void':
+            error("Function {} does not return any value".format(currCall))
+
 
 #Neuralgic point that check that the function call doen not return a value
 def p_np_checkVoidState(p):
     'np_checkVoidState : '
-    currCall = pcalls[-1]
-    if dic.getFuncType(currCall) != 'void':
-        error("Function {} should be void".format(currCall))
-    pcalls.pop()
+    currCall = pcalls.pop()
+    if pClassCalls:
+        curCallaux = currCall.split('.')
+        auxDic = getDic(pClassCalls[-1])
+        pClassCalls.pop()
+        if auxDic.getFuncType(curCallaux[2]) != 'void':
+            error("Function {} should be void".format(curCallaux[2]))
+    else:
+        auxDic = copy(dic)
+        if auxDic.getFuncType(currCall) != 'void':
+            error("Function {} should be void".format(currCall))
+
+    
+    
 
 #Neuralgic point to create ERA cuadruple
 def p_np_eraQuad(p):
@@ -1661,38 +1769,59 @@ def p_np_checkParam(p):
     currCall = pcalls[-1]
     opdo = pilaO.pop()
 
+    if pClassCalls:
+        auxDic = getDic(pClassCalls[-1])
+        curCallaux = currCall.split('.')
+        currCall = curCallaux[2]
+    else:
+        auxDic = copy(dic)
+
     if dic.chechArr(currFunc, opdo):
         error("Can't operate array {}".format(opdo))
 
     opdoT = ptypes.pop()
     paramK += 1
-    if paramK <= dic.funcParamSize(currCall):
-        if opdoT == dic.funcParam(currCall, paramK):
+    if paramK <= auxDic.funcParamSize(currCall):
+        if opdoT == auxDic.funcParam(currCall, paramK):
             quadaux.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
-            if type(opdo) != int:
-                opdo = dic.getVarMemo(currFunc, opdo)
+            opdo = changeToMem(opdo)
             quadruples.append(Quadruple('PARAMETER', opdo, None, paramK))
         else: 
-            error("Expected type {} on call to function {}".format(dic.funcParam(currCall, paramK), currCall))
+            error("Expected type {} on call to function {}".format(auxDic.funcParam(currCall, paramK), currCall))
 
 #Neuralgic point that mark the end of a function call
 def p_np_endVoid(p):
     'np_endVoid : '
     global paramK, progName
     currCall = pcalls[-1]
-    if paramK > dic.funcParamSize(currCall):
-        error("{} takes {} parameters but {} were given".format(currCall, dic.funcParamSize(currCall), paramK))
-    elif paramK < dic.funcParamSize(currCall):
-        error("{} mising {} parameters".format(currCall, dic.funcParamSize(currCall) - paramK))
+
+    if pClassCalls:
+        auxDic = getDic(pClassCalls[-1])
+        pName = pClassCalls[-1]
+        curCallaux = currCall.split('.')
+        currFunc = curCallaux[2]
+    else:
+        auxDic = copy(dic)
+        pName = progName
+        currFunc = currCall
+
+    if paramK > auxDic.funcParamSize(currFunc):
+        error("{} takes {} parameters but {} were given".format(currFunc, auxDic.funcParamSize(currFunc), paramK))
+    elif paramK < auxDic.funcParamSize(currFunc):
+        error("{} mising {} parameters".format(currFunc, auxDic.funcParamSize(currFunc) - paramK))
     else:
         poper.pop()
         quadruples.append(Quadruple('GOSUB', currCall, None, None))
         quadaux.append(Quadruple("GOSUB", currCall, None, None))
-        if dic.getFuncType(currCall) != 'void' and dic.getFuncType(currCall) != 'program':
-            tempType = dic.getFuncType(currCall)
+        if auxDic.getFuncType(currFunc) != 'void' and auxDic.getFuncType(currFunc) != 'program':
+            tempType = auxDic.getFuncType(currFunc)
             temp = generate_temporal(tempType)
-            quadaux.append(Quadruple('=', currCall, None, temp))
-            quadruples.append(Quadruple("=", dic.getVarMemo(progName, currCall), None, temp))
+            if "curCallaux" in locals():
+                quadaux.append(Quadruple('=', curCallaux[0] + '.' + currFunc, None, temp))
+                quadruples.append(Quadruple("=", curCallaux[0] + '.' + str(auxDic.getVarMemo(pName, currFunc)), None, temp))
+            else:
+                quadaux.append(Quadruple('=', currFunc, None, temp))
+                quadruples.append(Quadruple("=", auxDic.getVarMemo(pName, currFunc), None, temp))
             pilaO.append(temp)
             ptypes.append(tempType)
         if pParams:
@@ -1724,10 +1853,8 @@ def generateQuad(check):
                 pilaO.append(temp)
                 ptypes.append(tempType)
                 quadaux.append(Quadruple(op, opdo_izq, opdo_der, temp))
-                if type(opdo_izq) != int:
-                    opdo_izq = dic.getVarMemo(currFunc, opdo_izq)
-                if type(opdo_der) != int:
-                    opdo_der = dic.getVarMemo(currFunc, opdo_der)
+                opdo_izq = changeToMem(opdo_izq)
+                opdo_der = changeToMem(opdo_der)
                 quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))
 
 #function to generate temporal
@@ -1755,7 +1882,6 @@ def generate_temporal(tempType):
                 error('Limit of variables of type {} reached'.format(tempType))
             temp = global_bool
             global_bool += 1
-        return temp
     else:
         if tempType == 'int':
             if local_int > 5999: 
@@ -1777,19 +1903,79 @@ def generate_temporal(tempType):
                 error('Limit of variables of type {} reached'.format(tempType))
             temp = local_bool
             local_bool += 1
-        return temp
+    return temp
         
 #Neuralgic point to mark the end of the program
 def p_np_endProg(p):
     'np_endProg : '
-    global progName, global_int, global_float, global_char, global_bool
+    global progName, global_int, global_float, global_char, global_bool, global_class
     dic.dic[progName].memory[0] = global_int - 1000
     dic.dic[progName].memory[1] = global_float - 2000
     dic.dic[progName].memory[2] = global_char - 3000
     dic.dic[progName].memory[3] = global_bool - 4000
+    if global_class > 0:
+        arraux = []
+        for i in range(global_class):
+            arraux.append((i, dic.getTypeFromMemo(progName, i)))
+        dic.dic[progName].memory[4] = arraux
+        
     dic.delVar(progName)
     quadaux.append(Quadruple('END', None, None, None))
     quadruples.append(Quadruple('END', None, None, None))
+
+#Neuralgic point that marks the end of a class
+def p_np_endClass(p):
+    'np_endClass : '
+    global global_int, global_float, global_char, global_bool, arrClases, currFunc, progName, dic, auxiliarDic
+    dic.dic[progName].memory[0] = global_int - 1000
+    dic.dic[progName].memory[1] = global_float - 2000
+    dic.dic[progName].memory[2] = global_char - 3000
+    dic.dic[progName].memory[3] = global_bool - 4000
+    dicAux = copy(dic)
+    arrClases.append((progName, dicAux))
+    dic.clearDic()
+    dic = copy(auxiliarDic)
+    global_int = 1000
+    global_float = 2000
+    global_char = 3000
+    global_bool = 4000
+    progName =  pcalls.pop()
+    currFunc = progName
+
+#Function that change a variable name into its memory address
+def changeToMem(var):
+    global currFunc, progName
+    if type(var) != int and not match(r'\d+\.\d+', var):
+        if dic.varOccupied(currFunc,var):
+            var = dic.getVarMemo(currFunc, var)
+        elif dic.varOccupied(progName,var):
+            var = dic.getVarMemo(progName, var)
+    return var
+
+#Function to get the dictionary a specific Class
+def getDic(c, var = "N"):
+    for i in arrClases:
+        if c == i[0]:
+            return i[1]
+    if var == 'N':
+        error("Class {} not defined".format(c))
+    else:
+        error("Object {} not defined".format(var))
+
+#Fucntion that checks if a class has alredy been declared
+def checkClass(c):
+    for i in arrClases:
+        if c == i[0]:
+            error("Class {} has already been declared".format(c))
+
+#Fucntion that checks if a class exist
+def checkClassExist(c):
+    cont = 0
+    for i in arrClases:
+        if c == i[0]:
+            cont += 1
+    if cont == 0:        
+        error("Class {} does not exist".format(c))
 
 #Function to display errors
 def error(line):
@@ -1804,8 +1990,8 @@ def printAll():
     print(ptypes)
     print(pjumps)
     #To check quaruples withou memory addresses, use quadaux instead of quadruples
-    for item in quadaux:
-        print(item.get_quad())
+    for index, item in enumerate(quadruples):
+        print(index, item.get_quad())
 
 def main():
     text = input('Insert your program file (.patrol): ')
@@ -1815,7 +2001,9 @@ def main():
                 parser.parse(file.read())
         except EOFError:
             sys.exit("Error: File doesn't exist")
-        #print(dic.printAll())
+        # dic.printAll()
+        # for i  in arrClases:
+        #     i[1].printAll()
         #printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
@@ -1826,10 +2014,10 @@ def vmHelper():
     out = {
         'dictionary': dic,
         'const_table': const_table,
-        'quadruples': quadruples
+        'quadruples': quadruples,
+        'arrClases': arrClases
     }
     return out
 
 if __name__ == "__main__":
     main()
-

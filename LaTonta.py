@@ -10,9 +10,11 @@ d = Lex_Parser.vmHelper()
 dic = d['dictionary']
 const_table = d['const_table']
 quadruples = d['quadruples']
+arrClases = d["arrClases"]
 
 fconst_table = {}
 global_memory = {}
+aux_global_memory = {}
 ongoing = True
 current = 0
 memory = {}
@@ -38,6 +40,9 @@ for key in const_table:
 
 #Get the memory adresses from the global function
 global_memory = dic.getGlobalMem()
+if 0 in global_memory.keys():
+    global_memory = dic.createClassMemo(global_memory, arrClases)
+
 
 #Function that validates that a memory addres exist on a dictionary and noy have none
 def exist(dic, mem, check = "no"):
@@ -48,67 +53,75 @@ def exist(dic, mem, check = "no"):
 
 #Function that check if the function is a 
 def checkMem(mem):
-    if type(mem) == str:
+    if type(mem) == str and mem[0] == '(':
         return getValue(int(mem[1:-1]))
+    elif type(mem) == str:
+        aux = mem.split('.')
+        return int(aux[0])
     else:
         return mem
 
 #function to get the value of a memory address
 def getValue(mem):
     aux = None
-    mem = checkMem(mem)
+    fmem = checkMem(mem)
     #Global memory
-    if mem >= 1000 and mem < 2000:
-        exist(global_memory, mem, "yes")
-        aux = int(global_memory[mem])
-    elif mem >= 2000 and mem < 3000:
-        exist(global_memory, mem, "yes")
-        aux = float(global_memory[mem])
-    elif mem >= 3000 and mem < 4000:
-        exist(global_memory, mem, "yes")
-        aux = global_memory[mem]
-    elif mem >= 4000 and mem < 5000:
-        exist(global_memory, mem, "yes")
-        if global_memory[mem] == 'True' or global_memory[mem] == True:
+    if fmem >= 1000 and fmem < 2000:
+        exist(global_memory, fmem, "yes")
+        aux = int(global_memory[fmem])
+    elif fmem >= 2000 and fmem < 3000:
+        exist(global_memory, fmem, "yes")
+        aux = float(global_memory[fmem])
+    elif fmem >= 3000 and fmem < 4000:
+        exist(global_memory, fmem, "yes")
+        aux = global_memory[fmem]
+    elif fmem >= 4000 and fmem < 5000:
+        exist(global_memory, fmem, "yes")
+        if global_memory[fmem] == 'True' or global_memory[fmem] == True:
             aux = True
-        elif global_memory[mem] != None:
+        elif global_memory[fmem] != None:
             aux = False
+    elif fmem >= 0 and fmem < 500:
+        exist(global_memory, fmem, "yes")
+        secondmem = mem.split('.')
+        exist(global_memory[fmem], int(secondmem[1]), "yes")
+        aux = global_memory[fmem][int(secondmem[1])]
 
     #Local memory
-    elif mem >= 5000 and mem < 6000:
+    elif fmem >= 5000 and fmem < 6000:
         memAux = pMemory[-1]
-        exist(memAux, mem, "yes")
-        aux = int(memAux[mem])
-    elif mem >= 6000 and mem < 7000:
+        exist(memAux, fmem, "yes")
+        aux = int(memAux[fmem])
+    elif fmem >= 6000 and fmem < 7000:
         memAux = pMemory[-1]
-        exist(memAux, mem, "yes")
-        aux = float(memAux[mem])
-    elif mem >= 7000 and mem < 8000:
+        exist(memAux, fmem, "yes")
+        aux = float(memAux[fmem])
+    elif fmem >= 7000 and fmem < 8000:
         memAux = pMemory[-1]
-        exist(memAux, mem, "yes")
-        aux = memAux[mem]
-    elif mem >= 8000 and mem < 9000:
+        exist(memAux, fmem, "yes")
+        aux = memAux[fmem]
+    elif fmem >= 8000 and fmem < 9000:
         memAux = pMemory[-1]
-        exist(memAux, mem, "yes")
-        if memAux[mem] == 'True' or memAux[mem] == True:
+        exist(memAux, fmem, "yes")
+        if memAux[fmem] == 'True' or memAux[fmem] == True:
             aux = True
-        elif memAux[mem] != None:
+        elif memAux[fmem] != None:
             aux = False
 
     #constant variables
-    elif mem >= 9000 and mem < 10000:
-        aux = fconst_table[mem]
-    elif mem >= 10000 and mem < 11000:
-        aux = fconst_table[mem]
-    elif mem >= 11000 and mem < 12000:
-        aux = fconst_table[mem]
-    elif mem >= 12000 and mem < 13000:
-        if fconst_table[mem] == 'True':
+    elif fmem >= 9000 and fmem < 10000:
+        aux = fconst_table[fmem]
+    elif fmem >= 10000 and fmem < 11000:
+        aux = fconst_table[fmem]
+    elif fmem >= 11000 and fmem < 12000:
+        aux = fconst_table[fmem]
+    elif fmem >= 12000 and fmem < 13000:
+        if fconst_table[fmem] == 'True':
             aux = True
-        elif fconst_table[mem] != None:
+        elif fconst_table[fmem] != None:
             aux = False
-    elif mem >= 13000 and mem < 14000:
-        aux = fconst_table[mem]
+    elif fmem >= 13000 and fmem < 14000:
+        aux = fconst_table[fmem]
     
     if aux is None:
         error("Not assign variable")
@@ -117,14 +130,19 @@ def getValue(mem):
 
 #Function to set value to a memory address
 def setValue(val, mem):
-    mem = checkMem(mem)
-    if mem >= 1000 and mem < 5000:
-        exist(global_memory, mem)
-        global_memory[mem] = val
-    elif mem >= 5000 and mem < 9000:
+    fmem = checkMem(mem)
+    if fmem >= 1000 and fmem < 5000:
+        exist(global_memory, fmem)
+        global_memory[fmem] = val
+    elif fmem >= 5000 and fmem < 9000:
         memAux = pMemory[-1]
-        exist(memAux, mem)
-        memAux[mem] = val
+        exist(memAux, fmem)
+        memAux[fmem] = val
+    elif fmem >= 0 and fmem < 500:
+        exist(global_memory, fmem)
+        secondmem = mem.split('.')
+        exist(global_memory[fmem], int(secondmem[1]))
+        global_memory[fmem][int(secondmem[1])] = val
 
 
 #Function that checks that the recive value is an int
@@ -151,7 +169,14 @@ def checkValue(val, mem):
 #Function that set a value for a parameter
 def setParam(val, pos):
     global func, memory, contPBool, contPChar, contPFloat, contPInt
-    paramT = dic.getParam(func, pos)
+    if "." in func:
+        splitFunc = func.split('.')
+        for i in arrClases:
+            if i[0] == splitFunc[1]:
+                paramT = i[1].getParam(splitFunc[2], pos)
+    else:
+        paramT = dic.getParam(func, pos)
+    
     if paramT == 'int':
         exist(memory, 5000+contPInt)
         memory[5000+contPInt] = val
@@ -261,7 +286,7 @@ while ongoing:
     #Read
     elif quadruples[current].getOp() == 'read':
         if write:
-            print(write)
+            print(write.replace(r'\n', '\n'))
             write = ''
         aux = input('Enter value: ')
         mem = checkMem(quadruples[current].getTemp())
@@ -336,7 +361,13 @@ while ongoing:
     #ERA
     elif quadruples[current].getOp() == 'ERA':
         func = quadruples[current].getOpIzq()
-        memory = dic.getLocalMem(func)
+        if "." in func:
+            splitFunc = func.split('.')
+            for i in arrClases:
+                if i[0] == splitFunc[1]:
+                    memory = i[1].getLocalMem(splitFunc[2])
+        else:
+            memory = dic.getLocalMem(func)
         current += 1
     #Parameter
     elif quadruples[current].getOp() == 'PARAMETER':
@@ -347,21 +378,39 @@ while ongoing:
     elif quadruples[current].getOp() == 'GOSUB':
         pMemory.append(memory)
         pJumps.append(current+1)
+        if "." in func:
+            splitFunc = func.split('.')
+            aux_global_memory = global_memory
+            global_memory = aux_global_memory[int(splitFunc[0])]
+            for i in arrClases:
+                if i[0] == splitFunc[1]:
+                    current = i[1].getStar(splitFunc[2])
+        else:
+            current = dic.getStar(func)
+
         contPBool = 0
         contPChar = 0
         contPFloat = 0
         contPInt = 0
-        current = dic.getStar(func)
         pFuncs.append(func)
     #ENDFUNC
     elif quadruples[current].getOp() == 'ENDFUNC':
         pMemory.pop()
-        pFuncs.pop()
+        tempfunc = pFuncs.pop()
+        if "." in tempfunc:
+            global_memory = aux_global_memory
         current = pJumps.pop()
     #return
     elif quadruples[current].getOp() == 'return':
         aux = getValue(quadruples[current].getTemp())
-        setValue(aux, dic.getMemAd(pFuncs[-1]))
+        if "." in pFuncs[-1]:
+            splitFunc = pFuncs[-1].split('.')
+            for i in arrClases:
+                if i[0] == splitFunc[1]:
+                    setValue(aux, i[1].getMemAd(splitFunc[2]))
+            global_memory = aux_global_memory
+        else:
+            setValue(aux, dic.getMemAd(pFuncs[-1]))
         pMemory.pop()
         pFuncs.pop()
         current = pJumps.pop()
@@ -369,5 +418,5 @@ while ongoing:
     elif quadruples[current].getOp() == 'END':
         ongoing = False
         if write:
-            print(write)
+            print(write.replace(r'\n', '\n'))
             write = ''
