@@ -2,6 +2,22 @@ program TMatrices;
 vars
 i, j, k, lim, mat1[10,10], mat2[10,10], res[10,10] : int;
 
+void function PrintRes(l:int;);
+x, y :int;
+{
+
+    write("\n[");
+    from x = 0 to l do{
+        from y = 0 to l do{
+            write(res[x,y], " ");
+        }
+        if(x == l) then{
+            write("]");
+        }
+        write(" \n");
+    }
+}
+
 main(){
     write("Multiplicacion de Matrices \n");
     write("Ingresa el limite de columnas y filas (menor a 10): ");
@@ -50,16 +66,7 @@ main(){
             res[i,j] = mat1[i,j] + mat2[i,j];
         }
     }
-    write("\n[");
-    from i = 0 to lim do{
-        from j = 0 to lim do{
-            write(res[i,j], " ");
-        }
-        if(i == lim) then{
-            write("]");
-        }
-        write(" \n");
-    } 
+    PrintRes(lim); 
 
     write("Resta de Matriz = ");
     from i = 0 to lim do{
@@ -67,16 +74,7 @@ main(){
             res[i,j] = mat1[i,j] - mat2[i,j];
         }
     }
-    write("\n[");
-    from i = 0 to lim do{
-        from j = 0 to lim do{
-            write(res[i,j], " ");
-        }
-        if(i == lim) then{
-            write("]");
-        }
-        write(" \n");
-    }  
+    PrintRes(lim);  
 
     write("Multiplicacion de Matriz = ");
     # Multiplicacion Matrices
@@ -87,16 +85,7 @@ main(){
             }
         }
     }
-    write("\n[");
-    from i = 0 to lim do{
-        from j = 0 to lim do{
-            write(res[i,j], " ");
-        }
-        if(i == lim) then{
-            write("]");
-        }
-        write(" \n");
-    }  
+    PrintRes(lim);  
 
     write("FIN :)");
 }
