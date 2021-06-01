@@ -1357,10 +1357,12 @@ def check_type_id(check):
         if match(r'[A-Z][a-zA-Z0-9]*', t):
             error("Can't opperate Object {}".format(check))
         ptypes.append(t)
-        arrFunc = copy(currFunc)
+        if dic.isArr(currFunc, check):
+            arrFunc = copy(currFunc)
     elif dic.varOccupied(progName,check):
         ptypes.append(dic.getVarType(progName, check))
-        arrFunc = copy(progName)
+        if dic.isArr(progName, check):
+            arrFunc = copy(progName)
     else:
         #dic.printAll()
         error('Variable "{}" not defined'.format(check))
