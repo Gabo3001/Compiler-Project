@@ -1,0 +1,179 @@
+program Calc;
+vars
+r: int;
+
+# Funciones calculadora normal
+int function Sum(a:int; b:int;);{
+    return(a+b);
+}
+
+int function Sub(a:int; b:int;);{
+    return(a-b);
+}
+
+int function Mult(a:int; b:int;);{
+    return(a*b);
+}
+
+int function Div(a:int; b:int;);{
+    return(a/b);
+}
+
+int function Power(a:int; b:int;);
+i : int;
+{
+    if(b == 0) then{
+        return(1);
+    }
+    else{
+       from i=1 to b do{
+           a *= a;
+       }
+       return(a);
+    }
+}
+
+int function Sqrt(a:int;);
+i, res : int;
+{
+    if (a == 0 | a == 1) then {
+        return(a);
+    }
+    i = 1;
+    res = 1;
+    while (res <= a) do
+    {
+      i += 1;
+      res = i * i;
+    }
+    return(i - 1);
+}
+
+# Funciones calculadora logica
+bool function Not(b:bool;);{
+    if(b == True) then {
+        return(False);
+    }
+    else {
+        return(True);
+    }
+}
+
+bool function And(b1:bool;b2:bool;);{
+    return(b1&b2);
+}
+
+bool function Or(b1:bool;b2:bool;);{
+    return(b1|b2);
+}
+
+bool function Nand(b1:bool;b2:bool;);{
+    #return(Not(b1&b2));
+    return(Not(And(b1,b2)));
+}
+
+bool function Nor(b1:bool;b2:bool;);{
+    #return(Not(b1|b2));
+    return(Not(Or(b1,b2)));
+}
+
+bool function Xor(b1:bool;b2:bool;);{
+    return((b1&(Not(b2)))|((Not(b1))&b2));
+    #return(Or(And(b1,(Not(b2))),And((Not(b1)),b2)));
+    
+
+}
+
+void function CalcArit();
+iA, iB, res: int;
+{
+    write("Choose an option\n");
+    write("1.Sum  \n2. Substract \n3. Multiply \n4. Division \n5. Power \n5. Square Root \n0. Quit");
+    read(res);
+    if(res == 0) then {
+        write("Byee!");
+    }
+    if(res == 1) then {
+        write("Enter two int numbers: ");
+        read(iA, iB);
+        write(iA, "+", iB, "=", Sum(iA, iB));
+    }
+    if(res == 2) then {
+        write("Enter two int numbers: ");
+        read(iA, iB);
+        write(iA, "-", iB, "=", Sub(iA, iB));
+    }
+    if(res == 3) then {
+        write("Enter two int numbers: ");
+        read(iA, iB);
+        write(iA, "*", iB, "=", Mult(iA, iB));
+    }
+    if(res == 4) then {
+        write("Enter two int numbers: ");
+        read(iA, iB);
+        write(iA, "/", iB, "=", Div(iA, iB));
+    }
+    if(res == 5) then {
+        write("Enter two int numbers: ");
+        read(iA, iB);
+        write(iA, "^", iB, "=", Power(iA, iB));
+    }
+    if(res == 6) then {
+        write("Enter one int numbers: ");
+        read(iA);
+        write("raiz(", iA, ") =", Sqrt(iA));
+    }
+}
+
+void function CalcLog();
+res: int;
+bA, bB: bool;
+{
+    write("Choose an option \n");
+    write("1.Not \n2. And \n3. Or \n4. Nand \n5. Nor \n5. Xor \n0. Quit");
+    read(res);
+    if(res == 0) then {
+        write("Byee!");
+    }
+    if(res == 1) then {
+        write("Enter True or False: ");
+        read(bA);
+        write("Not =", Not(bA));
+    }
+    if(res == 2) then {
+        write("Enter two bool (True/False) ");
+        read(bA, bB);
+        write("And=", And(bA, bB));
+    }
+    if(res == 3) then {
+        write("Enter two int numbers: ");
+        read(bA, bB);
+        write("Or =", Or(bA, bB));
+    }
+    if(res == 4) then {
+        write("Enter two bool (True/False) ");
+        read(bA, bB);
+        write("Nand=", Nand(bA, bB));
+    }
+    if(res == 5) then {
+        write("Enter two bool (True/False) ");
+        read(bA, bB);
+        write("Nor=", Nor(bA, bB));
+    }
+    if(res == 6) then {
+        write("Enter two bool (True/False) ");
+        read(bA, bB);
+        write("Xor=", Xor(bA, bB));
+    }
+}
+
+main(){
+    write("Choose the calculator 1.Aritmetic or 2. Logic \n");
+    read(r);
+    if(r == 1) then {
+        CalcArit();
+    }
+    if(r == 2) then {
+        CalcLog();
+    }
+}
