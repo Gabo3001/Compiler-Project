@@ -1,0 +1,156 @@
+program Petpet;
+class Pet; {
+    attributes
+    age: int;
+    weight: float;
+    size: char;
+    methods
+    void function PetDefault();
+    {
+        age = 0;
+        weight = 0.0;
+        size = 's';
+    }
+    void function SetPetInfo(a:int; w:float; s:char;);
+    {
+        age = a;
+        weight = w;
+        size = s;
+    }
+    void function PrintPet();
+    {
+        write("Pet's age: ", age, " \n");   
+        write("Pet's weight: ", weight, " \n");   
+        write("Pet's size: ", size, " \n");   
+    }
+};
+
+class Doggy <inherit Pet>; {
+    attributes
+    pure: bool;
+    methods
+    void function SetDogpure(p:bool;);
+    {
+        pure = p;
+    }
+    bool function GetDogpure();
+    {
+        return(pure);
+    }
+    void function PrintDog();
+    {
+        write("Dog's age: ", age, " \n");   
+        write("Dog's weight: ", weight, " \n");   
+        write("Dog's size: ", size, " \n"); 
+        if(pure == True) then {
+            write("Dog is a pure race \n"); 
+        }
+        else{
+            write("Dog isn't a pure race \n"); 
+        }
+        
+    }
+};
+class Cat <inherit Pet>; {
+    attributes
+    type: char;
+    methods
+    void function SetCatType(t:char;);
+    {
+        type = t;
+    }
+    char function GetCatType();
+    {
+        return(type);
+    }
+    void function PrintCat();
+    {
+        write("Cat's age: ", age, " \n");   
+        write("Cat's weight: ", weight, " \n");   
+        write("Cat's size: ", size, " \n"); 
+        if(type == 's') then {
+            write("Cat is a street cat \n"); 
+        }
+        else{
+            if(type == 'h') then {
+                write("Cat is a home cat \n"); 
+            }
+            else{
+                write("Cat is an unknown cat \n"); 
+            }
+        }  
+    }
+};
+
+vars
+    dog1, dog2: Doggy;
+    cat1, cat2: Cat;
+    pet1, pet2: Pet;
+    a: int;
+    w: float;
+    s, t, res: char;
+    p: bool;
+
+main(){
+    write("Welcome to Pau Patrol's Register Center! \n");
+    a = 2;
+    w = 7.99;
+    s = 'm';
+    p = True;
+    dog1.SetPetInfo(a, w, s);
+    dog1.SetDogpure(p);
+    cat1.SetPetInfo(5, 8.66, 's');
+    cat1.SetCatType('s');
+    #pet1.PetDefault();
+    #pet1.SetPetInfo(4, 3.70, 's');
+    pet1.age = 4;
+    pet1.weight = 3.70;
+    pet1.size = 's';
+
+    write("Do you want to register a dog(d), cat(c) or other pet(p)? \n");
+    read(res);
+    write("Great! Give me the pet's age, weight, size[S/M/B] \n");
+    read(a,w,s);
+    if(res == 'd') then {
+        dog2.SetPetInfo(a, w, s);
+        write("Is it a pure bread dog? [True/False] ");
+        read(p);
+        dog2.SetDogpure(p);
+        #read(dog2.pure);
+    }
+    else{
+        if(res == 'c') then {
+            cat2.SetPetInfo(a, w, s);
+            write("What type of cat is street(s), house(h) or unknown(u)? ");
+            read(t);
+            cat2.SetCatType(t);
+            #read(cat2.type);
+        }
+        else {
+            pet2.SetPetInfo(a, w, s);
+        }
+    }
+
+    write("Okay! Let's meet the crew! \nDog : \n");
+    dog1.PrintDog();
+    write("Cat : \n");
+    cat1.PrintCat();
+    write("Pet : \n");
+    pet1.PrintPet();
+    if(res == 'd') then{
+       write("Your dog : \n");
+       dog2.PrintDog();
+    }
+    else{
+        if(res == 'c') then{
+            write("Your cat : \n");
+            cat2.PrintCat();
+        }
+        else{
+            write("Your pet : \n");
+            pet2.PrintPet();
+        }
+    }
+
+}
+

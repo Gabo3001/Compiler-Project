@@ -1,0 +1,30 @@
+program Calc;
+vars
+iA, iB, res: int;
+fA, fB : float;
+bA, bB: bool;
+
+int function SumaI (a:int; b:int;);{
+    return(a+b);
+}
+
+float function SumaF (a:float; b:float;);{
+    return(a+b);
+}
+
+void function Menu(){
+    write("1. Sum (int) /n2. Sum (float) /n");
+    read(res);
+    if(res == 1) then {
+        write("Enter");
+        read(iA, iB);
+        write(SumaI(iA, iB));
+
+    }
+}
+
+main(){
+    write("Calculator!! /nChoose an option/n");
+    Menu();
+
+}

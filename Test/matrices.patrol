@@ -1,0 +1,102 @@
+program TMatrices;
+vars
+i, j, k, lim, mat1[10,10], mat2[10,10], res[10,10] : int;
+
+main(){
+    write("Multiplicacion de Matrices \n");
+    write("Ingresa el limite de columnas y filas (menor a 10): ");
+    read(lim);
+    lim -= 1;
+
+    # Definir matriz mat1
+    write("Ingresa los numeros de la matriz 1: ");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            read(mat1[i,j]);
+        }
+    }
+    write("mat1 = \n[");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            write(mat1[i,j], " ");
+        }
+        if(i == lim) then{
+            write("]");
+        }
+        write(" \n");
+    } 
+
+    # Definir matriz mat2
+    write("Ingresa los numeros de la matriz 2: ");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            read(mat2[i,j]);
+        }
+    } 
+    write("mat2 = \n[");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            write(mat2[i,j], " ");
+        }
+        if(i == lim) then{
+            write("]");
+        }
+        write(" \n");
+    } 
+
+    write("Suma de Matriz = ");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            res[i,j] = mat1[i,j] + mat2[i,j];
+        }
+    }
+    write("\n[");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            write(res[i,j], " ");
+        }
+        if(i == lim) then{
+            write("]");
+        }
+        write(" \n");
+    } 
+
+    write("Resta de Matriz = ");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            res[i,j] = mat1[i,j] - mat2[i,j];
+        }
+    }
+    write("\n[");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            write(res[i,j], " ");
+        }
+        if(i == lim) then{
+            write("]");
+        }
+        write(" \n");
+    }  
+
+    write("Multiplicacion de Matriz = ");
+    # Multiplicacion Matrices
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            from k = 0 to lim do{
+                res[i,j] += mat1[i,k] * mat2[k,j];
+            }
+        }
+    }
+    write("\n[");
+    from i = 0 to lim do{
+        from j = 0 to lim do{
+            write(res[i,j], " ");
+        }
+        if(i == lim) then{
+            write("]");
+        }
+        write(" \n");
+    }  
+
+    write("FIN :)");
+}
