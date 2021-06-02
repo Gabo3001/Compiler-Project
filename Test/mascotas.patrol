@@ -105,7 +105,7 @@ main(){
     #pet1.SetPetInfo(4, 3.70, 'S');
     pet1.age = 4;
     pet1.weight = 3.70;
-    pet1.size = 's';cd
+    pet1.size = 's';
 
     write("Do you want to register a dog(d), cat(c) or other pet(p)? \n");
     read(res);
