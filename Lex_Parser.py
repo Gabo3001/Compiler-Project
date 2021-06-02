@@ -1268,6 +1268,8 @@ def p_np_addClassId(p):
     global currFunc
     varCall = p[-3]
     var = p[-1]
+    if not dic.varOccupied(currFunc, varCall):
+        error("Object {} not defined".format(varCall))
     cName = dic.getVarType(currFunc, varCall)
     auxDic = getDic(cName, varCall)
     if auxDic.varOccupied(cName,var):
