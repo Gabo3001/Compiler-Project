@@ -3,47 +3,46 @@ vars
 r: int;
 
 # Funciones calculadora normal
-int function Sum(a:int; b:int;);{
-    return(a+b);
+int function Sum(pau:int; gabo:int;);{
+    return(pau+gabo);
 }
 
-int function Sub(a:int; b:int;);{
-    return(a-b);
+int function Sub(pau:int; gabo:int;);{
+    return(pau-gabo);
 }
 
-int function Mult(a:int; b:int;);{
-    return(a*b);
+int function Mult(pau:int; gabo:int;);{
+    return(pau*gabo);
 }
 
-int function Div(a:int; b:int;);{
-    return(a/b);
+int function Div(pau:int; gabo:int;);{
+    return(pau/gabo);
 }
 
-int function Power(a:int; b:int;);
+int function Power(pau:int; gabo:int;);
 i, num : int;
 {
-    
-    if(b == 0) then{
+    if(gabo == 0) then{
         return(1);
     }
     else{
         num = 1;
-       from i=1 to b do{
-           num *= a;
+       from i=1 to gabo do{
+           num *= pau;
        }
        return(num);
     }
 }
 
-int function Sqrt(a:int;);
+int function Sqrt(pau:int;);
 i, res : int;
 {
-    if (a == 0 | a == 1) then {
-        return(a);
+    if (pau == 0 | pau == 1) then {
+        return(pau);
     }
     i = 1;
     res = 1;
-    while (res <= a) do
+    while (res <= pau) do
     {
       i += 1;
       res = i * i;
@@ -52,8 +51,8 @@ i, res : int;
 }
 
 # Funciones calculadora logica
-bool function Not(b:bool;);{
-    if(b == True) then {
+bool function Not(gabo:bool;);{
+    if(gabo == True) then {
         return(False);
     }
     else {
@@ -61,34 +60,32 @@ bool function Not(b:bool;);{
     }
 }
 
-bool function And(b1:bool;b2:bool;);{
-    return(b1&b2);
+bool function And(pau:bool;gabo:bool;);{
+    return(pau&gabo);
 }
 
-bool function Or(b1:bool;b2:bool;);{
-    return(b1|b2);
+bool function Or(pau:bool;gabo:bool;);{
+    return(pau|gabo);
 }
 
-bool function Nand(b1:bool;b2:bool;);{
-    return(Not(b1&b2));
-    #return(Not(And(b1,b2)));
+bool function Nand(pau:bool;gabo:bool;);{
+    return(Not(pau&gabo));
+    #return(Not(And(pau,gabo)));
 }
 
-bool function Nor(b1:bool;b2:bool;);{
-    return(Not(b1|b2));
-    #return(Not(Or(b1,b2)));
+bool function Nor(pau:bool;gabo:bool;);{
+    return(Not(pau|gabo));
+    #return(Not(Or(pau,gabo)));
 }
 
-bool function Xor(b1:bool;b2:bool;);{
+bool function Xor(pau:bool;gabo:bool;);{
     
-    return((b1&(Not(b2)))|((Not(b1))&b2));
-    #return(Or(And(b1,(Not(b2))),And((Not(b1)),b2)));
-    
-
+    return((pau&(Not(gabo)))|((Not(pau))&gabo));
+    #return(Or(And(pau,(Not(gabo))),And((Not(pau)),gabo)));
 }
 
 void function CalcArit();
-iA, iB, res: int;
+iPau, iGabo, res: int;
 {
     write("Choose an option\n");
     write("1.Sum  \n2. Substract \n3. Multiply \n4. Division \n5. Power \n6. Square Root \n0. Quit");
@@ -98,39 +95,39 @@ iA, iB, res: int;
     }
     if(res == 1) then {
         write("Enter two int numbers: ");
-        read(iA, iB);
-        write(iA, "+", iB, "=", Sum(iA, iB));
+        read(iPau, iGabo);
+        write(iPau, "+", iGabo, "=", Sum(iPau, iGabo));
     }
     if(res == 2) then {
         write("Enter two int numbers: ");
-        read(iA, iB);
-        write(iA, "-", iB, "=", Sub(iA, iB));
+        read(iPau, iGabo);
+        write(iPau, "-", iGabo, "=", Sub(iPau, iGabo));
     }
     if(res == 3) then {
         write("Enter two int numbers: ");
-        read(iA, iB);
-        write(iA, "*", iB, "=", Mult(iA, iB));
+        read(iPau, iGabo);
+        write(iPau, "*", iGabo, "=", Mult(iPau, iGabo));
     }
     if(res == 4) then {
         write("Enter two int numbers: ");
-        read(iA, iB);
-        write(iA, "/", iB, "=", Div(iA, iB));
+        read(iPau, iGabo);
+        write(iPau, "/", iGabo, "=", Div(iPau, iGabo));
     }
     if(res == 5) then {
         write("Enter two int numbers: ");
-        read(iA, iB);
-        write(iA, "^", iB, "=", Power(iA, iB));
+        read(iPau, iGabo);
+        write(iPau, "^", iGabo, "=", Power(iPau, iGabo));
     }
     if(res == 6) then {
         write("Enter one int numbers: ");
-        read(iA);
-        write("sqrt(", iA, ") =", Sqrt(iA));
+        read(iPau);
+        write("sqrt(", iPau, ") =", Sqrt(iPau));
     }
 }
 
 void function CalcLog();
 res: int;
-bA, bB: bool;
+bPau, bGabo: bool;
 {
     write("Choose an option \n");
     write("1.Not \n2. And \n3. Or \n4. Nand \n5. Nor \n6. Xor \n0. Quit");
@@ -140,33 +137,33 @@ bA, bB: bool;
     }
     if(res == 1) then {
         write("Enter True or False: ");
-        read(bA);
-        write("Not =", Not(bA));
+        read(bPau);
+        write("Not =", Not(bPau));
     }
     if(res == 2) then {
         write("Enter two bool (True/False) ");
-        read(bA, bB);
-        write("And=", And(bA, bB));
+        read(bPau, bGabo);
+        write("And=", And(bPau, bGabo));
     }
     if(res == 3) then {
         write("Enter two int numbers: ");
-        read(bA, bB);
-        write("Or =", Or(bA, bB));
+        read(bPau, bGabo);
+        write("Or =", Or(bPau, bGabo));
     }
     if(res == 4) then {
         write("Enter two bool (True/False) ");
-        read(bA, bB);
-        write("Nand=", Nand(bA, bB));
+        read(bPau, bGabo);
+        write("Nand=", Nand(bPau, bGabo));
     }
     if(res == 5) then {
         write("Enter two bool (True/False) ");
-        read(bA, bB);
-        write("Nor=", Nor(bA, bB));
+        read(bPau, bGabo);
+        write("Nor=", Nor(bPau, bGabo));
     }
     if(res == 6) then {
         write("Enter two bool (True/False) ");
-        read(bA, bB);
-        write("Xor=", Xor(bA, bB));
+        read(bPau, bGabo);
+        write("Xor=", Xor(bPau, bGabo));
     }
 }
 

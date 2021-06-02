@@ -164,7 +164,7 @@ def checkValue(val, mem):
     if mem >= 3000 and mem < 4000 or  mem >= 7000 and mem < 8000:
         if not match(r".", val) or len(val) > 1:
             error("Expected type Char")
-    if mem >= 4000 and mem < 5000 or  mem >= 9000 and mem < 10000:
+    if mem >= 4000 and mem < 5000 or  mem >= 8000 and mem < 9000:
         if not match(r'(True|False)', val):
             error("Expected type Bool")
 
