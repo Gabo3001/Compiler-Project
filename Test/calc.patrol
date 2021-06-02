@@ -20,16 +20,18 @@ int function Div(a:int; b:int;);{
 }
 
 int function Power(a:int; b:int;);
-i : int;
+i, num : int;
 {
+    
     if(b == 0) then{
         return(1);
     }
     else{
+        num = 1;
        from i=1 to b do{
-           a *= a;
+           num *= a;
        }
-       return(a);
+       return(num);
     }
 }
 
@@ -68,16 +70,17 @@ bool function Or(b1:bool;b2:bool;);{
 }
 
 bool function Nand(b1:bool;b2:bool;);{
-    #return(Not(b1&b2));
-    return(Not(And(b1,b2)));
+    return(Not(b1&b2));
+    #return(Not(And(b1,b2)));
 }
 
 bool function Nor(b1:bool;b2:bool;);{
-    #return(Not(b1|b2));
-    return(Not(Or(b1,b2)));
+    return(Not(b1|b2));
+    #return(Not(Or(b1,b2)));
 }
 
 bool function Xor(b1:bool;b2:bool;);{
+    
     return((b1&(Not(b2)))|((Not(b1))&b2));
     #return(Or(And(b1,(Not(b2))),And((Not(b1)),b2)));
     
@@ -88,7 +91,7 @@ void function CalcArit();
 iA, iB, res: int;
 {
     write("Choose an option\n");
-    write("1.Sum  \n2. Substract \n3. Multiply \n4. Division \n5. Power \n5. Square Root \n0. Quit");
+    write("1.Sum  \n2. Substract \n3. Multiply \n4. Division \n5. Power \n6. Square Root \n0. Quit");
     read(res);
     if(res == 0) then {
         write("Byee!");
@@ -121,7 +124,7 @@ iA, iB, res: int;
     if(res == 6) then {
         write("Enter one int numbers: ");
         read(iA);
-        write("raiz(", iA, ") =", Sqrt(iA));
+        write("sqrt(", iA, ") =", Sqrt(iA));
     }
 }
 
@@ -130,7 +133,7 @@ res: int;
 bA, bB: bool;
 {
     write("Choose an option \n");
-    write("1.Not \n2. And \n3. Or \n4. Nand \n5. Nor \n5. Xor \n0. Quit");
+    write("1.Not \n2. And \n3. Or \n4. Nand \n5. Nor \n6. Xor \n0. Quit");
     read(res);
     if(res == 0) then {
         write("Byee!");

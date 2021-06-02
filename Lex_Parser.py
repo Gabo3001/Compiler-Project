@@ -1130,7 +1130,7 @@ def addVars(key):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
             if match(r'[A-Z][a-zA-Z0-9]*', currType):
-                error("Can't hanble lists of objects")
+                error("Can't handle lists of objects")
             memo = getMemo(key, lvl1*lvl2)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             pvars.pop()
@@ -1355,7 +1355,7 @@ def check_type_id(check):
     if dic.varOccupied(currFunc,check):
         t = dic.getVarType(currFunc, check)
         if match(r'[A-Z][a-zA-Z0-9]*', t):
-            error("Can't opperate Object {}".format(check))
+            error("Can't operate Object {}".format(check))
         ptypes.append(t)
         if dic.isArr(currFunc, check):
             arrFunc = copy(currFunc)
@@ -1470,7 +1470,7 @@ def p_np_oneDimArr(p):
         temp = changeToMem(temp)
         quadruples.append(Quadruple(tabOp['VER'], temp, 0, lvl))
     else:
-        error("Variable {} expect two indexes and recieved one".format(opdo))
+        error("Variable {} expect two indexes and received one".format(opdo))
 
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ftwoDimArr(p):
@@ -1504,7 +1504,7 @@ def p_np_ftwoDimArr(p):
         pilaO.append(temp2)
         pdim.append((opdo,2))
     else:
-        error("Variable {} expect one index and recieved two".format(opdo))
+        error("Variable {} expect one index and received two".format(opdo))
 
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ltwoDimArr(p):
@@ -1670,7 +1670,7 @@ def p_np_assingFor(p):
         error("Can't operate array {}".format(temp))
 
     if tempT != 'int' or opdoT_der != 'int':
-        error('Expeted type int')
+        error('Expected type int')
     else:
         quadaux.append(Quadruple(op, opdo_der, None, temp))
         opdo_der = changeToMem(opdo_der)

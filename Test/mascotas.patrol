@@ -95,21 +95,21 @@ main(){
     write("Welcome to Pau Patrol's Register Center! \n");
     a = 2;
     w = 7.99;
-    s = 'm';
+    s = 'M';
     p = True;
     dog1.SetPetInfo(a, w, s);
     dog1.SetDogpure(p);
-    cat1.SetPetInfo(5, 8.66, 's');
+    cat1.SetPetInfo(5, 8.66, 'G');
     cat1.SetCatType('s');
     #pet1.PetDefault();
-    #pet1.SetPetInfo(4, 3.70, 's');
+    #pet1.SetPetInfo(4, 3.70, 'S');
     pet1.age = 4;
     pet1.weight = 3.70;
-    pet1.size = 's';
+    pet1.size = 's';cd
 
     write("Do you want to register a dog(d), cat(c) or other pet(p)? \n");
     read(res);
-    write("Great! Give me the pet's age, weight, size[S/M/B] \n");
+    write("Great! Give me the pet's age, weight(float), size[S/M/B] \n");
     read(a,w,s);
     if(res == 'd') then {
         dog2.SetPetInfo(a, w, s);
