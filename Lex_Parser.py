@@ -1171,6 +1171,8 @@ def getMemo(key, memChunck = 1):
         elif match(r'[A-Z][a-zA-Z0-9]*', currType):
             if global_class > 499: 
                 error('Limit of classes reached'.format(currType))
+            if dic.getFuncType(progName) == 'class':
+                error("Can't operate objects inside clases")
             memo = global_class
             global_class += memChunck
     else: 
