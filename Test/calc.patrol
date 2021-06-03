@@ -70,18 +70,15 @@ bool function Or(pau:bool;gabo:bool;);{
 
 bool function Nand(pau:bool;gabo:bool;);{
     return(Not(pau&gabo));
-    #return(Not(And(pau,gabo)));
 }
 
 bool function Nor(pau:bool;gabo:bool;);{
     return(Not(pau|gabo));
-    #return(Not(Or(pau,gabo)));
 }
 
 bool function Xor(pau:bool;gabo:bool;);{
     
     return((pau&(Not(gabo)))|((Not(pau))&gabo));
-    #return(Or(And(pau,(Not(gabo))),And((Not(pau)),gabo)));
 }
 
 void function CalcArit();
