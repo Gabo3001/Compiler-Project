@@ -1,4 +1,4 @@
-# LEX_Parser.py by Gabriel Ortega and Paulina Cámara (2021)
+# Lex_Parser.py by Gabriel Ortega and Paulina Cámara (2021)
 # Lexer and Parser program using ply
 
 import ply.lex as lex
@@ -1109,7 +1109,16 @@ def p_np_addToDic(p):
     while pvars:
         addVars(currFunc)
 
-#Function that add variable to process table
+'''
+Function that add variable to process table
+
+Parameters
+----------
+key : str -> Name of a function
+
+Returns
+----------
+'''
 def addVars(key):
     global currType
     item = pvars[-1]
@@ -1143,7 +1152,18 @@ def addVars(key):
             dic.addVar(key, item, currType, memo)
             pvars.pop()
 
-#function that returns the memory number of the function
+'''
+Function that returns the memory address of the function
+
+Parameters
+----------
+key : str -> Nome of  afunction
+memChunck : int -> Number of address in a memory chunk (default : 1)
+
+Returns
+----------
+inr -> memory address
+'''
 def getMemo(key, memChunck = 1):
     global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool, global_class, local_class
     memo = ""
@@ -1203,7 +1223,17 @@ def getMemo(key, memChunck = 1):
             local_class += memChunck
     return memo
 
-#Function that return memory number of a constant
+'''
+Function that return memory number of a constant
+
+Parameters
+----------
+vart : str -> Type of the constant
+
+Returns
+----------
+inr -> memory address
+'''
 def get_const_memo(vart):
     global const_int, const_float, const_char, const_bool, const_string 
     if vart == 'int':
@@ -1352,8 +1382,13 @@ def p_np_addConstString(p):
     pilaO.append(const_table[string]['memo'])
     ptypes.append('string')
 
+'''
+Function to check type of ids
 
-#Function to check type of ids
+Parameters
+----------
+check : str -> Name of the variable
+'''
 def check_type_id(check):
     global currFunc, arrFunc, progName
     if dic.varOccupied(currFunc,check):
@@ -1868,7 +1903,13 @@ def p_np_endVoid(p):
         else:
             paramK = 0
 
-#Function that will generate the quadruples
+'''
+Generate logical and aritmetical quadruples
+
+Parameters
+----------
+check : str -> Operator
+'''
 def generateQuad(check):
     global currFunc
     if len(poper) > 0:
@@ -1896,7 +1937,17 @@ def generateQuad(check):
                 opdo_der = changeToMem(opdo_der)
                 quadruples.append(Quadruple(tabOp[op], opdo_izq, opdo_der, temp))
 
-#function to generate temporal
+'''
+Generate temporal memory addres
+
+Parameters
+----------
+tempType : str -> Temporal type
+
+Returns
+----------
+int : Memory addres of the temporal
+'''
 def generate_temporal(tempType):
     global currFunc, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     temp = ""
@@ -1981,7 +2032,17 @@ def p_np_endClass(p):
     progName =  pcalls.pop()
     currFunc = progName
 
-#Function that change a variable name into its memory address
+'''
+Change a variable name into its memory address
+
+Parameters
+----------
+var : str -> variable name
+
+Returns
+----------
+int : Memory addres of the variable
+'''
 def changeToMem(var):
     global currFunc, progName
     if type(var) != int and not match(r'\d+\.\d+', var):
@@ -1991,7 +2052,14 @@ def changeToMem(var):
             var = dic.getVarMemo(progName, var)
     return var
 
-#Function to get the dictionary a specific Class
+'''
+Get the dictionary a specific Class
+
+Parameters
+----------
+c : str -> Class Name
+var : str -> Tells if its gonna check for an object or a class (default : N)
+'''
 def getDic(c, var = "N"):
     for i in arrClases:
         if c == i[0]:
@@ -2001,13 +2069,25 @@ def getDic(c, var = "N"):
     else:
         error("Object {} not defined".format(var))
 
-#Fucntion that checks if a class has alredy been declared
+'''
+Checks if a class has alredy been declared
+
+Parameters
+----------
+c : str -> Class Name
+'''
 def checkClass(c):
     for i in arrClases:
         if c == i[0]:
             error("Class {} has already been declared".format(c))
 
-#Fucntion that checks if a class exist
+'''
+Checks if a class exist
+
+Parameters
+----------
+c : str -> Class Name
+'''
 def checkClassExist(c):
     cont = 0
     for i in arrClases:
@@ -2016,13 +2096,22 @@ def checkClassExist(c):
     if cont == 0:        
         error("Class {} does not exist".format(c))
 
-#Function to display errors
+'''
+Function to display errors
+
+Parameters
+----------
+line : str -> Explanation of the error
+'''
 def error(line):
     print("Line " + str(lexer.lineno) + ": " + line)
     sys.exit()
 
 parser = yacc.yacc()
 
+'''
+Prints the Operator, Operand, jumps and types stacks, also prints all the quadrupels
+'''
 def printAll():
     print(pilaO) 
     print(poper)
@@ -2032,6 +2121,9 @@ def printAll():
     for index, item in enumerate(quadruples):
         print(index, item.get_quad())
 
+'''
+Recieves a .patrol file and compile it 
+'''
 def main():
     text = input('Insert your program file (.patrol): ')
     if ".patrol" in text : 
@@ -2043,11 +2135,17 @@ def main():
         # dic.printAll()
         # for i  in arrClases:
         #     i[1].printAll()
-        #printAll()
+        # printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
-    
-#Fucntion to help the virtual machine to get all it need to process the code
+
+'''    
+Fucntion to help the virtual machine to get all it need to process the code
+
+Returns
+--------
+dictionary : Dictionary with the main structures from compilation
+'''
 def vmHelper():
     main()
     out = {

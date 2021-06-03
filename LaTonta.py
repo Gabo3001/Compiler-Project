@@ -1,3 +1,6 @@
+# La_Tonta.py by Gabriel Ortega and Paulina Cámara (2021)
+# Virtual Machine for the Pau Patrol ++ Programin Language
+
 import Lex_Parser
 import sys
 from datastruct import DirProcess
@@ -29,7 +32,13 @@ pFuncs = deque()
 pMemory = deque()
 pJumps = deque()
 
-#Fucntion to handle errors
+'''
+  Stop the ejecution of the program and show why it stops
+
+  Parameters
+  ----------
+  l : str -> Error that will be showed
+  ''' 
 def error(l):
     sys.exit(l)
 
@@ -43,15 +52,36 @@ global_memory = dic.getGlobalMem()
 if 0 in global_memory.keys():
     global_memory = dic.createClassMemo(global_memory, arrClases)
 
+'''
+Validates that a memory addres exist on a dictionary and thst its value is not none
 
-#Function that validates that a memory addres exist on a dictionary and noy have none
+Parameters
+----------
+dic : dictionary -> Dictionary where the validation will take place
+mem : int -> Memory address
+check : str -> Indicates if the value has have a value (default : no)
+
+Returns
+----------
+int -> memory addres
+''' 
 def exist(dic, mem, check = "no"):
     if mem not in dic:
         error("Stackoverflow")
     if dic[mem] == None and check != "no":
         error("Variable without value")
 
-#Function that check if the function is a 
+'''
+Function that check if a memory address needs extra process 
+
+Parameters
+----------
+mem : int -> Memory address
+
+Returns
+----------
+int -> memory addres
+''' 
 def checkMem(mem):
     if type(mem) == str and mem[0] == '(':
         return getValue(int(mem[1:-1]))
@@ -61,7 +91,17 @@ def checkMem(mem):
     else:
         return mem
 
-#function to get the value of a memory address
+'''
+function to get the value of a memory address
+
+Parameters
+----------
+mem : int -> Memory address
+
+Returns
+----------
+int|float|str|bool -> The value save on the memory address
+''' 
 def getValue(mem):
     aux = None
     fmem = checkMem(mem)
@@ -128,7 +168,14 @@ def getValue(mem):
 
     return aux
 
-#Function to set value to a memory address
+'''
+Function to set value to a memory address
+
+Parameters
+----------
+val : int|float|char|bool -> Value that will be saved
+mem : int -> Memory address
+''' 
 def setValue(val, mem):
     fmem = checkMem(mem)
     if fmem >= 1000 and fmem < 5000:
@@ -145,13 +192,27 @@ def setValue(val, mem):
         global_memory[fmem][int(secondmem[1])] = val
 
 
-#Function that checks that the recive value is an int
+
+'''
+Function that checks that the recive value is an int
+
+Parameters
+----------
+s : str -> string to be checked
+''' 
 def check_int(s):
     if s[0] in ('-'):
         return s[1:].isdigit()
     return s.isdigit()
 
-#Function that check that the recieved value correspond with the corresponding var type
+'''
+Function that check that the recieved value correspond with the corresponding var type
+
+Parameters
+----------
+val : str -> Value to be checked
+mem : int -> memory addres
+''' 
 def checkValue(val, mem):
     if val == '':
         error("None input unacceptable")
@@ -168,7 +229,14 @@ def checkValue(val, mem):
         if not match(r'(True|False)', val):
             error("Expected type Bool")
 
-#Function that set a value for a parameter
+'''
+Function that set a value for a parameter
+
+Parameters
+----------
+val : int|float|char|bool -> Value to be assigned
+pos : int -> Possition of the parameter on the function
+''' 
 def setParam(val, pos):
     global func, memory, contPBool, contPChar, contPFloat, contPInt
     if "." in func:

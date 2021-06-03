@@ -1,3 +1,6 @@
+# ObjQuad.py by Gabriel Ortega and Paulina Cámara (2021)
+# Program to create quadruples and access its values
+
 class Quadruple:
   '''
   Class used to save all the sections of a quadruple

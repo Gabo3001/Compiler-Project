@@ -1,3 +1,6 @@
+# dataStruct.py by Gabriel Ortega and Paulina Cámara (2021)
+# Program to process function and variable dictionaries
+
 from copy import copy
 
 class Directory:
