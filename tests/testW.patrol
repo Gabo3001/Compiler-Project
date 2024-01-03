@@ -1,0 +1,31 @@
+program TestW;
+vars
+a, b, c : int;
+aB : bool;
+main(){
+    a = 0;
+    while(a < 3) do 
+    {a = a + 1;}
+
+    a = 0;
+    b = 0;
+    while(b < 4) do 
+    {
+        a = a + 1;
+        b = b + a;
+        write(a, ",", b);
+    }
+
+    aB = False;
+    write("Adivina el numero magico entre 1 y 5");
+    while(aB != True) do {
+        read(c);
+        if(c == 3) then{
+            aB = True;
+            write("Numero Magico Correcto");
+        }
+        else
+        {write("Incorrecto");}
+    }
+    write("TestWhile end");
+}

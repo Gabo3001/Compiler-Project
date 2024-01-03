@@ -1,4 +1,4 @@
-# Lex_Parser.py by Gabriel Ortega and Paulina Cámara (2021)
+# LEX_Parser.py by Gabriel Ortega and Paulina Cámara (2021)
 # Lexer and Parser program using ply
 
 import ply.lex as lex
@@ -327,39 +327,6 @@ lexer = lex.lex()
         print(tok)
 
 pruebaLex()"""
-
-# ***** Operator Table *****
-tabOp = {
-    'GOTO' : 1,
-    'GOTOF' : 2,
-    'GOTOV' : 3, 
-    '=' : 4,
-    '+=' : 5,
-    '-=' : 6,
-    '*=' : 7,
-    '/=' : 8,
-    '+' : 9,
-    '-' : 10,
-    '*' : 11,
-    '/' : 12,
-    'write' : 13,
-    'read' : 14,
-    '>' : 15,
-    '<' : 16,
-    '>=' : 17,
-    '<=' : 18,
-    '==' : 19,
-    '!=' : 20,
-    '&' : 21,
-    '|' : 22,
-    'VER' : 23,
-    'ERA' : 24,
-    'PARAMETER' : 25,
-    'GOSUB' : 26,
-    'ENDFUNC' : 27,
-    'return' : 28,
-    'END' : 29
- }
 
 # ***** SEMANTIC CUBE *****
 
@@ -1020,7 +987,7 @@ def p_empty(p):
 #Neuralgic point to mark the start of the program
 def p_np_startProg(p):
     'np_startProg : '
-    quadruples.append(Quadruple(tabOp["GOTO"], -1, -1, 0))
+    quadruples.append(Quadruple("GOTO", None, None, 0))
     quadaux.append(Quadruple("GOTO", None, None, 0))
     pjumps.append(len(quadruples) - 1)
 
@@ -1109,16 +1076,7 @@ def p_np_addToDic(p):
     while pvars:
         addVars(currFunc)
 
-'''
-Function that add variable to process table
-
-Parameters
-----------
-key : str -> Name of a function
-
-Returns
-----------
-'''
+#Function that add variable to process table
 def addVars(key):
     global currType
     item = pvars[-1]
@@ -1139,7 +1097,7 @@ def addVars(key):
             error('Variable "{}" has already been declared'.format(v[0]))
         else:
             if match(r'[A-Z][a-zA-Z0-9]*', currType):
-                error("Can't handle lists of objects")
+                error("Can't hanble lists of objects")
             memo = getMemo(key, lvl1*lvl2)
             dic.addVar(key, v[0], currType, memo, lvl1, lvl2)
             pvars.pop()
@@ -1152,18 +1110,7 @@ def addVars(key):
             dic.addVar(key, item, currType, memo)
             pvars.pop()
 
-'''
-Function that returns the memory address of the function
-
-Parameters
-----------
-key : str -> Nome of  afunction
-memChunck : int -> Number of address in a memory chunk (default : 1)
-
-Returns
-----------
-inr -> memory address
-'''
+#function that returns the memory number of the function
 def getMemo(key, memChunck = 1):
     global currType, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool, global_class, local_class
     memo = ""
@@ -1191,8 +1138,6 @@ def getMemo(key, memChunck = 1):
         elif match(r'[A-Z][a-zA-Z0-9]*', currType):
             if global_class > 499: 
                 error('Limit of classes reached'.format(currType))
-            if dic.getFuncType(progName) == 'class':
-                error("Can't operate objects inside clases")
             memo = global_class
             global_class += memChunck
     else: 
@@ -1223,17 +1168,7 @@ def getMemo(key, memChunck = 1):
             local_class += memChunck
     return memo
 
-'''
-Function that return memory number of a constant
-
-Parameters
-----------
-vart : str -> Type of the constant
-
-Returns
-----------
-inr -> memory address
-'''
+#Function that return memory number of a constant
 def get_const_memo(vart):
     global const_int, const_float, const_char, const_bool, const_string 
     if vart == 'int':
@@ -1269,7 +1204,7 @@ def p_np_endFunc(p):
     global currFunc, local_int, local_float, local_char, local_bool, contReturns, local_class
     if dic.getFuncType(currFunc) != 'void' and  dic.getFuncType(currFunc) != 'program' and contReturns < 1:
         error("Function {} expect a return value".format(currFunc))
-    quadruples.append(Quadruple(tabOp['ENDFUNC'], -1, -1, -1))
+    quadruples.append(Quadruple('ENDFUNC', None, None, None))
     quadaux.append(Quadruple("ENDFUNC", None, None, None))
     dic.dic[currFunc].memory[0] = local_int - 5000
     dic.dic[currFunc].memory[1] = local_float - 6000
@@ -1300,8 +1235,6 @@ def p_np_addClassId(p):
     global currFunc
     varCall = p[-3]
     var = p[-1]
-    if not dic.varOccupied(currFunc, varCall):
-        error("Object {} not defined".format(varCall))
     cName = dic.getVarType(currFunc, varCall)
     auxDic = getDic(cName, varCall)
     if auxDic.varOccupied(cName,var):
@@ -1382,26 +1315,19 @@ def p_np_addConstString(p):
     pilaO.append(const_table[string]['memo'])
     ptypes.append('string')
 
-'''
-Function to check type of ids
 
-Parameters
-----------
-check : str -> Name of the variable
-'''
+#Function to check type of ids
 def check_type_id(check):
     global currFunc, arrFunc, progName
     if dic.varOccupied(currFunc,check):
         t = dic.getVarType(currFunc, check)
         if match(r'[A-Z][a-zA-Z0-9]*', t):
-            error("Can't operate Object {}".format(check))
+            error("Can't opperate Object {}".format(check))
         ptypes.append(t)
-        if dic.isArr(currFunc, check):
-            arrFunc = copy(currFunc)
+        arrFunc = copy(currFunc)
     elif dic.varOccupied(progName,check):
         ptypes.append(dic.getVarType(progName, check))
-        if dic.isArr(progName, check):
-            arrFunc = copy(progName)
+        arrFunc = copy(progName)
     else:
         #dic.printAll()
         error('Variable "{}" not defined'.format(check))
@@ -1477,7 +1403,7 @@ def p_np_doAssign(p):
         quadaux.append(Quadruple(op, opdo_der, None, temp))
         opdo_der = changeToMem(opdo_der)
         temp = changeToMem(temp)
-        quadruples.append(Quadruple(tabOp[op], opdo_der, -1, temp))
+        quadruples.append(Quadruple(op, opdo_der, None, temp))
     else:
         error('Type {} could not be assign with type {}'.format(tempT, opdoT_der))
 
@@ -1507,9 +1433,9 @@ def p_np_oneDimArr(p):
             error("Indexes can only be type int")
         quadaux.append(Quadruple('VER', temp, 0, lvl))
         temp = changeToMem(temp)
-        quadruples.append(Quadruple(tabOp['VER'], temp, 0, lvl))
+        quadruples.append(Quadruple('VER', temp, 0, lvl))
     else:
-        error("Variable {} expect two indexes and received one".format(opdo))
+        error("Variable {} expect two indexes and recieved one".format(opdo))
 
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ftwoDimArr(p):
@@ -1526,7 +1452,7 @@ def p_np_ftwoDimArr(p):
         quadaux.append(Quadruple('VER', temp, 0, lvl))
         tempaux = temp
         temp = changeToMem(temp)
-        quadruples.append(Quadruple(tabOp['VER'], temp, 0, lvl))
+        quadruples.append(Quadruple('VER', temp, 0, lvl))
 
         lvl2 = dic.getLvl2(arrFunc, opdo)
 
@@ -1539,11 +1465,11 @@ def p_np_ftwoDimArr(p):
         d2 = const_table[lvl2]['memo']
         temp2 = generate_temporal('int')
         quadaux.append(Quadruple('*', tempaux, d2, temp2))
-        quadruples.append(Quadruple(tabOp['*'], temp, d2, temp2))
+        quadruples.append(Quadruple('*', temp, d2, temp2))
         pilaO.append(temp2)
         pdim.append((opdo,2))
     else:
-        error("Variable {} expect one index and received two".format(opdo))
+        error("Variable {} expect one index and recieved two".format(opdo))
 
 #Neuralgic point that process the first part of a 2 dimensional array
 def p_np_ltwoDimArr(p):
@@ -1559,12 +1485,12 @@ def p_np_ltwoDimArr(p):
     quadaux.append(Quadruple('VER', temp, 0, lv2))
     tempaux = temp
     temp = changeToMem(temp)
-    quadruples.append(Quadruple(tabOp['VER'], temp, 0, lv2))
+    quadruples.append(Quadruple('VER', temp, 0, lv2))
 
     temp2 = pilaO.pop()
     temp3 = generate_temporal('int')
     quadaux.append(Quadruple('+', tempaux, temp2, temp3))
-    quadruples.append(Quadruple(tabOp['+'], temp, temp2, temp3))
+    quadruples.append(Quadruple('+', temp, temp2, temp3))
     pilaO.append(temp3)
 
 #Neuralgic point to process the end of an array
@@ -1586,7 +1512,7 @@ def p_np_endArr(p):
     temp = generate_temporal('int')
     quadaux.append(Quadruple('+', opdo, virAd, temp))
     opdo = changeToMem(opdo)
-    quadruples.append(Quadruple(tabOp['+'], opdo, virAd, temp))
+    quadruples.append(Quadruple('+', opdo, virAd, temp))
     
     pilaO.append("(" + str(temp) +  ")")
     ptypes.append(dic.getVarType(arrFunc,id))
@@ -1604,7 +1530,7 @@ def p_np_addRead(p):
 
     quadaux.append(Quadruple('read', None, None, temp))
     temp = changeToMem(temp)
-    quadruples.append(Quadruple(tabOp['read'], -1, -1, temp))
+    quadruples.append(Quadruple('read', None, None, temp))
 
 #Neuralgic point to generate write quadruple
 def p_np_addWrite(p):
@@ -1619,7 +1545,7 @@ def p_np_addWrite(p):
 
         quadaux.append(Quadruple('write', None, None, opdo))
         opdo = changeToMem(opdo)
-        quadruples.append(Quadruple(tabOp['write'], -1, -1, opdo))
+        quadruples.append(Quadruple('write', None, None, opdo))
 
 #Neuralgic point to generate return quadruple
 def p_np_addReturn(p):
@@ -1636,7 +1562,7 @@ def p_np_addReturn(p):
                 contReturns += 1
                 quadaux.append(Quadruple('return', None, None, opdo))
                 opdo = changeToMem(opdo)
-                quadruples.append(Quadruple(tabOp['return'], -1, -1, opdo))
+                quadruples.append(Quadruple('return', None, None, opdo))
             else:
                 error("Expected return value type {}".format(dic.getFuncType(currFunc)))
     else:
@@ -1655,7 +1581,7 @@ def p_np_checkBool(p):
 
         quadaux.append(Quadruple('GOTOF', opdo, None, 0))
         opdo = changeToMem(opdo)
-        quadruples.append(Quadruple(tabOp['GOTOF'], opdo, -1, 0))
+        quadruples.append(Quadruple('GOTOF', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
         error('Type mismatch, expected value of type bool')
@@ -1670,7 +1596,7 @@ def p_np_endIf(p):
 #Neuralgic point to generate GOTO quadruple of else
 def p_np_else(p):
     'np_else : '
-    quadruples.append(Quadruple(tabOp['GOTO'], -1, -1, 0))
+    quadruples.append(Quadruple('GOTO', None, None, 0))
     quadaux.append(Quadruple("GOTO", None, None, 0))
     jump = pjumps.pop()
     quadruples[jump].temp = len(quadruples)
@@ -1687,7 +1613,7 @@ def p_np_endWhile(p):
     'np_endWhile : '
     startW = pjumps.pop()
     temp = pjumps.pop()
-    quadruples.append(Quadruple(tabOp['GOTO'], -1, -1, temp))
+    quadruples.append(Quadruple('GOTO', None, None, temp))
     quadaux.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
@@ -1709,12 +1635,12 @@ def p_np_assingFor(p):
         error("Can't operate array {}".format(temp))
 
     if tempT != 'int' or opdoT_der != 'int':
-        error('Expected type int')
+        error('Expeted type int')
     else:
         quadaux.append(Quadruple(op, opdo_der, None, temp))
         opdo_der = changeToMem(opdo_der)
         temp = changeToMem(temp)
-        quadruples.append(Quadruple(tabOp[op], opdo_der, -1, temp))
+        quadruples.append(Quadruple(op, opdo_der, None, temp))
         ptypes.append(tempT)
         pilaO.append(temp)
         pilaO.append(temp)
@@ -1735,7 +1661,7 @@ def p_np_checkExp(p):
 
         quadaux.append(Quadruple('GOTOV', opdo, None, 0))
         opdo = changeToMem(opdo)
-        quadruples.append(Quadruple(tabOp['GOTOV'], opdo, -1, 0))
+        quadruples.append(Quadruple('GOTOV', opdo, None, 0))
         pjumps.append(len(quadruples) - 1)
     else:
         error('Type mismatch, expected value of type bool')
@@ -1754,10 +1680,10 @@ def p_np_endFor(p):
     const = (const_table[1]['memo'])
     quadaux.append(Quadruple('+=', const, None, currVar))
     currVar = changeToMem(currVar)
-    quadruples.append(Quadruple(tabOp['+='], const, -1, currVar))
+    quadruples.append(Quadruple('+=', const, None, currVar))
     startW = pjumps.pop()
     temp = pjumps.pop()
-    quadruples.append(Quadruple(tabOp['GOTO'], -1, -1, temp))
+    quadruples.append(Quadruple('GOTO', None, None, temp))
     quadaux.append(Quadruple('GOTO', None, None, temp))
     endW = len(quadruples)
     quadruples[startW].temp = endW
@@ -1830,7 +1756,7 @@ def p_np_eraQuad(p):
     'np_eraQuad : '
     global paramK
     currCall = pcalls[-1]
-    quadruples.append(Quadruple(tabOp['ERA'], currCall, -1, -1))
+    quadruples.append(Quadruple('ERA', currCall, None, None))
     quadaux.append(Quadruple("ERA", currCall, None, None))
     if paramK > 0:
         pParams.append(paramK)
@@ -1859,7 +1785,7 @@ def p_np_checkParam(p):
         if opdoT == auxDic.funcParam(currCall, paramK):
             quadaux.append(Quadruple('PARAMETER', opdo, None, 'par' + str(paramK)))
             opdo = changeToMem(opdo)
-            quadruples.append(Quadruple(tabOp['PARAMETER'], opdo, -1, paramK))
+            quadruples.append(Quadruple('PARAMETER', opdo, None, paramK))
         else: 
             error("Expected type {} on call to function {}".format(auxDic.funcParam(currCall, paramK), currCall))
 
@@ -1885,17 +1811,17 @@ def p_np_endVoid(p):
         error("{} mising {} parameters".format(currFunc, auxDic.funcParamSize(currFunc) - paramK))
     else:
         poper.pop()
-        quadruples.append(Quadruple(tabOp['GOSUB'], currCall, -1, -1))
+        quadruples.append(Quadruple('GOSUB', currCall, None, None))
         quadaux.append(Quadruple("GOSUB", currCall, None, None))
         if auxDic.getFuncType(currFunc) != 'void' and auxDic.getFuncType(currFunc) != 'program':
             tempType = auxDic.getFuncType(currFunc)
             temp = generate_temporal(tempType)
             if "curCallaux" in locals():
                 quadaux.append(Quadruple('=', curCallaux[0] + '.' + currFunc, None, temp))
-                quadruples.append(Quadruple(tabOp["="], curCallaux[0] + '.' + str(auxDic.getVarMemo(pName, currFunc)), -1, temp))
+                quadruples.append(Quadruple("=", curCallaux[0] + '.' + str(auxDic.getVarMemo(pName, currFunc)), None, temp))
             else:
                 quadaux.append(Quadruple('=', currFunc, None, temp))
-                quadruples.append(Quadruple(tabOp["="], auxDic.getVarMemo(pName, currFunc), -1, temp))
+                quadruples.append(Quadruple("=", auxDic.getVarMemo(pName, currFunc), None, temp))
             pilaO.append(temp)
             ptypes.append(tempType)
         if pParams:
@@ -1903,13 +1829,7 @@ def p_np_endVoid(p):
         else:
             paramK = 0
 
-'''
-Generate logical and aritmetical quadruples
-
-Parameters
-----------
-check : str -> Operator
-'''
+#Function that will generate the quadruples
 def generateQuad(check):
     global currFunc
     if len(poper) > 0:
@@ -1935,19 +1855,9 @@ def generateQuad(check):
                 quadaux.append(Quadruple(op, opdo_izq, opdo_der, temp))
                 opdo_izq = changeToMem(opdo_izq)
                 opdo_der = changeToMem(opdo_der)
-                quadruples.append(Quadruple(tabOp[op], opdo_izq, opdo_der, temp))
+                quadruples.append(Quadruple(op, opdo_izq, opdo_der, temp))
 
-'''
-Generate temporal memory addres
-
-Parameters
-----------
-tempType : str -> Temporal type
-
-Returns
-----------
-int : Memory addres of the temporal
-'''
+#function to generate temporal
 def generate_temporal(tempType):
     global currFunc, progName, global_int, global_float, global_char, global_bool, local_int, local_float, local_char, local_bool
     temp = ""
@@ -2011,7 +1921,7 @@ def p_np_endProg(p):
         
     dic.delVar(progName)
     quadaux.append(Quadruple('END', None, None, None))
-    quadruples.append(Quadruple(tabOp['END'], -1, -1, -1))
+    quadruples.append(Quadruple('END', None, None, None))
 
 #Neuralgic point that marks the end of a class
 def p_np_endClass(p):
@@ -2032,17 +1942,7 @@ def p_np_endClass(p):
     progName =  pcalls.pop()
     currFunc = progName
 
-'''
-Change a variable name into its memory address
-
-Parameters
-----------
-var : str -> variable name
-
-Returns
-----------
-int : Memory addres of the variable
-'''
+#Function that change a variable name into its memory address
 def changeToMem(var):
     global currFunc, progName
     if type(var) != int and not match(r'\d+\.\d+', var):
@@ -2052,14 +1952,7 @@ def changeToMem(var):
             var = dic.getVarMemo(progName, var)
     return var
 
-'''
-Get the dictionary a specific Class
-
-Parameters
-----------
-c : str -> Class Name
-var : str -> Tells if its gonna check for an object or a class (default : N)
-'''
+#Function to get the dictionary a specific Class
 def getDic(c, var = "N"):
     for i in arrClases:
         if c == i[0]:
@@ -2069,25 +1962,13 @@ def getDic(c, var = "N"):
     else:
         error("Object {} not defined".format(var))
 
-'''
-Checks if a class has alredy been declared
-
-Parameters
-----------
-c : str -> Class Name
-'''
+#Fucntion that checks if a class has alredy been declared
 def checkClass(c):
     for i in arrClases:
         if c == i[0]:
             error("Class {} has already been declared".format(c))
 
-'''
-Checks if a class exist
-
-Parameters
-----------
-c : str -> Class Name
-'''
+#Fucntion that checks if a class exist
 def checkClassExist(c):
     cont = 0
     for i in arrClases:
@@ -2096,22 +1977,13 @@ def checkClassExist(c):
     if cont == 0:        
         error("Class {} does not exist".format(c))
 
-'''
-Function to display errors
-
-Parameters
-----------
-line : str -> Explanation of the error
-'''
+#Function to display errors
 def error(line):
     print("Line " + str(lexer.lineno) + ": " + line)
     sys.exit()
 
 parser = yacc.yacc()
 
-'''
-Prints the Operator, Operand, jumps and types stacks, also prints all the quadrupels
-'''
 def printAll():
     print(pilaO) 
     print(poper)
@@ -2121,9 +1993,6 @@ def printAll():
     for index, item in enumerate(quadruples):
         print(index, item.get_quad())
 
-'''
-Recieves a .patrol file and compile it 
-'''
 def main():
     text = input('Insert your program file (.patrol): ')
     if ".patrol" in text : 
@@ -2135,17 +2004,11 @@ def main():
         # dic.printAll()
         # for i  in arrClases:
         #     i[1].printAll()
-        # printAll()
+        #printAll()
     else:
         sys.exit("Error: File isn't a Pau Patrol++ program")
-
-'''    
-Fucntion to help the virtual machine to get all it need to process the code
-
-Returns
---------
-dictionary : Dictionary with the main structures from compilation
-'''
+    
+#Fucntion to help the virtual machine to get all it need to process the code
 def vmHelper():
     main()
     out = {

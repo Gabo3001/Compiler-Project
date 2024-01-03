@@ -1,0 +1,38 @@
+program TestIf;
+vars
+a, b, c, d: int;
+aB, bB : bool;
+main(){
+    a = 1;
+    b = 20;
+    c = 4;
+    aB = False;
+    bB = True;
+
+    if (a < 3) then 
+    {a = 3 * 3;}
+
+    if (aB != True) then 
+    { 
+        b = 15; 
+        c = b - 5;
+    }
+
+    if (a / 3 == 0 ) then 
+    { write("Hello Pau");}
+    else
+    { write("Hello Gabo");} 
+
+    if (bB) then 
+    { 
+        read(d);
+        a = b + c;
+        b = d + a;
+    } 
+    else
+    { 
+        a = b + c;
+        b = a + c;
+    }
+    write("TestIf end");
+}

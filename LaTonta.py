@@ -1,6 +1,3 @@
-# La_Tonta.py by Gabriel Ortega and Paulina Cámara (2021)
-# Virtual Machine for the Pau Patrol ++ Programin Language
-
 import Lex_Parser
 import sys
 from datastruct import DirProcess
@@ -32,13 +29,7 @@ pFuncs = deque()
 pMemory = deque()
 pJumps = deque()
 
-'''
-  Stop the ejecution of the program and show why it stops
-
-  Parameters
-  ----------
-  l : str -> Error that will be showed
-  ''' 
+#Fucntion to handle errors
 def error(l):
     sys.exit(l)
 
@@ -52,36 +43,15 @@ global_memory = dic.getGlobalMem()
 if 0 in global_memory.keys():
     global_memory = dic.createClassMemo(global_memory, arrClases)
 
-'''
-Validates that a memory addres exist on a dictionary and thst its value is not none
 
-Parameters
-----------
-dic : dictionary -> Dictionary where the validation will take place
-mem : int -> Memory address
-check : str -> Indicates if the value has have a value (default : no)
-
-Returns
-----------
-int -> memory addres
-''' 
+#Function that validates that a memory addres exist on a dictionary and noy have none
 def exist(dic, mem, check = "no"):
     if mem not in dic:
         error("Stackoverflow")
     if dic[mem] == None and check != "no":
         error("Variable without value")
 
-'''
-Function that check if a memory address needs extra process 
-
-Parameters
-----------
-mem : int -> Memory address
-
-Returns
-----------
-int -> memory addres
-''' 
+#Function that check if the function is a 
 def checkMem(mem):
     if type(mem) == str and mem[0] == '(':
         return getValue(int(mem[1:-1]))
@@ -91,17 +61,7 @@ def checkMem(mem):
     else:
         return mem
 
-'''
-function to get the value of a memory address
-
-Parameters
-----------
-mem : int -> Memory address
-
-Returns
-----------
-int|float|str|bool -> The value save on the memory address
-''' 
+#function to get the value of a memory address
 def getValue(mem):
     aux = None
     fmem = checkMem(mem)
@@ -168,14 +128,7 @@ def getValue(mem):
 
     return aux
 
-'''
-Function to set value to a memory address
-
-Parameters
-----------
-val : int|float|char|bool -> Value that will be saved
-mem : int -> Memory address
-''' 
+#Function to set value to a memory address
 def setValue(val, mem):
     fmem = checkMem(mem)
     if fmem >= 1000 and fmem < 5000:
@@ -192,30 +145,14 @@ def setValue(val, mem):
         global_memory[fmem][int(secondmem[1])] = val
 
 
-
-'''
-Function that checks that the recive value is an int
-
-Parameters
-----------
-s : str -> string to be checked
-''' 
+#Function that checks that the recive value is an int
 def check_int(s):
     if s[0] in ('-'):
         return s[1:].isdigit()
     return s.isdigit()
 
-'''
-Function that check that the recieved value correspond with the corresponding var type
-
-Parameters
-----------
-val : str -> Value to be checked
-mem : int -> memory addres
-''' 
+#Function that check that the recieved value correspond with the corresponding var type
 def checkValue(val, mem):
-    if val == '':
-        error("None input unacceptable")
     if mem >= 1000 and mem < 2000 or  mem >= 5000 and mem < 6000:
         if not check_int(val):
             error("Expected type Int")
@@ -225,18 +162,11 @@ def checkValue(val, mem):
     if mem >= 3000 and mem < 4000 or  mem >= 7000 and mem < 8000:
         if not match(r".", val) or len(val) > 1:
             error("Expected type Char")
-    if mem >= 4000 and mem < 5000 or  mem >= 8000 and mem < 9000:
+    if mem >= 4000 and mem < 5000 or  mem >= 9000 and mem < 10000:
         if not match(r'(True|False)', val):
             error("Expected type Bool")
 
-'''
-Function that set a value for a parameter
-
-Parameters
-----------
-val : int|float|char|bool -> Value to be assigned
-pos : int -> Possition of the parameter on the function
-''' 
+#Function that set a value for a parameter
 def setParam(val, pos):
     global func, memory, contPBool, contPChar, contPFloat, contPInt
     if "." in func:
@@ -267,50 +197,50 @@ def setParam(val, pos):
 # ***** Execution *****
 while ongoing:
     #GOTO
-    if quadruples[current].getOp() == 1:
+    if quadruples[current].getOp() == 'GOTO':
         current = quadruples[current].getTemp()
     #GOTOF
-    elif quadruples[current].getOp() == 2:
+    elif quadruples[current].getOp() == 'GOTOF':
         aux = getValue(quadruples[current].getOpIzq())
         if aux:
             current += 1
         else:
             current = quadruples[current].getTemp()
     #GOTOV
-    elif quadruples[current].getOp() == 3:
+    elif quadruples[current].getOp() == 'GOTOV':
         aux = getValue(quadruples[current].getOpIzq())
         if aux:
             current = quadruples[current].getTemp()
         else:
             current += 1
     #Assigment
-    elif quadruples[current].getOp() == 4:
+    elif quadruples[current].getOp() == '=':
         aux = getValue(quadruples[current].getOpIzq())
         setValue(aux, quadruples[current].getTemp())
         current += 1
     #plus equal
-    elif quadruples[current].getOp() == 5:
+    elif quadruples[current].getOp() == '+=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getTemp()) 
         res = aux1 + aux2
         setValue(res, quadruples[current].getTemp())
         current += 1
     #Minus equal
-    elif quadruples[current].getOp() == 6:
+    elif quadruples[current].getOp() == '-=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getTemp())
         res = aux2 - aux1
         setValue(res, quadruples[current].getTemp())
         current += 1
     #Mult equal
-    elif quadruples[current].getOp() == 7:
+    elif quadruples[current].getOp() == '*=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getTemp())
         res = aux1 * aux2
         setValue(res, quadruples[current].getTemp())
         current += 1
     #Division equal
-    elif quadruples[current].getOp() == 8:
+    elif quadruples[current].getOp() == '/=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getTemp())
         if aux1 == 0:
@@ -319,28 +249,28 @@ while ongoing:
         setValue(res, quadruples[current].getTemp())
         current += 1
     #Sum
-    elif quadruples[current].getOp() == 9:
+    elif quadruples[current].getOp() == '+':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 + aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Rest
-    elif quadruples[current].getOp() == 10:
+    elif quadruples[current].getOp() == '-':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 - aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Multiplication
-    elif quadruples[current].getOp() == 11:
+    elif quadruples[current].getOp() == '*':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 * aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Division
-    elif quadruples[current].getOp() == 12:
+    elif quadruples[current].getOp() == '/':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         if aux2 == 0:
@@ -349,12 +279,12 @@ while ongoing:
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Write
-    elif quadruples[current].getOp() == 13:
+    elif quadruples[current].getOp() == 'write':
         aux = getValue(quadruples[current].getTemp())
         write = write + str(aux)
         current += 1
     #Read
-    elif quadruples[current].getOp() == 14:
+    elif quadruples[current].getOp() == 'read':
         if write:
             print(write.replace(r'\n', '\n'))
             write = ''
@@ -365,63 +295,63 @@ while ongoing:
         setValue(aux, mem)
         current += 1
     #Greather than
-    elif quadruples[current].getOp() == 15:
+    elif quadruples[current].getOp() == '>':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 > aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Less than
-    elif quadruples[current].getOp() == 16:
+    elif quadruples[current].getOp() == '<':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 < aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Greather or equal than
-    elif quadruples[current].getOp() == 17:
+    elif quadruples[current].getOp() == '>=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 >= aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Less or equal than
-    elif quadruples[current].getOp() == 18:
+    elif quadruples[current].getOp() == '<=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 <= aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Equal
-    elif quadruples[current].getOp() == 19:
+    elif quadruples[current].getOp() == '==':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 == aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Different
-    elif quadruples[current].getOp() == 20:
+    elif quadruples[current].getOp() == '!=':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 != aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #And
-    elif quadruples[current].getOp() == 21:
+    elif quadruples[current].getOp() == '&':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 and aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Or
-    elif quadruples[current].getOp() == 22:
+    elif quadruples[current].getOp() == '|':
         aux1 = getValue(quadruples[current].getOpIzq())
         aux2 = getValue(quadruples[current].getOpDer())
         result = aux1 or aux2
         setValue(result, quadruples[current].getTemp())
         current += 1
     #Verify
-    elif quadruples[current].getOp() == 23:
+    elif quadruples[current].getOp() == 'VER':
         aux = getValue(quadruples[current].getOpIzq())
         lim1 = quadruples[current].getOpDer()
         lim2 = quadruples[current].getTemp()
@@ -429,7 +359,7 @@ while ongoing:
             error("Index out of range")
         current += 1
     #ERA
-    elif quadruples[current].getOp() == 24:
+    elif quadruples[current].getOp() == 'ERA':
         func = quadruples[current].getOpIzq()
         if "." in func:
             splitFunc = func.split('.')
@@ -440,12 +370,12 @@ while ongoing:
             memory = dic.getLocalMem(func)
         current += 1
     #Parameter
-    elif quadruples[current].getOp() == 25:
+    elif quadruples[current].getOp() == 'PARAMETER':
         aux = getValue(quadruples[current].getOpIzq())
         setParam(aux, quadruples[current].getTemp())
         current += 1
     #GOSUB
-    elif quadruples[current].getOp() == 26:
+    elif quadruples[current].getOp() == 'GOSUB':
         pMemory.append(memory)
         pJumps.append(current+1)
         if "." in func:
@@ -464,14 +394,14 @@ while ongoing:
         contPInt = 0
         pFuncs.append(func)
     #ENDFUNC
-    elif quadruples[current].getOp() == 27:
+    elif quadruples[current].getOp() == 'ENDFUNC':
         pMemory.pop()
         tempfunc = pFuncs.pop()
         if "." in tempfunc:
             global_memory = aux_global_memory
         current = pJumps.pop()
     #return
-    elif quadruples[current].getOp() == 28:
+    elif quadruples[current].getOp() == 'return':
         aux = getValue(quadruples[current].getTemp())
         if "." in pFuncs[-1]:
             splitFunc = pFuncs[-1].split('.')
@@ -485,7 +415,7 @@ while ongoing:
         pFuncs.pop()
         current = pJumps.pop()
     #Endprogram
-    elif quadruples[current].getOp() == 29:
+    elif quadruples[current].getOp() == 'END':
         ongoing = False
         if write:
             print(write.replace(r'\n', '\n'))
